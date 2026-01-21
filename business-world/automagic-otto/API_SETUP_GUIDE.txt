@@ -1,0 +1,61 @@
+# AutoMagic API Setup Guide
+
+## Required APIs (in order of importance):
+
+### 1. OpenAI API (for DALL-E images)
+1. Go to: https://platform.openai.com/
+2. Sign up or log in
+3. Click "API keys" in the left menu
+4. Click "Create new secret key"
+5. Copy the key and paste it in .env file at OPENAI_API_KEY=
+
+### 2. ElevenLabs API (for voice)
+1. Go to: https://elevenlabs.io/
+2. Sign up for free account
+3. Click your profile icon → "Profile"
+4. Copy your API key
+5. Paste it in .env file at ELEVENLABS_API_KEY=
+
+### 3. Google Cloud (for YouTube)
+1. Go to: https://console.cloud.google.com/
+2. Create a new project
+3. Enable "YouTube Data API v3"
+4. Create credentials (OAuth 2.0 Client ID)
+5. Download the JSON file as "youtube_credentials.json"
+6. Put it in your AutoMagic folder
+7. Update GOOGLE_API_CREDENTIALS_FILE in .env if you use a different filename
+
+### 4. Google AI Studio (for Gemini)
+1. Go to: https://makersuite.google.com/app/apikey
+2. Click "Create API key"
+3. Copy it to .env at GOOGLE_API_KEY=
+
+## Your YouTube Channel ID:
+1. Go to YouTube
+2. Click your profile → "Your channel"
+3. The URL contains your channel ID (or use a tool like https://commentpicker.com/youtube-channel-id.php)
+4. Add it to .env at YOUTUBE_CHANNEL_ID=
+
+## Installing FFmpeg (Required for video processing)
+
+### Windows:
+1. Download FFmpeg from https://ffmpeg.org/download.html#build-windows
+2. Extract the zip file to a location on your computer (e.g., C:\ffmpeg)
+3. Add FFmpeg to your system PATH:
+   - Right-click on "This PC" and select "Properties"
+   - Click on "Advanced system settings"
+   - Click on "Environment Variables"
+   - Under "System variables", find and select the "Path" variable
+   - Click "Edit" and add the path to the FFmpeg bin folder (e.g., C:\ffmpeg\bin)
+   - Click "OK" on all dialogs to save changes
+4. Restart your command prompt and verify with: ffmpeg -version
+
+### macOS:
+1. Install using Homebrew: brew install ffmpeg
+2. Verify installation: ffmpeg -version
+
+### Linux:
+1. Install using apt (Ubuntu/Debian): sudo apt update && sudo apt install ffmpeg
+2. Verify installation: ffmpeg -version
+
+Save this file for reference!

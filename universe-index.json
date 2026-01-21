@@ -1,0 +1,103 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-21",
+  "worlds": {
+    "game-world": {
+      "path": "game-world/",
+      "tiers": {
+        "live": {
+          "purple-chalk": {
+            "name": "Purple Chalk",
+            "status": "deployed",
+            "url": "purplechalked.com",
+            "tags": ["noir", "detective", "music"]
+          }
+        },
+        "ready": {
+          "group-groove": {
+            "name": "Group Groove",
+            "status": "ready",
+            "tags": ["multiplayer", "music", "social"]
+          },
+          "frequency-factory": {
+            "name": "Frequency Factory",
+            "status": "ready",
+            "tags": ["puzzle", "frequency", "sound"]
+          },
+          "big-chakra-hustle": {
+            "name": "Big Chakra Hustle",
+            "status": "ready",
+            "tags": ["strategy", "energy", "chakra"]
+          }
+        },
+        "development": {
+          "viberated": {"name": "Viberated", "status": "active", "tags": ["vibration"]},
+          "syntax-soul": {"name": "Syntax Soul", "status": "active", "tags": ["code", "music"]},
+          "uni-cat": {"name": "Uni-Cat", "status": "active", "tags": ["adventure", "cat"]},
+          "dumb-bull": {"name": "Dumb Bull", "status": "active", "tags": ["bull"]},
+          "nova-reign": {"name": "Nova Reign", "status": "placeholder", "tags": ["space", "strategy"]},
+          "laxy-galaxy": {"name": "Laxy Galaxy", "status": "placeholder", "tags": ["galaxy"]},
+          "midnight-mall": {"name": "Midnight Mall", "status": "placeholder", "tags": ["mall", "adventure"]},
+          "battle-bars": {"name": "Battle Bars", "status": "placeholder", "tags": ["music", "battle"]},
+          "treetacticals": {"name": "Treetacticals", "status": "placeholder", "tags": ["tactics", "tree"]},
+          "gta-g-ray": {"name": "GTA G Ray", "status": "placeholder", "tags": ["ray"]},
+          "punchboy": {"name": "Punchboy", "status": "placeholder", "tags": ["fighting"]},
+          "sleigh-the-night": {"name": "Sleigh The Night", "status": "placeholder", "tags": ["holiday"]},
+          "gobble-gadget": {"name": "Gobble Gadget", "status": "placeholder", "tags": ["gadget"]},
+          "ghost-jacking": {"name": "Ghost Jacking", "status": "concept", "tags": ["audio", "ghost"]},
+          "mystery-mayhem": {"name": "Mystery Mayhem", "status": "docs-only", "tags": ["mystery"]}
+        }
+      }
+    },
+    "story-world": {
+      "path": "story-world/",
+      "projects": {
+        "echoverse": {
+          "name": "Echoverse",
+          "type": "series",
+          "books": ["book-1-echoes-of-none", "book-2-echoes-of-origin", "book-3-echoes-of-convergence", "book-4-echoes-of-transcendence"],
+          "status": "active",
+          "tags": ["scifi", "consciousness", "3-6-9"]
+        },
+        "purple-chalk-book": {"name": "Purple Chalk Book", "status": "active", "tags": ["noir", "companion"]},
+        "biter-man": {"name": "Biter Man", "status": "active", "tags": ["comic"]},
+        "big-qi-energy": {"name": "Big Qi Energy", "status": "active", "tags": ["energy"]},
+        "hush-the-voiced-ones": {"name": "HUSH: The Voiced Ones", "status": "placeholder", "tags": ["voice"]},
+        "shadow-of-fire": {"name": "Shadow of Fire", "status": "placeholder", "tags": ["fire"]},
+        "guardians-of-last-dragons": {"name": "Guardians of Last Dragons", "status": "placeholder", "tags": ["dragons"]},
+        "red-earth": {"name": "Red Earth", "status": "placeholder", "tags": ["earth"]},
+        "wearbears": {"name": "WearBears", "status": "placeholder", "tags": ["bears"]},
+        "cosmistics-kids": {"name": "Cosmistics Kids", "status": "placeholder", "tags": ["kids", "cosmic"]},
+        "trapfirmations": {"name": "Trapfirmations", "status": "placeholder", "tags": ["affirmations"]}
+      }
+    },
+    "music-world": {
+      "path": "music-world/",
+      "albums": {
+        "trapfirmations": {"name": "Trapfirmations", "status": "active"},
+        "albumbdy": {"name": "Albumbdy", "status": "active"},
+        "silverback": {"name": "Silverback", "status": "active"}
+      }
+    },
+    "business-world": {
+      "path": "business-world/",
+      "projects": {
+        "d-roc-hub": {"name": "D-RoC Hub", "status": "active", "tags": ["landing", "hub"]},
+        "automagic-otto": {"name": "Automagic Otto", "status": "active", "tags": ["ai", "automation"]}
+      }
+    }
+  },
+  "loreRules": {
+    "humBan": "Hum is BANNED outside Echoes of None",
+    "crossCharacters": ["Aires", "Dai"],
+    "ottoCanon": "Otto = AI entity with 6 Devides (canon, not fictional)",
+    "keyPattern": "3-6-9"
+  },
+  "searchAliases": {
+    "echoes": "story-world/echoverse/book-1-echoes-of-none",
+    "echoes chapter 5": "story-world/echoverse/book-1-echoes-of-none/chapters/ch05-revised.md",
+    "purple chalk": "game-world/live/purple-chalk",
+    "chalk": "game-world/live/purple-chalk",
+    "otto": "business-world/automagic-otto"
+  }
+}

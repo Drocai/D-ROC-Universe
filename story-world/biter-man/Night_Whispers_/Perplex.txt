@@ -1,0 +1,41 @@
+Launch a very small, very focused test loop before you touch the rest of the deck.
+
+## What to do this week
+
+- **Produce 3 versions of Episode 1**  
+  - A: full 45s as scripted.[1][2]
+  - B: a 15–20s ultra-hook cut that jumps faster to the twist.[2]
+  - C: a “PG-13” cut with slightly toned-down lines for safety testing.[1]
+
+- **Soft-launch on one primary platform first**  
+  - Pick TikTok or Reels as the main lab; post A/B/C over 7–10 days at your planned 9 PM slot.[2]
+  - Use your killer hook line in every caption + on-screen text: “Real history whispered like dirty secrets in your ear at 2 a.m.”[3]
+
+- **Instrument for learning, not vanity**  
+  - Watch: 3-second hold, completion rate, saves, shares, comments with quotes, and any flags.[4][2]
+  - Especially track if drop-off spikes during the heartbeat pause; shorten or score it differently if retention dips there.[1]
+
+## What to tweak before scaling
+
+- **Tighten brand-safe language in public-facing pieces**  
+  - Keep the deck’s “Horny History” and spicier phrasing, but also add one clean sentence version for brands: “Night Whispers is an ASMR history micro-series that turns real events into addictive late-night storytelling.”[3][2]
+  - In captions, alternate between explicit and more playful/clever hooks so you can see which gets you reach without risking bans.[2][3]
+
+- **Clarify the funnel to money early**  
+  - In the deck, add one visual that shows: Shorts → Follow → Patreon/“After Dark” feed → Merch (candles, journals, pins).[3][2]
+  - Set up at least a basic Patreon tier and a single easy merch item (journal or candle) so early fans have somewhere to go.[2][3]
+
+## After first 3–5 posts
+
+- **Double-down if early signals match your comps**  
+  - If any cut clears, say, 20–30% watch-through and strong saves/shares at small scale, commit to your 3x/week schedule for a month.[4][2]
+  - Use the highest-performing lines as recurring “series staples” and put them in your bio and channel banner.[3]
+
+If you tell which platform you want to prioritize first (TikTok, Reels, or Shorts), next step can be concrete: exact posting calendar, 3 captions, and thumbnail text for your first week.[2][3]
+
+Sources
+[1] HTML-text.html https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/c643801e-a495-4814-aa42-807f13f9cd48/HTML-text.html
+[2] text.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/2f8844e2-739d-4c8b-80e1-2fb5ea3f200f/text.txt
+[3] New-text.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/01a3cd4c-bd37-4ead-bf31-75915d5bc57c/New-text.txt
+[4] text-2.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/f12012e0-e49c-44b5-9941-3bb7f1fa0f6a/text-2.txt
+[5] rich-text-RTF.rtf https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/140debcb-f54a-4d96-8b8a-7db95587aec2/rich-text-RTF.rtf

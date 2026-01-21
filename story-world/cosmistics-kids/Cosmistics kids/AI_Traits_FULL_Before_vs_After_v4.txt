@@ -1,0 +1,11 @@
+                            Before (your FLAC halves)  After (PASS‑HUMAN v4)
+Dynamic Range (dB)                            26.8900                25.8600
+Crest Factor (dB)                             13.3400                19.7300
+Avg Spectral Centroid (Hz)                  1425.1000              1632.5000
+Avg Spectral Flatness                          0.0173                 0.0271
+Strongest Rep Lag (s)                          0.5970                 0.5970
+Rep Strength (RMS)                             0.5660                 0.5730
+Rep Lag (Centroid) (s)                         0.5970                 0.5970
+Rep Strength (Centroid)                        0.2810                 0.1870
+Low-Energy Frame Ratio                         0.2000                 0.2000
+Avg Pause Length (s)                           0.1190                 0.1200

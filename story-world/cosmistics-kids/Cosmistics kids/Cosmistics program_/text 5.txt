@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #0F0F1A;
+      color: #F5F5FF;
+      margin: 0;
+      padding: 20px;
+    }
+
+```
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #FFCA28;
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+h2 {
+  color: #00B4B8;
+  border-bottom: 1px solid #7B3F80;
+  padding-bottom: 10px;
+  margin-top: 40px;
+}
+
+.card-showcase {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  margin: 30px 0;
+}
+
+.card {
+  position: relative;
+  width: 300px;
+  height: 500px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(123, 63, 128, 0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 0 30px rgba(0, 180, 184, 0.7);
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #1A1A4F, #7B3F80);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.card-title {
+  position: absolute;
+  top: 20px;
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #FFCA28;
+  width: 100%;
+}
+
+.frequency {
+  position: absolute;
+  bottom: 20px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #F5F5FF;
+  width: 100%;
+}
+
+.sacred-geometry {
+  width: 70%;
+  height: 70%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Creation Field Card */
+.creation-field .card-inner {
+  background: linear-gradient(135deg, #00B4B8, #FFCA28);
+}
+
+.creation-field .sacred-geometry {
+  position: relative;
+}
+
+.creation-field .triangle {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.creation-field .triangle:before,
+.creation-field .triangle:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: 2px solid rgba(245, 245, 255, 0.8);
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  animation: pulse 3s infinite alternate;
+}
+
+.creation-field .triangle:after {
+  transform: scale(0.8);
+  animation-delay: 1.5s;
+}
+
+.creation-field .flower-of-life {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="100" cy="100" r="40" fill="none" stroke="rgba(245,245,255,0.3)" /><circle cx="140" cy="100" r="40" fill="none" stroke="rgba(245,245,255,0.3)" /><circle cx="60" cy="100" r="40" fill="none" stroke="rgba(245,245,255,0.3)" /><circle cx="120" cy="65" r="40" fill="none" stroke="rgba(245,245,255,0.3)" /><circle cx="80" cy="65" r="40" fill="none" stroke="rgba(245,245,255,0.3)" /><circle cx="120" cy="135" r="40" fill="none" stroke="rgba(245,245,255,0.3)" /><circle cx="80" cy="135" r="40" fill="none" stroke="rgba(245,245,255,0.3)" /></svg>');
+  background-size: contain;
+  opacity: 0.7;
+}
+
+.creation-field .spiral {
+  position: absolute;
+  width: 60%;
+  height: 60%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 20 C 60 20, 70 30, 70 40 C 70 50, 60 60, 50 60 C 40 60, 30 50, 30 40 C 30 30, 35 25, 40 25 C 45 25, 50 30, 50 35 C 50 40, 45 45, 40 45 C 35 45, 32 40, 32 35" fill="none" stroke="rgba(255,202,40,0.8)" stroke-width="3" /></svg>');
+  background-size: contain;
+  animation: rotate 20s linear infinite;
+}
+
+/* Consciousness Doorway Card */
+.consciousness-doorway .card-inner {
+  background: linear-gradient(135deg, #1A1A4F, #7B3F80);
+}
+
+.consciousness-doorway .sacred-geometry {
+  position: relative;
+}
+
+.consciousness-doorway .vesica-piscis {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="70" cy="100" r="60" fill="none" stroke="rgba(245,245,255,0.3)" stroke-width="2" /><circle cx="130" cy="100" r="60" fill="none" stroke="rgba(245,245,255,0.3)" stroke-width="2" /></svg>');
+  background-size: contain;
+  opacity: 0.7;
+}
+
+.consciousness-doorway .metatron {
+  position: absolute;
+  width: 80%;
+  height: 80%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect x="60" y="60" width="80" height="80" fill="none" stroke="rgba(245,245,255,0.5)" /><rect x="40" y="40" width="120" height="120" fill="none" stroke="rgba(245,245,255,0.5)" /><line x1="40" y1="40" x2="160" y2="160" stroke="rgba(245,245,255,0.5)" /><line x1="160" y1="40" x2="40" y2="160" stroke="rgba(245,245,255,0.5)" /><circle cx="100" cy="100" r="70" fill="none" stroke="rgba(245,245,255,0.5)" /></svg>');
+  background-size: contain;
+  animation: pulse 4s infinite alternate;
+}
+
+.consciousness-doorway .portal {
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(245,245,255,0.9) 0%, rgba(245,245,255,0) 70%);
+  border-radius: 50%;
+  animation: glow 3s infinite alternate;
+}
+
+/* Abundance Matrix Card */
+.abundance-matrix .card-inner {
+  background: linear-gradient(135deg, #FF8700, #00A651);
+}
+
+.abundance-matrix .sacred-geometry {
+  position: relative;
+}
+
+.abundance-matrix .phi-spiral {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 50 L 50 10 A 40 40 0 0 1 90 50 A 40 40 0 0 1 50 90 A 40 40 0 0 1 10 50 A 40 40 0 0 1 50 10" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1" /></svg>');
+  background-size: contain;
+  opacity: 0.8;
+  animation: rotate 30s linear infinite;
+}
+
+.abundance-matrix .grid {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  background-image: linear-gradient(0deg, rgba(255,255,255,0.2) 1px, transparent 1px), 
+                    linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px);
+  background-size: 10px 10px;
+  opacity: 0.3;
+  animation: pulse 3s infinite alternate;
+}
+
+.abundance-matrix .center {
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  background: radial-gradient(circle, #FFCA28 0%, rgba(255,202,40,0) 70%);
+  border-radius: 50%;
+  animation: glow 2s infinite alternate;
+}
+
+/* Energy Foundation Card */
+.energy-foundation .card-inner {
+  background: linear-gradient(135deg, #CF0000, #0087FF);
+}
+
+.energy-foundation .sacred-geometry {
+  position: relative;
+}
+
+.energy-foundation .chakra-column {
+  position: absolute;
+  width: 20%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.energy-foundation .chakra {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  animation: pulse 2s infinite alternate;
+}
+
+.energy-foundation .chakra:nth-child(1) {
+  background: #CF0000;
+  animation-delay: 0.1s;
+}
+
+.energy-foundation .chakra:nth-child(2) {
+  background: #FF8700;
+  animation-delay: 0.2s;
+}
+
+.energy-foundation .chakra:nth-child(3) {
+  background: #FFCA28;
+  animation-delay: 0.3s;
+}
+
+.energy-foundation .chakra:nth-child(4) {
+  background: #00A651;
+  animation-delay: 0.4s;
+}
+
+.energy-foundation .chakra:nth-child(5) {
+  background: #0087FF;
+  animation-delay: 0.5s;
+}
+
+.energy-foundation .chakra:nth-child(6) {
+  background: #1A1A4F;
+  animation-delay: 0.6s;
+}
+
+.energy-foundation .chakra:nth-child(7) {
+  background: #7B3F80;
+  animation-delay: 0.7s;
+}
+
+.energy-foundation .energy-field {
+  position: absolute;
+  width: 80%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0.5;
+  animation: pulse 4s infinite alternate;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% { opacity: 0.3; transform: scale(0.95); }
+  100% { opacity: 0.8; transform: scale(1.05); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 10px rgba(255,255,255,0.5); opacity: 0.7; }
+  100% { box-shadow: 0 0 25px rgba(255,255,255,0.8); opacity: 0.9; }
+}
+
+.info-panel {
+  background-color: rgba(26, 26, 79, 0.7);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  border-left: 4px solid #00B4B8;
+}
+
+.info-panel h3 {
+  color: #FFCA28;
+  margin-top: 0;
+}
+
+.info-panel ul {
+  padding-left: 20px;
+}
+
+.info-panel li {
+  margin-bottom: 8px;
+}
+
+.card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, #0F0F1A, #1A1A4F);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+}
+
+.cosmistics-logo {
+  width: 60%;
+  height: auto;
+  opacity: 0.8;
+}
+
+.card-seal {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  top: 5%;
+  left: 5%;
+  border: 1px solid rgba(255, 202, 40, 0.3);
+  border-radius: 10px;
+}
+
+.section-divider {
+  display: flex;
+  align-items: center;
+  margin: 40px 0;
+}
+
+.divider-line {
+  flex-grow: 1;
+  height: 1px;
+  background: linear-gradient(to right, rgba(0, 180, 184, 0), rgba(0, 180, 184, 0.8), rgba(0, 180, 184, 0));
+}
+
+.divider-symbol {
+  margin: 0 20px;
+  color: #FFCA28;
+  font-size: 1.5rem;
+}
+```
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>COSMISTICS: Field Amplification Cards</h1>
+
+```
+<div class="info-panel">
+  <h3>Visualization Concepts</h3>
+  <p>The following visualizations represent key cards from the COSMISTICS Field Amplification system. Each card incorporates sacred geometry, frequency-matched colors, and intention-focused designs to create powerful tools for consciousness expansion and reality creation.</p>
+</div>
+
+<h2>Manifestation Series</h2>
+
+<div class="card-showcase">
+  <div class="card creation-field">
+    <div class="card-inner">
+      <div class="card-title">CREATION FIELD</div>
+      <div class="sacred-geometry">
+        <div class="flower-of-life"></div>
+        <div class="triangle"></div>
+        <div class="spiral"></div>
+      </div>
+      <div class="frequency">639 Hz + 528 Hz</div>
+    </div>
+  </div>
+  
+  <div class="card abundance-matrix">
+    <div class="card-inner">
+      <div class="card-title">ABUNDANCE MATRIX</div>
+      <div class="sacred-geometry">
+        <div class="grid"></div>
+        <div class="phi-spiral"></div>
+        <div class="center"></div>
+      </div>
+      <div class="frequency">639 Hz + 741 Hz</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-divider">
+  <div class="divider-line"></div>
+  <div class="divider-symbol">✧</div>
+  <div class="divider-line"></div>
+</div>
+
+<h2>Expansion Series</h2>
+
+<div class="card-showcase">
+  <div class="card consciousness-doorway">
+    <div class="card-inner">
+      <div class="card-title">CONSCIOUSNESS DOORWAY</div>
+      <div class="sacred-geometry">
+        <div class="vesica-piscis"></div>
+        <div class="metatron"></div>
+        <div class="portal"></div>
+      </div>
+      <div class="frequency">1074 Hz + 963 Hz</div>
+    </div>
+  </div>
+  
+  <div class="card energy-foundation">
+    <div class="card-inner">
+      <div class="card-title">ENERGY FOUNDATION</div>
+      <div class="sacred-geometry">
+        <div class="energy-field"></div>
+        <div class="chakra-column">
+          <div class="chakra"></div>
+          <div class="chakra"></div>
+          <div class="chakra"></div>
+          <div class="chakra"></div>
+          <div class="chakra"></div>
+          <div class="chakra"></div>
+          <div class="chakra"></div>
+        </div>
+      </div>
+      <div class="frequency">Multiple Frequencies</div>
+    </div>
+  </div>
+</div>
+
+<div class="info-panel">
+  <h3>Card Usage Protocol</h3>
+  <ul>
+    <li><strong>Meditation Focus:</strong> Center the card in your visual field, focusing on the geometric patterns while breathing deeply.</li>
+    <li><strong>Intention Setting:</strong> Place your written intention beneath the card, activating it with three clockwise circles using your right index finger.</li>
+    <li><strong>Energetic Activation:</strong> Hold the card between your palms for 1-2 minutes, infusing it with your energy.</li>
+    <li><strong>Field Amplification:</strong> Place activated cards in strategic locations (workspace, home, meditation area) to maintain the frequency field.</li>
+    <li><strong>System Integration:</strong> Use cards in conjunction with the COSMISTICS daily practice for enhanced results.</li>
+  </ul>
+</div>
+```
+
+  </div>
+</body>
+</html>

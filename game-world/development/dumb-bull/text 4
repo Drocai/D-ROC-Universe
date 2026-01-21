@@ -1,0 +1,15 @@
+# Ultra-Concise Implementation Steps
+
+1. **AI Generate (10 min)**: Upload `Dumbull.txt` to Claude/Cursor/Replit → Paste blueprint prompt → Download HTML.
+2. **Customize (5 min)**: Replace song URL, Spotify links, lyrics array.
+3. **Monetize/Analytics (10 min)**:
+- Ads: Add Applixir SDK script + init.
+- IAP: Stripe buttons.
+- Analytics: Plausible script.
+- Email: Formspree form.
+4. **Test (15 min)**: Desktop/mobile/iOS; Lighthouse 100/100; 60fps.
+5. **Deploy (3 min)**: Netlify drag-drop → PWA ready.
+6. **Launch (20 min + $500)**: Iframe on landing; TikTok/Reddit clips + contest; UTM ads.
+7. **Monitor**: Weekly: Plays/ads/streams (Plausible/Spotify); A/B ads.
+
+**Live in 1hr | ROI: $5K/mo @10K plays**

@@ -1,0 +1,238 @@
+import { useState, useEffect, FC, useMemo } from 'react';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { ShieldCheck, User, Lock, EyeOff, Calculator, Power, Smartphone, HardDrive, Image as ImageIcon, FileText, Video, Music, MoreHorizontal } from 'lucide-react';
+
+// --- TYPESCRIPT DEFINITIONS ---
+type AppInfo = {
+  id: string;
+  name: string;
+  icon: React.ComponentType<{ className?: string }>;
+};
+
+type Profile = {
+  id: string;
+  name: string;
+  pinSuffix: string;
+  avatar: React.ReactNode;
+  apps: AppInfo[];
+  isReal: boolean;
+};
+
+// --- MOCK DATA ---
+const mockApps: AppInfo[] = [
+  { id: 'app1', name: 'Gallery', icon: ImageIcon },
+  { id: 'app2', name: 'Documents', icon: FileText },
+  { id: 'app3', name: 'Camera', icon: Video },
+  { id: 'app4', name: 'Music Player', icon: Music },
+  { id: 'app5', name: 'Contacts', icon: User },
+  { id: 'app6', name: 'Secure Notes', icon: Lock },
+  { id: 'app7', name: 'Vault', icon: HardDrive },
+  { id: 'app8', name: 'More Apps', icon: MoreHorizontal },
+];
+
+const initialProfiles: Profile[] = [
+  {
+    id: 'p1',
+    name: 'Personal',
+    pinSuffix: '#personal',
+    avatar: <div className="w-full h-full bg-sky-500 flex items-center justify-center text-white font-bold text-4xl">P</div>,
+    apps: [mockApps[0], mockApps[1], mockApps[2], mockApps[3]],
+    isReal: true,
+  },
+  {
+    id: 'p2',
+    name: 'Work',
+    pinSuffix: '#work',
+    avatar: <div className="w-full h-full bg-emerald-500 flex items-center justify-center text-white font-bold text-4xl">W</div>,
+    apps: [mockApps[1], mockApps[4], mockApps[5]],
+    isReal: false,
+  },
+  {
+    id: 'p3',
+    name: 'Public',
+    pinSuffix: '#public',
+    avatar: <div className="w-full h-full bg-amber-500 flex items-center justify-center text-white font-bold text-4xl">A</div>,
+    apps: [mockApps[0], mockApps[3], mockApps[7]],
+    isReal: false,
+  },
+];
+
+// --- HELPER COMPONENTS ---
+const AppIcon: FC<{ app: AppInfo }> = ({ app }) => (
+  <div className="flex flex-col items-center gap-y-2 p-2 rounded-lg hover:bg-slate-700/50 transition-colors cursor-pointer">
+    <div className="w-16 h-16 bg-slate-700 border-2 border-slate-600 rounded-xl flex items-center justify-center">
+      <app.icon className="w-8 h-8 text-slate-300" />
+    </div>
+    <span className="text-xs text-slate-400 font-medium truncate w-20 text-center">{app.name}</span>
+  </div>
+);
+
+const PinPadButton: FC<{ onClick: () => void; children: React.ReactNode; className?: string }> = ({ onClick, children, className }) => (
+  <button 
+    onClick={onClick}
+    className={`bg-slate-800 rounded-xl aspect-square flex items-center justify-center text-3xl font-mono text-slate-100 hover:bg-slate-700 active:bg-slate-900 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-sky-500 ${className}`}>
+    {children}
+  </button>
+);
+
+// --- MAIN PAGE COMPONENT ---
+const DekoyAppPage: NextPage = () => {
+  const [profiles, setProfiles] = useState<Profile[]>(initialProfiles);
+  const [activeProfileId, setActiveProfileId] = useState<string>(initialProfiles[0].id);
+  const [isStealthMode, setIsStealthMode] = useState<boolean>(false);
+  const [pinInput, setPinInput] = useState<string>('');
+  const [showPanicConfirmation, setShowPanicConfirmation] = useState<boolean>(false);
+  const [statusMessage, setStatusMessage] = useState<string>('Welcome');
+
+  const activeProfile = useMemo(() => profiles.find(p => p.id === activeProfileId)!, [profiles, activeProfileId]);
+
+  useEffect(() => {
+    setStatusMessage(`Switched to ${activeProfile.name} profile.`);
+  }, [activeProfileId, activeProfile.name]);
+
+  const handlePinInput = (value: string) => {
+    if (pinInput.length >= 12) return;
+    setPinInput(prev => prev + value);
+  };
+
+  const handleDelete = () => {
+    setPinInput(prev => prev.slice(0, -1));
+  };
+
+  const resetPinInput = () => {
+    setTimeout(() => {
+        setPinInput('');
+        setShowPanicConfirmation(false);
+    }, 1500);
+  }
+
+  useEffect(() => {
+    if (pinInput.endsWith('#')) {
+      const suffix = pinInput.substring(pinInput.lastIndexOf('_') + 1);
+      const targetProfile = profiles.find(p => p.pinSuffix.toLowerCase() === `#${suffix.toLowerCase()}`);
+
+      if (targetProfile) {
+        setActiveProfileId(targetProfile.id);
+        setStatusMessage(`Successfully switched to ${targetProfile.name}.`);
+      } else if (pinInput.toLowerCase().endsWith('#panic')) {
+        setShowPanicConfirmation(true);
+        setStatusMessage('Confirm Emergency Wipe? Press OK.');
+      } else {
+        setStatusMessage('Invalid PIN suffix.');
+      }
+      resetPinInput();
+    }
+  }, [pinInput, profiles]);
+
+  const handleEmergencyWipe = () => {
+    setStatusMessage('Erasing all data...');
+    setShowPanicConfirmation(false);
+    setPinInput('');
+    // Simulate wipe delay
+    setTimeout(() => {
+        alert('SYSTEM ERROR 0xE0434352\nCritical failure. Please contact support.');
+        // In a real scenario, the app would close or restart.
+        // For this demo, we'll just reset.
+        window.location.reload();
+    }, 1000);
+  };
+
+  return (
+    <>
+      <Head>
+        <title>DEKOY | Privacy Concept</title>
+        <meta name="description" content="Interactive concept for DEKOY privacy app" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <main className="bg-slate-950 min-h-screen flex items-center justify-center p-4 font-sans text-white">
+        <div className="w-full max-w-md mx-auto bg-slate-900 rounded-3xl shadow-2xl shadow-black/50 overflow-hidden ring-1 ring-slate-800">
+          {/* Header */}
+          <header className="p-4 flex justify-between items-center border-b border-slate-800">
+            <div className="flex items-center gap-x-3">
+              <ShieldCheck className="w-8 h-8 text-sky-400" />
+              <h1 className="text-xl font-bold tracking-tight">DEKOY</h1>
+            </div>
+            <div className="flex items-center gap-x-2 p-2 rounded-full bg-slate-800">
+                <Calculator className={`w-5 h-5 transition-colors ${isStealthMode ? 'text-sky-400' : 'text-slate-500'}`} />
+                <div className="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+                    <input type="checkbox" checked={isStealthMode} onChange={() => setIsStealthMode(!isStealthMode)} name="stealth-toggle" id="stealth-toggle" className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer checked:right-0 checked:border-sky-500"/>
+                    <label htmlFor="stealth-toggle" className="toggle-label block overflow-hidden h-6 rounded-full bg-slate-700 cursor-pointer"></label>
+                </div>
+            </div>
+          </header>
+
+          {/* Main Content Area */}
+          <div className="p-6 space-y-6">
+            {/* Status Bar */}
+            <div className="text-center bg-slate-800/50 p-3 rounded-lg">
+                <p className="text-sm text-slate-300 font-medium">{statusMessage}</p>
+            </div>
+
+            {/* Active Profile Display */}
+            <div className="flex flex-col items-center gap-y-4">
+                <div className="w-32 h-32 rounded-full overflow-hidden ring-4 ring-offset-4 ring-offset-slate-900 ring-sky-500">
+                    {activeProfile.avatar}
+                </div>
+                <h2 className="text-2xl font-semibold text-slate-100">{activeProfile.name}</h2>
+                <div className="flex items-center gap-x-2 px-3 py-1 bg-slate-800 rounded-full text-xs text-slate-400">
+                    {activeProfile.isReal ? <Lock className="w-3 h-3 text-emerald-400"/> : <EyeOff className="w-3 h-3 text-amber-400"/>}
+                    <span>{activeProfile.isReal ? 'Real Profile' : 'Decoy Profile'}</span>
+                </div>
+            </div>
+
+            {/* App Grid */}
+            <div className="grid grid-cols-4 gap-x-2 gap-y-4 pt-4 border-t border-slate-800">
+              {activeProfile.apps.map(app => <AppIcon key={app.id} app={app} />)}
+            </div>
+
+            {/* PIN Pad Section */}
+            <div className="pt-4 border-t border-slate-800 space-y-4">
+                <div className="flex justify-between items-center bg-slate-800 p-3 rounded-lg">
+                    <span className="text-sm font-medium text-slate-400">Enter PIN Suffix:</span>
+                    <div className="font-mono text-lg tracking-widest text-sky-300 bg-slate-900 px-3 py-1 rounded-md">
+                        {pinInput || '...'}
+                    </div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                    {'123456789'.split('').map(num => <PinPadButton key={num} onClick={() => handlePinInput(num)}>{num}</PinPadButton>)}
+                    <PinPadButton onClick={() => handlePinInput('_')}>_</PinPadButton>
+                    <PinPadButton onClick={() => handlePinInput('0')}>0</PinPadButton>
+                    <PinPadButton onClick={handleDelete}><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path><line x1="18" y1="9" x2="12" y2="15"></line><line x1="12" y1="9" x2="18" y2="15"></line></svg></PinPadButton>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                    <button onClick={() => handlePinInput('#panic')} className="col-span-1 flex items-center justify-center gap-x-2 bg-red-800/80 hover:bg-red-700/80 text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                        <Power className="w-5 h-5"/> EMERGENCY WIPE
+                    </button>
+                    <button onClick={() => handlePinInput(activeProfile.pinSuffix.replace('#',''))} className="col-span-1 flex items-center justify-center gap-x-2 bg-sky-800/80 hover:bg-sky-700/80 text-white font-bold py-3 px-4 rounded-xl transition-colors">
+                        <Smartphone className="w-5 h-5"/> SWITCH PROFILE
+                    </button>
+                </div>
+            </div>
+          </div>
+
+          {/* Panic Confirmation Modal */}
+          {showPanicConfirmation && (
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+                <div className="bg-slate-800 rounded-2xl p-6 w-full max-w-sm border border-slate-700 shadow-lg">
+                    <h3 className="text-lg font-bold text-red-400">Confirm Emergency Wipe?</h3>
+                    <p className="text-sm text-slate-400 mt-2 mb-6">This action is irreversible and will securely erase all application data.</p>
+                    <div className="flex gap-x-4">
+                        <button onClick={() => { setShowPanicConfirmation(false); setPinInput(''); }} className="w-full bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold py-3 rounded-lg transition-colors">Cancel</button>
+                        <button onClick={handleEmergencyWipe} className="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-lg transition-colors">OK - Wipe Data</button>
+                    </div>
+                </div>
+            </div>
+          )}
+        </div>
+      </main>
+      <style jsx global>{`
+        .toggle-checkbox:checked { right: 0; border-color: #0ea5e9; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #0ea5e9; }
+      `}</style>
+    </>
+  );
+};
+
+export default DekoyAppPage;

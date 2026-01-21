@@ -1,0 +1,12 @@
+Why This Design Works:
+1. Immediate Hook: The game launches immediately in the browser (no download). The visual style matches the "Trapfirmations" / "Frequency Factory" aesthetic: dark, neon, glitchy, and expensive.
+2. Conversion Funnel:
+• Pre-Game: The title screen has immediate "Pre-Save" buttons.
+• In-Game: The "Hype Meter" mechanic psychologically links the music to success. If the music stops, you lose.
+• Post-Game: The "Shop Closed" screen is the primary marketing real estate. It pushes the user to Stream, Watch, or Buy Merch while their adrenaline is up from the high score.
+3. Visuals: I utilized the provided Bull character as a "Billboard" sprite within a 3D world (React Three Fiber). This preserves the specific artistic style you uploaded while giving it 3D depth and lighting effects.
+4. Audio Integration: The code automatically loops song.mp3.
+Next Steps:
+• Drop the files: Put the code and your assets in a folder.
+• Deploy: Upload to Vercel or GitHub Pages for a free, instant SSL-secured PWA.
+• Share: Post the link with the caption: "Can you keep the shop open? High score gets a free hoodie. 🐂🏺"

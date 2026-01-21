@@ -1,0 +1,129 @@
+{
+  "content_type": "Email Marketing Sequences",
+  "platform": "Email (MailChimp / ConvertKit / Klaviyo)",
+  "sequence_types": ["Welcome Series", "Artist Onboarding", "Engagement", "Re-engagement", "Weekly Digest"],
+  
+  "email_strategy": {
+    "subject_line_best_practices": [
+      "Keep under 50 characters",
+      "Create curiosity without clickbait",
+      "Personalize when possible",
+      "Test emoji usage",
+      "A/B test everything"
+    ],
+    "content_principles": [
+      "Mobile-first (70% open on mobile)",
+      "Clear single CTA per email",
+      "Conversational tone",
+      "Short paragraphs (2-3 sentences max)",
+      "Value before ask"
+    ],
+    "sending_schedule": {
+      "welcome_series": "Email 1: Immediate, Email 2: Day 2, Email 3: Day 5, Email 4: Day 10",
+      "weekly_digest": "Every Friday 10am EST",
+      "engagement_campaigns": "As triggered by user behavior",
+      "re_engagement": "After 14 days inactive"
+    }
+  },
+  
+  "sequences": {
+    "welcome_series": {
+      "sequence_name": "New User Onboarding",
+      "goal": "Activate new sign-ups, get first rating completed",
+      "total_emails": 4,
+      
+      "email_1": {
+        "send_timing": "Immediate upon sign-up",
+        "subject_line": "Welcome to the Factory - Your first shift starts now",
+        "preview_text": "Get paid for your music taste. Here's how...",
+        "content": "Subject: Welcome to the Factory - Your first shift starts now\n\nHey [First Name],\n\nYou just clocked into Frequency Factory. Smart move.\n\nHere's what happens next:\n\n1️⃣ YOU RATE TRACKS\nListen to submitted music. Rate Hook Strength (1-10) and Production Quality (1-10). That's it.\n\n2️⃣ YOU EARN TOKENS\nEvery rating = tokens. Accurate ratings = bonus tokens. Tokens buy real stuff in the Factory Store (merch, vinyl, exclusive access).\n\n3️⃣ YOU GET PROMOTED\nStart as Intern. Climb to Associate, Manager, Director, Executive. Higher rank = more perks, more respect, more influence.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n👉 TAKE YOUR FIRST ACTION:\n\nRate your first track right now. It takes 3 minutes. Click here: [LINK TO PLATFORM]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nWhy you should care:\n\nYour ratings help undiscovered artists get heard. The tracks you certify (rate 90+) get promoted to labels, playlists, and our YouTube channel.\n\nYou're not just clicking buttons. You're shaping careers.\n\nAnd you get rewarded for it.\n\nReady? Clock in: [LINK]\n\nWelcome to the factory,\nThe Frequency Factory Team\n\nP.S. - Top raters this week get featured on our Instagram. Make your mark.\n\n---\n[FOOTER: Social links, Unsubscribe]",
+        "cta": "Rate your first track",
+        "success_metric": "50%+ click-through rate to platform"
+      },
+      
+      "email_2": {
+        "send_timing": "Day 2 - If no ratings yet, adjust message",
+        "subject_line": "You're Intern rank - here's how to level up fast",
+        "preview_text": "Executive rank operatives earn 5x more tokens...",
+        "content": "Subject: You're Intern rank - here's how to level up fast\n\nHey [First Name],\n\n[IF COMPLETED RATINGS:]\nYou rated [X] tracks yesterday. Nice start.\n\nYour current stats:\n- Rank: Intern\n- Tokens: [X]\n- Accuracy: [X]%\n\nHere's how to accelerate your climb to Executive:\n\n[IF NO RATINGS YET:]\nYou haven't rated any tracks yet. That's cool - most people need a day to explore.\n\nBut here's what you're missing:\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n📈 THE RANK PROGRESSION PATH:\n\nIntern (You are here)\n↓ 10 accurate ratings\nAssociate (+50% token bonus)\n↓ 30 accurate ratings\nManager (+100% token bonus)\n↓ 100 accurate ratings  \nDirector (+200% token bonus)\n↓ 300 accurate ratings\nExecutive (+400% token bonus + special perks)\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nYou want to reach Associate today? Rate 10 tracks: [LINK]\n\nTips for fast progression:\n\n✓ Listen to the full track (don't rush)\n✓ Rate honestly (accuracy matters more than speed)\n✓ Use headphones (catch production details)\n✓ Compare to similar tracks in the genre\n✓ Trust your gut but verify with specifics\n\nThe factory rewards quality, not quantity.\n\nRate slow. Rate right. Rank up fast.\n\n👉 Continue rating: [LINK]\n\nSee you in the factory,\nFF Team\n\nP.S. - Associate rank unlocks the leaderboard. That's where the real competition begins.\n\n---\n[FOOTER]",
+        "cta": "Rate 10 tracks today",
+        "success_metric": "30%+ click-through rate"
+      },
+      
+      "email_3": {
+        "send_timing": "Day 5",
+        "subject_line": "This track just got Factory Certified because of you",
+        "preview_text": "Your ratings matter. Here's proof...",
+        "content": "Subject: This track just got Factory Certified because of you\n\nHey [First Name],\n\n[IF USER RATED CERTIFIED TRACKS:]\nRemember [Track Name] by @[Artist]? The one you rated [X]/10?\n\nIt just got Factory Certified.\n\nCommunity average: [X]/10\nYour rating: [X]/10\n\nYou called it. The crowd agreed. Now that artist is getting featured on our YouTube channel (100K+ views), sent to indie labels, and promoted across our network.\n\nThat wouldn't have happened without your rating.\n\nThat's the power you have here.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n[IF USER HASN'T RATED CERTIFIED TRACKS:]\nThis week, 3 tracks got Factory Certified (90+ community rating).\n\nThose artists are now:\n- Featured on our YouTube channel (100K+ views)\n- Sent to indie label A&R reps\n- Promoted to playlist curators\n- Highlighted across our social channels\n\nAll because the community recognized their talent.\n\nYou could be part of discovering the next one.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🎯 YOUR IMPACT:\n\nTracks you've rated: [X]\nTokens earned: [X]\nArtists you've helped: [X]\nCurrent rank: [Rank]\n\nYou're not just rating music. You're changing careers.\n\nKeep going: [LINK TO PLATFORM]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nWant to hear this week's certified tracks?\nCheck them out: [LINK TO YOUTUBE/SPOTIFY PLAYLIST]\n\nThen rate some more tracks. Maybe you'll spot next week's certified artist before anyone else.\n\n👉 Continue rating: [LINK]\n\nYou're making a difference,\nFF Team\n\nP.S. - Your accuracy score is [X]%. Keep it above 80% and you'll rank up 2x faster.\n\n---\n[FOOTER]",
+        "cta": "Rate more tracks / Listen to certified tracks",
+        "success_metric": "25%+ click-through rate + increased rating activity"
+      },
+      
+      "email_4": {
+        "send_timing": "Day 10",
+        "subject_line": "You're invited: Weekend Challenge (2x tokens)",
+        "preview_text": "Double your earnings this weekend...",
+        "content": "Subject: You're invited: Weekend Challenge (2x tokens)\n\nHey [First Name],\n\nYou've been rating for 10 days now. You get how the factory works.\n\nTime to level up.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🏆 THIS WEEKEND ONLY: DOUBLE TOKEN CHALLENGE\n\nThe Deal:\n- Rate 20+ tracks between Friday 5pm and Sunday 11:59pm\n- Earn DOUBLE tokens for every rating\n- Top 10 raters get exclusive \"Weekend Warrior\" badge\n- #1 rater gets featured in Monday's YouTube video\n\nThe Catch:\n- Your ratings must be ACCURATE (we track consistency)\n- No spam clicking random numbers\n- Quality + Quantity = Win\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nWhy we do this:\n\nArtists submit more tracks on weekends. We need extra hands to keep the queue moving. Weekend challenges let us reward our most dedicated operatives.\n\nThis is your chance to:\n✓ Double your token bank\n✓ Climb multiple ranks\n✓ Get recognized in the community\n✓ Discover dozens of new artists\n\nReady?\n\n👉 Accept the challenge: [LINK]\n⏰ Starts: Friday 5pm EST\n⏰ Ends: Sunday 11:59pm EST\n\nYour current stats:\n- Rank: [Rank]\n- Total ratings: [X]\n- Accuracy: [X]%\n- Tokens: [X]\n\nAfter this weekend, you could be:\n- 1-2 ranks higher\n- 500-1000 more tokens\n- On the leaderboard\n- Featured on our social channels\n\nLet's see what you're made of.\n\nClock in when ready: [LINK]\n\nGame on,\nFF Team\n\nP.S. - Check the leaderboard Monday morning to see where you landed.\n\n---\n[FOOTER]",
+        "cta": "Join Weekend Challenge",
+        "success_metric": "40%+ click-through rate + weekend activity spike"
+      }
+    },
+    
+    "weekly_digest": {
+      "sequence_name": "Friday New Music Digest",
+      "goal": "Re-engage users, showcase certified tracks, drive platform activity",
+      "send_day": "Friday 10am EST",
+      
+      "email_template": {
+        "subject_lines": [
+          "Factory Certified: 5 tracks you need to hear this week",
+          "This week's best new music (rated by 1000+ operatives)",
+          "Your weekly certified tracks playlist is here",
+          "New music Friday: Factory Certified edition"
+        ],
+        "content": "Subject: Factory Certified: [X] tracks you need to hear this week\n\nHey [First Name],\n\nAnother week, another batch of certified bangers.\n\nThis week, [X] tracks hit 90+ rating from the community. Here they are:\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🏆 FACTORY CERTIFIED THIS WEEK:\n\n1. @[Artist] - \"[Track]\" - 9.4/10\n   [20-word description of why it's good]\n   ▶️ Listen: [Spotify link]\n\n2. @[Artist] - \"[Track]\" - 9.2/10\n   [20-word description]\n   ▶️ Listen: [Spotify link]\n\n[Continue for all certified tracks]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n📊 THIS WEEK'S STATS:\n\nTracks submitted: [X]\nTotal ratings: [X]\nCertified tracks: [X]\nAverage rating: [X]/10\n\nTop operative this week: @[Username] - [X] ratings, [X]% accuracy\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🎯 YOUR WEEK:\n\nRatings completed: [X]\nTokens earned: [X]\nCurrent rank: [Rank]\nAccuracy: [X]%\n\n[IF INACTIVE:]\nWe missed you this week! Artists are waiting for your ratings.\n\n👉 Rate tracks now: [LINK]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🔥 WHAT'S COMING NEXT WEEK:\n\n[Tease any challenges, features, or special events]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n🎵 FULL CERTIFIED PLAYLIST:\n\nAll certified tracks in one playlist: [Spotify/Apple Music link]\n\nSave it. Share it. Support these artists.\n\nAnd keep rating. Next week's certified tracks need your input.\n\n👉 Clock in: [LINK]\n\nHave a great weekend,\nFF Team\n\nP.S. - Which certified track was your favorite? Hit reply and let me know. I read every response.\n\n---\n[FOOTER]",
+        "cta": "Listen to playlist / Rate tracks",
+        "success_metric": "20%+ open rate, 15%+ click-through rate"
+      }
+    },
+    
+    "re_engagement": {
+      "sequence_name": "Win Back Inactive Users",
+      "trigger": "No activity for 14 days",
+      "goal": "Re-activate dormant users",
+      
+      "email": {
+        "subject_line": "We miss you (and so do the artists)",
+        "preview_text": "New features + double tokens = Come back",
+        "content": "Subject: We miss you (and so do the artists)\n\nHey [First Name],\n\nIt's been [X] days since you last rated a track.\n\nA lot has changed:\n\n✨ NEW FEATURES:\n- Rating comparison tool (see how your taste matches the crowd)\n- Enhanced token rewards (earning 2x faster now)\n- Improved queue system (better track variety)\n- New badges and achievements\n\n🎵 WHAT YOU'VE MISSED:\n\n[X] tracks got certified\n[X] artists discovered\n[X] tokens you could have earned\n\nThe factory kept running. But it's not the same without you.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n💰 SPECIAL COMEBACK OFFER:\n\nRate 5 tracks in the next 48 hours → Get 200 bonus tokens.\n\nThat's it. No catch. Just come back.\n\n👉 Claim your bonus: [LINK]\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\nWhy come back?\n\nBecause right now, there's an artist waiting for YOUR rating. Your opinion. Your feedback.\n\nYou signed up because you love music and have good taste.\n\nProve it.\n\n[LINK TO PLATFORM]\n\nWe'll see you in the factory,\nFF Team\n\nP.S. - If you're not interested anymore, I get it. Just hit unsubscribe and we'll stop emailing. No hard feelings.\n\n---\n[FOOTER]",
+        "cta": "Claim comeback bonus",
+        "success_metric": "10%+ reactivation rate"
+      }
+    }
+  },
+  
+  "email_copywriting_tips": {
+    "subject_lines": [
+      "Use numbers (\"3 tracks that...\", \"You earned 247 tokens\")",
+      "Create urgency (\"This weekend only\", \"24 hours left\")",
+      "Personalize (\"[Name], you're almost Executive rank\")",
+      "Ask questions (\"Ready to discover your next favorite artist?\")",
+      "Be direct (\"New certified tracks\", \"Your weekly digest\")"
+    ],
+    "body_copy": [
+      "Start with 'Hey [First Name]' - conversational",
+      "First line must hook immediately",
+      "Use short paragraphs (mobile readers)",
+      "Break up text with lines (━━━━━━)",
+      "One clear CTA per email",
+      "End with signature from team, not generic company",
+      "P.S. always - people read it"
+    ],
+    "ctas": [
+      "Use action verbs (Rate, Discover, Claim, Join)",
+      "Make it specific (\"Rate your first track\" not \"Get started\")",
+      "Create urgency when appropriate",
+      "Use buttons for primary CTA, links for secondary"
+    ]
+  }
+}

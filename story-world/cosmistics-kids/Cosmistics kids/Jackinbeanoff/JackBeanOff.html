@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- Allow pinch-zoom for accessibility -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jack and The Bean Off</title>
+
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load TensorFlow.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+  <!-- Load Tone.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+  <!-- PWA Manifest & Theme -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#6366f1">
+
+  <!-- iOS Home Screen Meta & Icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <!-- Standard Favicons -->
+  <link rel="icon" href="favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="favicon-16x16.png" sizes="16x16" type="image/png">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen p-4">
+
+  <!-- Register service worker -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('/sw.js')
+        .catch(e => console.warn('SW registration failed:', e));
+    }
+  </script>
+
+  <!-- Skip link for keyboard users -->
+  <a href="#start-title"
+     class="sr-only focus:not-sr-only fixed z-50 top-2 left-2 bg-white text-gray-900 p-3 rounded-lg shadow-md">
+    Skip to game menu
+  </a>
+
+  <!-- No-JS fallback -->
+  <noscript>
+    <div class="fixed top-0 left-0 w-full p-4 bg-red-900 text-white text-center z-[1000]">
+      JavaScript is required to play the game. Please enable it and reload.
+    </div>
+  </noscript>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen" class="screen active flex flex-col justify-center items-center space-y-4"
+       role="region" aria-labelledby="loading-title">
+    <h2 id="loading-title" class="sr-only">Loading</h2>
+    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-400"></div>
+    <p class="text-lg text-gray-300">Preparing... Loading model and assets</p>
+  </div>
+
+  <!-- Subliminal Visual Flash -->
+  <div id="visual-flash"></div>
+
+  <!-- NPC Turn Overlay -->
+  <div id="npc-overlay" class="screen" role="dialog" aria-labelledby="npc-name">
+    <div class="flex flex-col justify-center items-center space-y-4">
+      <h2 id="npc-name" class="text-4xl font-bold text-yellow-400">Jack's Turn...</h2>
+      <div class="animate-spin rounded-full h-12 w-12 border-t-4 border-yellow-400"></div>
+      <p id="npc-status" class="text-lg text-gray-300">...is trying the sequence...</p>
+    </div>
+  </div>
+
+  <!-- Start Menu -->
+  <div id="screen-start" class="screen p-4 space-y-6" role="region" aria-labelledby="start-title">
+    <h1 id="start-title" class="text-5xl font-bold text-indigo-400 text-center" tabindex="-1">
+      Jack and The Bean Off
+    </h1>
+    <p class="text-lg text-gray-300 text-center italic">"can you finish them"</p>
+
+    <!-- Mode Selection -->
+    <div class="w-full max-w-sm space-y-4 pt-4">
+      <button id="btn-start-solo"
+              class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg active:btn-active">
+        Solo Challenge
+      </button>
+      <button id="btn-start-rival"
+              class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg active:btn-active">
+        Rival Mode (vs. Jack/Bean)
+      </button>
+      <button id="btn-start-rando"
+              class="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg active:btn-active">
+        Rando Mode (No Training)
+      </button>
+    </div>
+
+    <!-- Subliminal Toggle -->
+    <div class="w-full max-w-sm pt-4">
+      <label for="toggle-subliminals" class="flex items-center justify-center space-x-2 text-gray-400">
+        <input type="checkbox" id="toggle-subliminals"
+               class="form-checkbox h-5 w-5 bg-gray-700 border-gray-600 rounded text-indigo-500 focus:ring-indigo-500"
+               checked>
+        <span>Enable Subliminal Cues</span>
+      </label>
+      <p class="text-xs text-gray-500 text-center mt-2">
+        (Flashes faint images/tones during predictions)
+      </p>
+    </div>
+  </div>
+
+  <!-- Mode Select Screen -->
+  <div id="screen-mode-select" class="screen p-4 space-y-6" role="region" aria-labelledby="mode-select-title">
+    <h2 id="mode-select-title" class="text-3xl font-bold text-center" tabindex="-1">Select Game</h2>
+    <p class="text-gray-400 text-center">Which game do you want to play?</p>
+    <button id="btn-select-shake"
+            class="w-full max-w-sm bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg active:btn-active">
+      Shaking Game
+    </button>
+    <button id="btn-select-rub"
+            class="w-full max-w-sm bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-6 rounded-lg shadow-lg active:btn-active">
+      Rubbing Game
+    </button>
+    <p id="mode-select-status" class="text-red-400 text-sm mt-4 text-center h-5" aria-live="assertive"></p>
+    <button class="btn-back text-gray-400 mt-4">Back to Menu</button>
+  </div>
+
+  <!-- Sensor Permission -->
+  <div id="screen-permission" class="screen p-4 space-y-4" role="region" aria-labelledby="permission-title">
+    <h2 id="permission-title" class="text-2xl font-semibold mb-4 text-center" tabindex="-1">
+      Connect to Sensors
+    </h2>
+    <p class="text-gray-400 mb-4 text-center max-w-md">
+      This game needs permission to access your phone's motion sensors. Required for iOS 13+.
+    </p>
+    <button id="btn-permission"
+            class="w-full max-w-sm bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg shadow-md active:btn-active">
+      Connect to Sensors
+    </button>
+    <p id="permission-status" class="text-red-400 text-sm mt-4 text-center" aria-live="assertive"></p>
+    <button class="btn-back text-gray-400 mt-4">Back to Menu</button>
+  </div>
+
+  <!-- Calibration / Training -->
+  <div id="screen-calibrate" class="screen p-4 space-y-4 justify-start pt-12" role="region"
+       aria-labelledby="calibrate-title">
+    <h2 id="calibrate-title" class="text-3xl font-bold text-center" tabindex="-1">
+      Calibrate: <span id="calibrate-gesture-name"></span>
+    </h2>
+
+    <div class="w-full max-w-sm">
+      <label for="model-name-input" class="text-sm font-medium text-gray-300">Name Your Model:</label>
+      <input type="text" id="model-name-input"
+             class="w-full p-3 mt-1 bg-gray-700 text-white rounded-lg border border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+             placeholder="e.g., MyVibe, TheMaster, etc.">
+    </div>
+
+    <p id="calibrate-error" class="text-red-400 text-sm text-center h-5" aria-live="assertive"></p>
+
+    <button id="btn-load-model"
+            class="w-full max-w-sm bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-4 rounded-lg shadow-md active:btn-active"
+            style="display: none;">
+      Load Saved Model & Play
+    </button>
+
+    <p class="text-gray-400 mb-2 text-center">...or train a new one. Perform the gesture when you tap.</p>
+
+    <div class="w-full max-w-sm space-y-3">
+      <button id="btn-record-slow"
+              class="btn-record w-full bg-blue-600 hover:bg-blue-700 font-bold py-3 px-4 rounded-lg shadow-md active:btn-active"
+              data-label="0" aria-label="Record Slow Gesture">
+        Record 'Slow'
+      </button>
+      <button id="btn-record-medium"
+              class="btn-record w-full bg-green-600 hover:bg-green-700 font-bold py-3 px-4 rounded-lg shadow-md active:btn-active"
+              data-label="1" aria-label="Record Medium Gesture">
+        Record 'Medium'
+      </button>
+      <button id="btn-record-fast"
+              class="btn-record w-full bg-red-600 hover:bg-red-700 font-bold py-3 px-4 rounded-lg shadow-md active:btn-active"
+              data-label="2" aria-label="Record Fast Gesture">
+        Record 'Fast'
+      </button>
+    </div>
+
+    <div class="mt-4 text-sm text-gray-300 text-center">
+      <p>Data collected: <span id="data-count" class="font-bold text-yellow-400">0</span></p>
+      <p id="record-status" class="text-yellow-400 h-5" aria-live="polite"></p>
+    </div>
+
+    <button id="btn-train"
+            class="w-full max-w-sm bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg shadow-md active:btn-active disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+            disabled aria-label="Train Model and Start Game">
+      Train & Start Game
+    </button>
+    <pre id="train-status"
+         class="w-full max-w-sm mt-2 p-3 bg-gray-800 text-gray-300 rounded-md shadow-inner text-xs font-mono overflow-auto"
+         style="height: 100px;" aria-live="polite" placeholder="Training status..."></pre>
+    <button class="btn-back text-gray-400 mt-4" aria-label="Back to Menu">Back to Menu</button>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="screen-game" class="screen p-4 space-y-5 justify-between" role="region"
+       aria-labelledby="game-prompt-title">
+    <header class="w-full flex justify-between items-center max-w-md">
+      <h2 class="text-xl font-bold">Score: <span id="score" class="text-green-400">0</span></h2>
+      <h2 class="text-xl font-bold"><span id="reward-label">Splooge</span>: <span id="reward-counter"
+                                                                                class="text-yellow-400">0</span>
+      </h2>
+      <button class="btn-back text-gray-400" aria-label="Exit Game">Exit</button>
+    </header>
+
+    <div class="flex-grow flex flex-col justify-center items-center space-y-4 w-full max-w-md">
+      <h3 id="model-name-display" class="text-lg font-medium text-indigo-300 transition-opacity duration-500"></h3>
+
+      <h2 id="game-prompt-title"
+          class="text-2xl font-bold text-center text-yellow-400 mb-2"
+          tabindex="-1">
+        Perform this sequence:
+      </h2>
+      <div id="challenge-container"
+           class="w-full flex justify-center items-center space-x-2 flex-wrap">
+        <!-- Steps generated by JS -->
+      </div>
+      <div id="game-feedback" class="text-3xl font-medium text-white h-10 mt-4" aria-live="polite"></div>
+    </div>
+
+    <div class="w-full max-w-md bg-gray-700 rounded-full h-2.5 overflow-hidden">
+      <div id="game-timer-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 100%"></div>
+    </div>
+
+    <div class="w-full max-w-md space-y-4">
+      <div>
+        <div class="text-gray-400 text-sm mb-1">LIVE DATA (12-SAMPLE WINDOW)</div>
+        <div id="sample-visualizer" class="w-full"></div>
+      </div>
+      <div id="haptic-visualizer"
+           class="w-full h-12 rounded-lg bg-indigo-500 opacity-20 flex items-center justify-center">
+        <span id="haptic-status" class="text-sm text-indigo-100 font-medium">PREDICTION: ---</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JS -->
+  <script src="main.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUSH: The Voiced Ones - Franchise Roadmap</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        max-height: 720px;
+        background: #0A0A0F;
+        color: #FFFFFF;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .title {
+        color: #C2E7F0;
+        font-size: 72px;
+        font-weight: bold;
+        text-shadow: 0 0 15px rgba(194, 231, 240, 0.5);
+      }
+      
+      .subtitle {
+        color: #FFFFFF;
+        font-size: 36px;
+        font-weight: 300;
+      }
+      
+      .body-text {
+        font-size: 24px;
+      }
+      
+      .accent {
+        color: #FFBF40;
+      }
+      
+      .sound-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        opacity: 0.2;
+        z-index: 0;
+      }
+      
+      .opal-gradient {
+        background: linear-gradient(45deg, #C2E7F0, #C9A6D6, #FFBF40, #0ADFEF);
+        background-size: 400% 400%;
+        animation: gradient 8s ease infinite;
+      }
+      
+      @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .content-wrapper {
+        z-index: 10;
+        position: relative;
+      }
+      
+      .timeline-point {
+        position: relative;
+        padding-left: 30px;
+        margin-bottom: 20px;
+      }
+      
+      .timeline-point::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+      }
+      
+      .timeline-point::after {
+        content: '';
+        position: absolute;
+        left: 8px;
+        top: 50%;
+        width: 2px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+      
+      .timeline-point:last-child::after {
+        display: none;
+      }
+      
+      .timeline-year {
+        font-weight: bold;
+        font-size: 20px;
+        margin-bottom: 4px;
+      }
+      
+      .timeline-content {
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container grid grid-rows-1">
+      <!-- Sound wave decoration -->
+      <svg class="sound-wave" viewBox="0 0 1280 80" preserveAspectRatio="none">
+        <path d="M0,40 Q320,0 640,40 Q960,80 1280,40 L1280,80 L0,80 Z" fill="#C2E7F0"></path>
+      </svg>
+      
+      <div class="content-wrapper flex justify-evenly items-center p-12">
+        <div class="w-2/5 flex flex-col justify-center">
+          <h1 class="title mb-4">Franchise Roadmap</h1>
+          <h2 class="subtitle mb-6">5-Year Expansion Plan</h2>
+          
+          <div class="body-text">
+            <p class="mb-6">A strategic rollout of content and experiences to build the HUSH universe into a global phenomenon.</p>
+            
+            <div class="timeline-point" style="--point-color: #C2E7F0;">
+              <div class="timeline-point::before" style="background-color: #C2E7F0;"></div>
+              <div class="timeline-year accent">2026</div>
+              <div class="timeline-content">Book 1 Launch + Website + Social Media Campaign</div>
+            </div>
+            
+            <div class="timeline-point" style="--point-color: #C9A6D6;">
+              <div class="timeline-point::before" style="background-color: #C9A6D6;"></div>
+              <div class="timeline-year accent">2027</div>
+              <div class="timeline-content">Book 2 + Audiobook Series + Merchandise Line</div>
+            </div>
+            
+            <div class="timeline-point" style="--point-color: #0ADFEF;">
+              <div class="timeline-point::before" style="background-color: #0ADFEF;"></div>
+              <div class="timeline-year accent">2028</div>
+              <div class="timeline-content">Book 3 + Streaming Series Pilot + Mobile Game</div>
+            </div>
+            
+            <div class="timeline-point" style="--point-color: #FF9900;">
+              <div class="timeline-point::before" style="background-color: #FF9900;"></div>
+              <div class="timeline-year accent">2029</div>
+              <div class="timeline-content">Book 4 + Full Series Season 1 + Comic Series</div>
+            </div>
+            
+            <div class="timeline-point" style="--point-color: #FFBF40;">
+              <div class="timeline-point::before" style="background-color: #FFBF40;"></div>
+              <div class="timeline-year accent">2030</div>
+              <div class="timeline-content">Book 5 + Feature Film Development + Global Event</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="w-3/5 flex justify-center items-center">
+          <div style="height: 500px; width: 100%;">
+            <canvas id="roadmapChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script>
+      // Initialize the roadmap chart
+      document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('roadmapChart').getContext('2d');
+        
+        // Custom plugin to draw connecting lines between data points
+        const connectingLinesPlugin = {
+          id: 'connectingLines',
+          beforeDraw: function(chart) {
+            if (chart.config.type !== 'bubble') {
+              return;
+            }
+            
+            const ctx = chart.ctx;
+            const xAxis = chart.scales.x;
+            const yAxis = chart.scales.y;
+            const datasets = chart.data.datasets;
+            
+            ctx.save();
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            // Draw connecting lines between points
+            for (let i = 0; i < datasets.length; i++) {
+              const dataset = datasets[i];
+              ctx.strokeStyle = dataset.borderColor;
+              
+              for (let j = 0; j < dataset.data.length - 1; j++) {
+                const current = dataset.data[j];
+                const next = dataset.data[j + 1];
+                
+                ctx.beginPath();
+                ctx.moveTo(xAxis.getPixelForValue(current.x), yAxis.getPixelForValue(current.y));
+                ctx.lineTo(xAxis.getPixelForValue(next.x), yAxis.getPixelForValue(next.y));
+                ctx.stroke();
+              }
+            }
+            
+            ctx.restore();
+          }
+        };
+        
+        // Create the chart
+        const roadmapChart = new Chart(ctx, {
+          type: 'bubble',
+          plugins: [connectingLinesPlugin],
+          data: {
+            datasets: [
+              {
+                label: 'Book Series',
+                data: [
+                  { x: 2026, y: 1, r: 15 },
+                  { x: 2027, y: 2, r: 15 },
+                  { x: 2028, y: 3, r: 15 },
+                  { x: 2029, y: 4, r: 15 },
+                  { x: 2030, y: 5, r: 15 }
+                ],
+                backgroundColor: '#C2E7F0',
+                borderColor: '#C2E7F0',
+                borderWidth: 2
+              },
+              {
+                label: 'Digital Content',
+                data: [
+                  { x: 2026, y: 1.5, r: 10 },
+                  { x: 2027, y: 2.5, r: 12 },
+                  { x: 2028, y: 3.5, r: 15 },
+                  { x: 2029, y: 4.5, r: 18 },
+                  { x: 2030, y: 5.5, r: 20 }
+                ],
+                backgroundColor: '#C9A6D6',
+                borderColor: '#C9A6D6',
+                borderWidth: 2
+              },
+              {
+                label: 'Media Adaptations',
+                data: [
+                  { x: 2026, y: 0.5, r: 5 },
+                  { x: 2027, y: 1.5, r: 8 },
+                  { x: 2028, y: 2.5, r: 12 },
+                  { x: 2029, y: 3.5, r: 18 },
+                  { x: 2030, y: 4.5, r: 25 }
+                ],
+                backgroundColor: '#FFBF40',
+                borderColor: '#FFBF40',
+                borderWidth: 2
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                min: 2025.5,
+                max: 2030.5,
+                ticks: {
+                  color: '#FFFFFF',
+                  callback: function(value) {
+                    return value;
+                  }
+                },
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
+                },
+                title: {
+                  display: true,
+                  text: 'Year',
+                  color: '#FFFFFF',
+                  font: {
+                    size: 14
+                  }
+                }
+              },
+              y: {
+                min: 0,
+                max: 6,
+                ticks: {
+                  color: '#FFFFFF',
+                  callback: function(value) {
+                    return ['', 'Launch', 'Growth', 'Expansion', 'Mainstream', 'Global', ''][value];
+                  }
+                },
+                grid: {
+                  color: 'rgba(255, 255, 255, 0.1)'
+                },
+                title: {
+                  display: true,
+                  text: 'Franchise Development Stage',
+                  color: '#FFFFFF',
+                  font: {
+                    size: 14
+                  }
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  color: '#FFFFFF',
+                  font: {
+                    size: 14
+                  },
+                  boxWidth: 15
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const year = context.parsed.x;
+                    const stage = ['Launch', 'Growth', 'Expansion', 'Mainstream', 'Global'][Math.floor(context.parsed.y) - 1];
+                    const label = context.dataset.label;
+                    
+                    let content = '';
+                    if (label === 'Book Series') {
+                      content = `Book ${Math.floor(context.parsed.y)}`;
+                    } else if (label === 'Digital Content') {
+                      const digitalContent = ['Website & Social', 'Audiobooks & Merch', 'Mobile Game', 'AR Experience', 'Global Platform'][Math.floor(context.parsed.y) - 1];
+                      content = digitalContent;
+                    } else if (label === 'Media Adaptations') {
+                      const mediaContent = ['Development', 'Podcast Series', 'Streaming Pilot', 'Full Series', 'Feature Film'][Math.floor(context.parsed.y) - 1];
+                      content = mediaContent;
+                    }
+                    
+                    return `${year}: ${label} - ${content}`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+

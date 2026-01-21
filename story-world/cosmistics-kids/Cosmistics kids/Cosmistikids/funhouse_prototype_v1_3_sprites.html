@@ -1,0 +1,340 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no" />
+<title>Cosmistics Kids • Funhouse Prototype v1.3 (Sprite Loader)</title>
+<style>
+  :root{
+    --bg:#0b1124; --fg:#eaf0ff; --panel:#0f1a36; --line:#233466;
+    --accent:#82f1ff; --accent2:#8ef3c5; --gold:#ffd86b; --ok:#9cff6b; --bad:#ff6b8f;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color: transparent;}
+  html,body{height:100%;margin:0;background:radial-gradient(1200px 800px at 50% -10%, #152557 0%, var(--bg) 60%);
+            color:var(--fg); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial;}
+  .wrap{max-width:520px; margin:0 auto; padding:12px;}
+  header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+  .brand{display:flex;gap:10px;align-items:center}
+  .logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#1d2c5a,#14234a);
+        border:1px solid #2a3b73;display:grid;place-items:center;font-weight:900}
+  .stat{padding:6px 8px;border:1px solid var(--line);background:var(--panel);border-radius:10px;font-weight:800}
+  main{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:10px;position:relative}
+  #arena{width:100%;aspect-ratio:9/16;border:1px solid var(--line);border-radius:14px;background:
+     radial-gradient(200px 120px at 20% 15%, rgba(130,241,255,.12), transparent 60%),
+     radial-gradient(220px 140px at 80% 30%, rgba(142,243,197,.14), transparent 60%),
+     linear-gradient(180deg,#0e1730,#0b1226);
+     position:relative; overflow:hidden; touch-action:none}
+  .hud{display:flex; gap:8px; align-items:center; margin:6px 0 8px}
+  .bar{flex:1; height:10px; background:#0e1730; border:1px solid var(--line); border-radius:8px; overflow:hidden}
+  .fill{height:100%; width:0; background:linear-gradient(90deg,var(--accent),var(--accent2))}
+  .level{padding:4px 8px; border:1px solid var(--line); background:var(--panel); border-radius:10px; font-weight:800}
+  .affirm{position:absolute; top:8px; left:50%; transform:translateX(-50%); padding:8px 12px; border-radius:12px;
+          background:rgba(0,0,0,.45); border:1px solid rgba(255,255,255,.12); font-weight:800; letter-spacing:.2px;
+          opacity:0; pointer-events:none; transition:opacity .2s, transform .2s}
+  .affirm.show{opacity:1; transform:translate(-50%, 0)}
+  .ui{position:absolute; inset:0; pointer-events:none}
+  .assist{position:absolute; right:10px; bottom:12px; width:76px; height:76px; border-radius:50%;
+          background:radial-gradient(circle at 35% 35%, #fff6, transparent 65%), linear-gradient(180deg,#12214a,#0f1730);
+          border:2px solid var(--line); display:grid; place-items:center; font-weight:900; pointer-events:auto}
+  .assist.cool{filter:grayscale(.7) brightness(.7)}
+  .coolRing{position:absolute; inset:3px; border-radius:50%; border:3px solid rgba(255,255,255,.18);
+            mask: conic-gradient(#fff calc(var(--p,0)*1%), transparent 0)}
+  .joy{position:absolute; left:10px; bottom:10px; width:120px; height:120px; pointer-events:auto}
+  .joy-base{position:absolute; inset:0; border-radius:50%; background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.15)}
+  .joy-stick{position:absolute; width:56px; height:56px; border-radius:50%; left:32px; top:32px;
+             background:linear-gradient(180deg,#1a2b52,#0f1a36); border:2px solid var(--line)}
+  .entity{position:absolute; will-change:transform}
+  .orb{width:18px; height:18px; border-radius:50%; background:radial-gradient(circle, #fff 0, #ffd86b 40%, transparent 70%);
+        filter: drop-shadow(0 0 8px rgba(255,216,107,.5))}
+  .novaBall{width:30px;height:30px;border-radius:50%;
+        background:radial-gradient(circle at 35% 35%, #fff9 0%, #ffb26b 45%, #ff5f2e 90%);
+        box-shadow: 0 0 22px rgba(255,216,107,.45)}
+  .toast{position:absolute; bottom:8px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,.4);
+         border:1px solid rgba(255,255,255,.15); padding:6px 10px; border-radius:10px; font-size:12px; opacity:.9}
+  /* Loader panel */
+  .loader{margin:10px 0; padding:10px; background:var(--panel); border:1px solid var(--line); border-radius:12px}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  input[type="number"]{width:80px; padding:6px 8px; background:#0d1a36; color:var(--fg); border:1px solid var(--line); border-radius:8px}
+  input[type="file"]{width:100%;}
+  .btn{background:linear-gradient(180deg,#121c3a,#0f1730); border:1px solid var(--line); color:var(--fg);
+       padding:8px 12px; border-radius:10px; font-weight:800}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo">⚡</div>
+      <div>
+        <div style="font-weight:900;letter-spacing:.4px">Cosmistics Kids • Funhouse</div>
+        <div style="font-size:12px;opacity:.8">v1.3 • Sprite Loader • Nova Assist • Quency affirmations</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;align-items:center">
+      <span class="stat">⭐ FP: <b id="fp">0</b></span>
+      <span class="stat">🔥 Streak: <b id="streak">0</b></span>
+    </div>
+  </header>
+
+  <!-- SPRITE LOADER PANEL -->
+  <section class="loader">
+    <strong>Drop in your sprite sheets (PNG):</strong>
+    <div class="grid" style="margin-top:8px">
+      <div>
+        <div class="row"><span>Cosmo spritesheet</span></div>
+        <input id="cosmoFile" type="file" accept="image/png" />
+        <div class="row">
+          <label>Frame W <input id="c_w" type="number" value="128"></label>
+          <label>Frame H <input id="c_h" type="number" value="128"></label>
+          <label>Cols <input id="c_cols" type="number" value="4"></label>
+          <label>Rows <input id="c_rows" type="number" value="2"></label>
+          <label>FPS <input id="c_fps" type="number" value="8"></label>
+        </div>
+        <button id="c_apply" class="btn">Apply Cosmo</button>
+      </div>
+      <div>
+        <div class="row"><span>Nova spritesheet (optional)</span></div>
+        <input id="novaFile" type="file" accept="image/png" />
+        <div class="row">
+          <label>Frame W <input id="n_w" type="number" value="96"></label>
+          <label>Frame H <input id="n_h" type="number" value="96"></label>
+          <label>Cols <input id="n_cols" type="number" value="4"></label>
+          <label>Rows <input id="n_rows" type="number" value="2"></label>
+          <label>FPS <input id="n_fps" type="number" value="10"></label>
+        </div>
+        <button id="n_apply" class="btn">Apply Nova</button>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:12px;opacity:.85">
+      Tip: If your sheet is 4x2 frames at 128×128 each, leave defaults and click Apply. The game will animate instantly.
+    </div>
+  </section>
+
+  <main>
+    <div class="hud">
+      <div class="level">Lv <span id="lv">1</span></div>
+      <div class="bar"><div id="lvfill" class="fill"></div></div>
+      <div class="level">XP <span id="xp">0</span></div>
+    </div>
+
+    <div id="arena">
+      <canvas id="game" width="400" height="711" style="display:none"></canvas>
+      <div id="affirm" class="affirm"></div>
+      <div id="ui" class="ui">
+        <div id="assist" class="assist">
+          <div class="coolRing" id="ring"></div>
+          NOVA
+        </div>
+        <div class="joy" id="joy">
+          <div class="joy-base"></div>
+          <div class="joy-stick" id="stick"></div>
+        </div>
+      </div>
+    </div>
+    <div id="toast" class="toast" style="display:none"></div>
+  </main>
+</div>
+
+<script>
+(()=>{
+  const $=s=>document.querySelector(s);
+  const rng=(a,b)=>a+Math.random()*(b-a);
+  const clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+
+  // --- STATE ---
+  const canvas = $('#game'); const ctx = canvas.getContext('2d');
+  const arena = $('#arena');
+  let W=canvas.width, H=canvas.height;
+  function resizeCanvas(){
+    const r = arena.getBoundingClientRect();
+    // maintain 9:16
+    const w = r.width, h = r.width*16/9;
+    canvas.style.width = w+'px'; canvas.style.height = (h)+'px';
+  }
+  new ResizeObserver(resizeCanvas).observe(arena); resizeCanvas();
+
+  const state = {
+    fp:+(localStorage.getItem('ck_fp')||0),
+    streak:+(localStorage.getItem('ck_streak')||0),
+    lv:+(localStorage.getItem('ck_lv')||1),
+    xp:+(localStorage.getItem('ck_xp')||0),
+    xpTo:v=>40+(v-1)*30
+  };
+  function save(){
+    localStorage.setItem('ck_fp',state.fp);
+    localStorage.setItem('ck_streak',state.streak);
+    localStorage.setItem('ck_lv',state.lv);
+    localStorage.setItem('ck_xp',state.xp);
+    $('#fp').textContent=state.fp; $('#streak').textContent=state.streak;
+    $('#lv').textContent=state.lv; $('#xp').textContent=state.xp;
+    const pct = clamp(state.xp/state.xpTo(state.lv),0,1); $('#lvfill').style.width = (pct*100)+'%';
+  } save();
+
+  // --- AFFIRM ---
+  const affirmByEvent = {
+    start:["Frequency’s live — let’s light it up!","You’re already a winner for showing up."],
+    pickup:["Your light just got brighter!","Stack that energy — you’re unstoppable!","Shiny find! You’re glowing."],
+    smallCombo:["Nice flow, keep it going!","You’re in the rhythm now!"],
+    bigCombo:["Double the power, double the shine!","Cosmo × Nova — next-level brilliance!"],
+    level:["Level unlocked! You’re a champion in motion.","Look at you leveling up — that’s what champions do!"]
+  };
+  function affirm(ev){
+    const pool = affirmByEvent[ev]||["Shine on!"];
+    const line = pool[Math.floor(Math.random()*pool.length)];
+    const box = $('#affirm'); box.textContent=line; box.classList.add('show');
+    clearTimeout(box._t); box._t=setTimeout(()=>box.classList.remove('show'),1400);
+  }
+
+  // --- INPUT (Virtual joystick) ---
+  const joy=$('#joy'), stick=$('#stick');
+  let vx=0, vy=0, speed=2.2;
+  function setStick(dx,dy){
+    const rad=Math.min(36,Math.hypot(dx,dy)), ang=Math.atan2(dy,dx);
+    stick.style.left=(32+Math.cos(ang)*rad)+'px'; stick.style.top=(32+Math.sin(ang)*rad)+'px';
+    const m=rad/36; vx=Math.cos(ang)*speed*m; vy=Math.sin(ang)*speed*m;
+  }
+  joy.addEventListener('touchstart',e=>{
+    const r=joy.getBoundingClientRect(), t=e.touches[0];
+    setStick(t.clientX-(r.left+60), t.clientY-(r.top+60));
+  },{passive:true});
+  joy.addEventListener('touchmove',e=>{
+    const r=joy.getBoundingClientRect(), t=e.touches[0];
+    setStick(t.clientX-(r.left+60), t.clientY-(r.top+60));
+  },{passive:true});
+  ['touchend','touchcancel'].forEach(()=>{vx=vy=0; stick.style.left='32px'; stick.style.top='32px';});
+
+  // Keyboard fallback
+  const keys={}; window.addEventListener('keydown',e=>keys[e.key]=true);
+  window.addEventListener('keyup',e=>keys[e.key]=false);
+  function keysMove(){
+    const kx=(+!!(keys.ArrowRight||keys.d))-(+!!(keys.ArrowLeft||keys.a));
+    const ky=(+!!(keys.ArrowDown||keys.s))-(+!!(keys.ArrowUp||keys.w));
+    const m=Math.hypot(kx,ky)||1; vx=(kx/m)*speed; vy=(ky/m)*speed;
+  }
+
+  // --- SPRITE LOADER + ANIM ---
+  class Sprite {
+    constructor(){ this.img=null; this.frameW=64; this.frameH=64; this.cols=1; this.rows=1; this.fps=8; this.t=0; this.x=160; this.y=520; this.scale=1; }
+    get ready(){ return !!this.img; }
+    loadFromFile(file, onload){
+      const reader=new FileReader();
+      reader.onload=()=>{ const img=new Image(); img.onload=()=>{ this.img=img; onload&&onload(); }; img.src=reader.result; };
+      reader.readAsDataURL(file);
+    }
+    draw(dt){
+      if(!this.img) return;
+      this.t += dt/1000;
+      const frames = this.cols*this.rows;
+      const frame = Math.floor(this.t*this.fps)%frames;
+      const cx = frame % this.cols;
+      const cy = Math.floor(frame / this.cols);
+      const sx = cx*this.frameW, sy = cy*this.frameH;
+      const dw = this.frameW*this.scale, dh=this.frameH*this.scale;
+      ctx.drawImage(this.img, sx, sy, this.frameW, this.frameH, this.x, this.y, dw, dh);
+    }
+  }
+  const cosmo = new Sprite(); cosmo.scale=0.9; cosmo.x=140; cosmo.y=520;
+  const novaS = new Sprite(); novaS.scale=0.7; novaS.x=210; novaS.y=500;
+
+  function bindLoader(prefix, spr){
+    const f = $('#'+prefix+'File');
+    const w = $('#'+prefix[0]+'_w');
+    const h = $('#'+prefix[0]+'_h');
+    const cols = $('#'+prefix[0]+'_cols');
+    const rows = $('#'+prefix[0]+'_rows');
+    const fps  = $('#'+prefix[0]+'_fps');
+    const apply = $('#'+prefix[0]+'_apply');
+    apply.addEventListener('click',()=>{
+      if(!f.files || !f.files[0]){ alert('Choose a PNG spritesheet first.'); return; }
+      spr.frameW = parseInt(w.value||64,10);
+      spr.frameH = parseInt(h.value||64,10);
+      spr.cols   = parseInt(cols.value||1,10);
+      spr.rows   = parseInt(rows.value||1,10);
+      spr.fps    = parseInt(fps.value||8,10);
+      spr.loadFromFile(f.files[0], ()=>{
+        affirm('start');
+        canvas.style.display='block';
+      });
+    });
+  }
+  bindLoader('cosmo', cosmo);
+  bindLoader('nova', novaS);
+
+  // --- GAME THINGS (simple pickups) ---
+  const orbs=[];
+  function spawnOrb(){ orbs.push({x: rng(12, W-30), y: rng(90, H-30)}); }
+  for(let i=0;i<10;i++) spawnOrb();
+
+  function drawOrbs(){
+    ctx.save();
+    orbs.forEach(o=>{
+      const g = ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,9);
+      g.addColorStop(0,'#fff'); g.addColorStop(0.45,'#ffd86b'); g.addColorStop(0.9,'rgba(0,0,0,0)');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(o.x,o.y,9,0,Math.PI*2); ctx.fill();
+    });
+    ctx.restore();
+  }
+
+  function pickupTest(px,py, byNova=false){
+    for(let i=orbs.length-1;i>=0;i--){
+      const o=orbs[i], dx=o.x-(px+24), dy=o.y-(py+24);
+      if(dx*dx+dy*dy < (22*22)){
+        // collect
+        state.fp += byNova?2:1; state.xp += byNova?3:2; save();
+        orbs.splice(i,1);
+        if(byNova) affirm('bigCombo'); else affirm('pickup');
+      }
+    }
+  }
+
+  // --- NOVA ASSIST BUTTON ---
+  const assistBtn=$('#assist'), ring=$('#ring');
+  let assistReady=true, cool=6000, coolLeft=0;
+  function setCooldown(ms){ coolLeft=ms; assistReady=false; assistBtn.classList.add('cool'); ring.style.setProperty('--p','0'); }
+  function assistTick(dt){
+    if(!assistReady){
+      coolLeft-=dt; const p = Math.max(0, Math.min(1, 1-coolLeft/cool));
+      ring.style.setProperty('--p', (p*100));
+      if(coolLeft<=0){ assistReady=true; assistBtn.classList.remove('cool'); }
+    }
+  }
+  assistBtn.addEventListener('click', ()=>{
+    if(!assistReady) return;
+    // nova burst: collect near cosmo
+    pickupTest(cosmo.x, cosmo.y, true);
+    setCooldown(cool);
+  });
+
+  // --- LOOP ---
+  let last = performance.now();
+  function loop(ts){
+    const dt = ts-last; last=ts;
+    if(!('ontouchstart' in window)) keysMove();
+    // update positions
+    cosmo.x = clamp(cosmo.x + vx*(dt/16.7), 6, W-70);
+    cosmo.y = clamp(cosmo.y + vy*(dt/16.7), 90, H-90);
+    // follow
+    if(novaS.ready){
+      novaS.x += (cosmo.x+30 - novaS.x)*0.12;
+      novaS.y += (cosmo.y-20 - novaS.y)*0.12;
+    }
+    // drawing
+    ctx.clearRect(0,0,W,H);
+    drawOrbs();
+    if(cosmo.ready) cosmo.draw(dt);
+    if(novaS.ready) novaS.draw(dt);
+    // pickup checks
+    if(cosmo.ready) pickupTest(cosmo.x, cosmo.y, false);
+    // spawn a few
+    if(orbs.length<10 && Math.random()<0.02*(dt/16.7)) spawnOrb();
+    assistTick(dt);
+    requestAnimationFrame(loop);
+  }
+  affirm('start');
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>

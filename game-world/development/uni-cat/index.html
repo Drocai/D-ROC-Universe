@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ec4899">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Kenna's UniCat</title>
+    <!-- Link to the PWA manifest -->
+    <link rel="manifest" href="manifest.json">
+    <!-- Google Font for playful typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <style>
+        /* Base reset and typography */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Bubblegum Sans', cursive;
+            overflow: hidden;
+            touch-action: none;
+            /* Soften the background with a gentle gradient */
+            background: linear-gradient(135deg, #fce7f3 0%, #e0e7ff 100%);
+            /* Occupy the full viewport */
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
+        /* Layout container */
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        /* Main canvas styling */
+        #game-canvas {
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            touch-action: none;
+            max-width: 95vw;
+            max-height: 80vh;
+        }
+        /* HUD display for counters */
+        .hud {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            display: flex;
+            justify-content: space-between;
+            pointer-events: none;
+            z-index: 10;
+            gap: 8px;
+        }
+        .hud-item {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ec4899;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .hud-item.collected {
+            animation: pulse 0.3s;
+        }
+        @keyframes pulse {
+            50% { transform: scale(1.15); }
+        }
+        /* Power meter at the bottom */
+        .power-meter {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 300px;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 3px solid #ec4899;
+        }
+        .power-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ec4899, #a855f7, #3b82f6);
+            width: 0%;
+            transition: width 0.3s;
+        }
+        /* Modal styling */
+        .modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 90%;
+            z-index: 100;
+            border: 5px solid #fbbf24;
+            transition: transform 0.3s;
+        }
+        .modal.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .modal h2 {
+            font-size: 32px;
+            color: #ec4899;
+            margin-bottom: 15px;
+        }
+        .modal p {
+            font-size: 18px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, #ec4899, #a855f7);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 20px;
+            font-size: 20px;
+            font-family: 'Bubblegum Sans';
+            cursor: pointer;
+        }
+        /* Overlay for modals */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 99;
+        }
+        .overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+        /* Achievement popup */
+        .achievement-popup {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            padding: 15px 25px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            transition: top 0.5s;
+            z-index: 101;
+        }
+        .achievement-popup.show {
+            top: 70px;
+        }
+        /* Sound toggle button */
+        .sound-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 11;
+            border: 3px solid #ec4899;
+        }
+        /* Level indicator at the top */
+        .level-indicator {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 6px 15px;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #a855f7;
+            z-index: 11;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <!-- Heads-up display (HUD) for star/gem/heart counters -->
+        <div class="hud">
+            <div class="hud-item" id="stars-hud">⭐ <span id="stars">0</span></div>
+            <div class="hud-item" id="gems-hud">💎 <span id="gems">0</span></div>
+            <div class="hud-item" id="hearts-hud">❤️ <span id="hearts">0</span></div>
+        </div>
+        <!-- Level name indicator -->
+        <div class="level-indicator"><span id="level-name">Cloud Kingdom</span></div>
+        <!-- Sound toggle button -->
+        <div class="sound-toggle" id="sound-toggle">🔊</div>
+        <!-- Game canvas -->
+        <canvas id="game-canvas"></canvas>
+        <!-- Power meter -->
+        <div class="power-meter"><div class="power-fill" id="power-fill"></div></div>
+        <!-- Overlay behind modals -->
+        <div class="overlay" id="overlay"></div>
+        <!-- Welcome modal -->
+        <div class="modal" id="welcome-modal">
+            <h2>🦄 Kenna's UniCat! 🦄</h2>
+            <p style="font-size: 22px; color: #ec4899; font-weight: bold;">Let's Go on an Adventure!</p>
+            <p>✨ Collect sparkly things!<br>💖 Unlock magical powers!<br>🌈 Spread kindness!</p>
+            <button class="btn" id="start-btn">Let's Play! 🎮</button>
+        </div>
+        <!-- Level complete modal -->
+        <div class="modal" id="level-complete-modal">
+            <h2>🎉 Amazing! 🎉</h2>
+            <p id="level-complete-text"></p>
+            <p id="power-unlock-text" style="font-size: 24px; color: #ec4899; font-weight: bold;"></p>
+            <button class="btn" id="next-level-btn">Next! 🚀</button>
+        </div>
+        <!-- Game complete modal -->
+        <div class="modal" id="game-complete-modal">
+            <h2>🌟 KENNA IS AMAZING! 🌟</h2>
+            <p style="font-size: 22px; color: #ec4899; font-weight: bold;">You unlocked ALL the powers!</p>
+            <p>🦄 You're a Magical Hero! 💖</p>
+            <button class="btn" id="play-again-btn">Play Again! 🎮</button>
+        </div>
+        <!-- Achievement popup area -->
+        <div class="achievement-popup" id="achievement-popup"></div>
+    </div>
+    <script>
+        // Main game logic for Kenna's UniCat
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Global game state
+        let GAME_STATE = {
+            currentLevel: 0,
+            stars: 0,
+            gems: 0,
+            hearts: 0,
+            powerLevel: 0,
+            soundEnabled: true,
+            gameStarted: false,
+            levelComplete: false,
+            firstTimePlaying: true
+        };
+
+        // Level definitions: relative positions ensure responsiveness
+        const LEVELS = [
+            { name: "Cloud Kingdom", background: { start: '#a5f3fc', end: '#e0e7ff' }, powerUp: "Rainbow Trail", items: [ { type: 'star', x: 0.19, y: 0.20 }, { type: 'star', x: 0.81, y: 0.20 }, { type: 'gem', x: 0.50, y: 0.30 }, { type: 'heart', x: 0.25, y: 0.58 }, { type: 'star', x: 0.75, y: 0.67 }, { type: 'gem', x: 0.44, y: 0.78 }, { type: 'heart', x: 0.13, y: 0.83 } ] },
+            { name: "Rainbow Forest", background: { start: '#86efac', end: '#fef08a' }, powerUp: "Speed Dash", items: [ { type: 'star', x: 0.15, y: 0.17 }, { type: 'star', x: 0.85, y: 0.17 }, { type: 'gem', x: 0.38, y: 0.33 }, { type: 'gem', x: 0.63, y: 0.33 }, { type: 'heart', x: 0.50, y: 0.50 }, { type: 'star', x: 0.19, y: 0.75 }, { type: 'gem', x: 0.81, y: 0.75 }, { type: 'heart', x: 0.50, y: 0.87 } ] },
+            { name: "Sparkle Beach", background: { start: '#fef08a', end: '#fcd34d' }, powerUp: "Sparkle Blast", items: [ { type: 'star', x: 0.13, y: 0.17 }, { type: 'star', x: 0.88, y: 0.17 }, { type: 'gem', x: 0.31, y: 0.33 }, { type: 'gem', x: 0.69, y: 0.33 }, { type: 'heart', x: 0.50, y: 0.47 }, { type: 'star', x: 0.25, y: 0.67 }, { type: 'star', x: 0.75, y: 0.67 }, { type: 'gem', x: 0.50, y: 0.83 }, { type: 'heart', x: 0.19, y: 0.88 }, { type: 'heart', x: 0.81, y: 0.88 } ] },
+            { name: "Crystal Caves", background: { start: '#c7d2fe', end: '#ddd6fe' }, powerUp: "Star Jump", items: [ { type: 'star', x: 0.13, y: 0.20 }, { type: 'star', x: 0.88, y: 0.20 }, { type: 'gem', x: 0.25, y: 0.37 }, { type: 'gem', x: 0.50, y: 0.37 }, { type: 'gem', x: 0.75, y: 0.37 }, { type: 'heart', x: 0.38, y: 0.58 }, { type: 'heart', x: 0.63, y: 0.58 }, { type: 'star', x: 0.19, y: 0.78 }, { type: 'star', x: 0.81, y: 0.78 }, { type: 'gem', x: 0.50, y: 0.88 } ] },
+            { name: "Star Palace", background: { start: '#fae8ff', end: '#fbcfe8' }, powerUp: "Ultimate Unicorn", items: [ { type: 'star', x: 0.13, y: 0.17 }, { type: 'star', x: 0.50, y: 0.17 }, { type: 'star', x: 0.88, y: 0.17 }, { type: 'gem', x: 0.25, y: 0.37 }, { type: 'gem', x: 0.75, y: 0.37 }, { type: 'heart', x: 0.50, y: 0.50 }, { type: 'star', x: 0.19, y: 0.70 }, { type: 'star', x: 0.81, y: 0.70 }, { type: 'gem', x: 0.38, y: 0.87 }, { type: 'gem', x: 0.63, y: 0.87 }, { type: 'heart', x: 0.31, y: 0.93 }, { type: 'heart', x: 0.69, y: 0.93 } ] }
+        ];
+
+        // Simple audio system using oscillators
+        class AudioSystem {
+            constructor() { this.audioContext = null; }
+            init() { this.audioContext = new (window.AudioContext || window.webkitAudioContext)(); }
+            playMeow() {
+                if (!GAME_STATE.soundEnabled || !this.audioContext) return;
+                const o = this.audioContext.createOscillator(), g = this.audioContext.createGain();
+                o.connect(g); g.connect(this.audioContext.destination);
+                const f = 550 + Math.random() * 100;
+                o.frequency.setValueAtTime(f, this.audioContext.currentTime);
+                o.frequency.exponentialRampToValueAtTime(f * 1.4, this.audioContext.currentTime + 0.08);
+                o.frequency.exponentialRampToValueAtTime(f * 0.7, this.audioContext.currentTime + 0.18);
+                g.gain.setValueAtTime(0.25, this.audioContext.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.18);
+                o.start(); o.stop(this.audioContext.currentTime + 0.18);
+            }
+            playPurr() {
+                if (!GAME_STATE.soundEnabled || !this.audioContext) return;
+                const o = this.audioContext.createOscillator(), g = this.audioContext.createGain();
+                o.connect(g); g.connect(this.audioContext.destination);
+                o.frequency.setValueAtTime(100, this.audioContext.currentTime);
+                o.type = 'sawtooth';
+                g.gain.setValueAtTime(0.15, this.audioContext.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.4);
+                o.start(); o.stop(this.audioContext.currentTime + 0.4);
+            }
+            playCollect(p = 800) {
+                if (!GAME_STATE.soundEnabled || !this.audioContext) return;
+                const o = this.audioContext.createOscillator(), g = this.audioContext.createGain();
+                o.connect(g); g.connect(this.audioContext.destination);
+                o.frequency.setValueAtTime(p, this.audioContext.currentTime);
+                o.frequency.exponentialRampToValueAtTime(p * 2.2, this.audioContext.currentTime + 0.12);
+                g.gain.setValueAtTime(0.25, this.audioContext.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.12);
+                o.start(); o.stop(this.audioContext.currentTime + 0.12);
+            }
+            playPowerUp() {
+                if (!GAME_STATE.soundEnabled || !this.audioContext) return;
+                const o = this.audioContext.createOscillator(), g = this.audioContext.createGain();
+                o.connect(g); g.connect(this.audioContext.destination);
+                o.frequency.setValueAtTime(400, this.audioContext.currentTime);
+                o.frequency.exponentialRampToValueAtTime(1400, this.audioContext.currentTime + 0.35);
+                g.gain.setValueAtTime(0.3, this.audioContext.currentTime);
+                g.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + 0.35);
+                o.start(); o.stop(this.audioContext.currentTime + 0.35);
+            }
+            playVictory() {
+                if (!GAME_STATE.soundEnabled || !this.audioContext) return;
+                [523, 587, 659, 784, 880, 1047].forEach((f, i) => {
+                    const o = this.audioContext.createOscillator(), g = this.audioContext.createGain();
+                    o.connect(g); g.connect(this.audioContext.destination);
+                    o.frequency.setValueAtTime(f, this.audioContext.currentTime);
+                    g.gain.setValueAtTime(0.18, this.audioContext.currentTime + i * 0.09);
+                    g.gain.exponentialRampToValueAtTime(0.01, this.audioContext.currentTime + i * 0.09 + 0.25);
+                    o.start(this.audioContext.currentTime + i * 0.09);
+                    o.stop(this.audioContext.currentTime + i * 0.09 + 0.25);
+                });
+            }
+        }
+        const audio = new AudioSystem();
+
+        // Particle representation for sparkles and explosions
+        class Particle {
+            constructor(x, y, c, s, vx, vy) {
+                this.x = x;
+                this.y = y;
+                this.color = c;
+                this.size = s;
+                this.vx = vx;
+                this.vy = vy;
+                this.life = 1;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                this.vy += 0.1; // gravity effect
+                this.life -= 0.018;
+                this.size -= 0.04;
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+                ctx.fillStyle = this.color;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+            isDead() {
+                return this.life <= 0 || this.size <= 0;
+            }
+        }
+        // Tap effect for click visual feedback
+        class TapEffect {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.r = 10;
+                this.maxR = 80;
+                this.a = 1;
+            }
+            update() {
+                this.r += 4;
+                this.a -= 0.03;
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.globalAlpha = this.a;
+                ctx.strokeStyle = '#fff';
+                ctx.lineWidth = 5;
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = '#fff';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.globalAlpha = this.a * 0.5;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r * 0.7, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.restore();
+            }
+            isDead() {
+                return this.a <= 0 || this.r >= this.maxR;
+            }
+        }
+        // Particle system managing particles and tap effects
+        class ParticleSystem {
+            constructor() {
+                this.particles = [];
+                this.tapEffects = [];
+            }
+            addTapEffect(x, y) {
+                this.tapEffects.push(new TapEffect(x, y));
+            }
+            createExplosion(x, y, c, n = 25) {
+                for (let i = 0; i < n; i++) {
+                    const a = (Math.PI * 2 * i) / n;
+                    const s = 2 + Math.random() * 4;
+                    this.particles.push(new Particle(x, y, c, 4 + Math.random() * 4, Math.cos(a) * s, Math.sin(a) * s - 2));
+                }
+            }
+            createRainbowTrail(x, y) {
+                const cs = ['#f08', '#f0f', '#80f', '#08f', '#0f8', '#ff0', '#f80'];
+                this.particles.push(new Particle(x, y, cs[Math.floor(Math.random() * cs.length)], 4, (Math.random() - 0.5), (Math.random() - 0.5)));
+            }
+            update() {
+                for (let i = this.particles.length - 1; i >= 0; i--) {
+                    this.particles[i].update();
+                    if (this.particles[i].isDead()) this.particles.splice(i, 1);
+                }
+                for (let i = this.tapEffects.length - 1; i >= 0; i--) {
+                    this.tapEffects[i].update();
+                    if (this.tapEffects[i].isDead()) this.tapEffects.splice(i, 1);
+                }
+            }
+            draw(ctx) {
+                this.particles.forEach(p => p.draw(ctx));
+                this.tapEffects.forEach(e => e.draw(ctx));
+            }
+        }
+        const particleSystem = new ParticleSystem();
+
+        // Generate an image from inline SVG for UniCat
+        function createUniCatSVG() {
+            const svg = '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#ffc0e5"/><stop offset="100%" style="stop-color:#ff80cc"/></linearGradient><linearGradient id="horn" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#ffd700"/><stop offset="50%" style="stop-color:#f69"/><stop offset="100%" style="stop-color:#93d"/></linearGradient></defs><ellipse cx="60" cy="75" rx="35" ry="30" fill="url(#bg)" stroke="#f69" stroke-width="2"/><circle cx="60" cy="40" r="28" fill="url(#bg)" stroke="#f69" stroke-width="2"/><path d="M 40 25 L 35 10 L 45 20 Z" fill="#ffc0e5" stroke="#f69" stroke-width="1.5"/><path d="M 80 25 L 85 10 L 75 20 Z" fill="#ffc0e5" stroke="#f69" stroke-width="1.5"/><path d="M 60 12 L 55 2 L 60 0 L 65 2 Z" fill="url(#horn)" stroke="#fd0" stroke-width="1.5"/><ellipse cx="60" cy="2" rx="2" ry="3" fill="#fd0"/><ellipse cx="50" cy="40" rx="4" ry="6" fill="#4a0e4e"/><ellipse cx="70" cy="40" rx="4" ry="6" fill="#4a0e4e"/><ellipse cx="51" cy="38" rx="2" ry="3" fill="#fff"/><ellipse cx="71" cy="38" rx="2" ry="3" fill="#fff"/><ellipse cx="60" cy="48" rx="3" ry="2" fill="#f19"/><path d="M 55 51 Q 60 55 65 51" stroke="#f19" stroke-width="2" fill="none"/><line x1="35" y1="43" x2="45" y2="42" stroke="#f69" stroke-width="1.5"/><line x1="35" y1="47" x2="45" y2="47" stroke="#f69" stroke-width="1.5"/><line x1="75" y1="42" x2="85" y2="43" stroke="#f69" stroke-width="1.5"/><line x1="75" y1="47" x2="85" y2="47" stroke="#f69" stroke-width="1.5"/><ellipse cx="48" cy="100" rx="6" ry="12" fill="url(#bg)" stroke="#f69" stroke-width="1.5"/><ellipse cx="72" cy="100" rx="6" ry="12" fill="url(#bg)" stroke="#f69" stroke-width="1.5"/><path d="M 95 70 Q 105 60 108 50" stroke="url(#horn)" stroke-width="6" fill="none"/><circle cx="108" cy="48" r="3" fill="#fd0"/></svg>';
+            const img = new Image();
+            img.src = 'data:image/svg+xml;base64,' + btoa(svg);
+            return img;
+        }
+
+        // Player class controlling UniCat movement and drawing
+        class Player {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.targetX = x;
+                this.targetY = y;
+                this.size = 70;
+                this.speed = 5.5;
+                this.img = createUniCatSVG();
+                this.bounceOffset = 0;
+                this.scale = 1;
+            }
+            moveTo(x, y) {
+                this.targetX = x;
+                this.targetY = y;
+                audio.playMeow();
+            }
+            update() {
+                const dx = this.targetX - this.x;
+                const dy = this.targetY - this.y;
+                const d = Math.sqrt(dx * dx + dy * dy);
+                if (d > this.speed) {
+                    // Adjust speed if power level is high
+                    const spd = GAME_STATE.powerLevel >= 2 ? 7.5 : this.speed;
+                    this.x += (dx / d) * spd;
+                    this.y += (dy / d) * spd;
+                    // Add rainbow trails when moving and powered
+                    if (GAME_STATE.powerLevel >= 1 && Math.random() < 0.4)
+                        particleSystem.createRainbowTrail(this.x, this.y + this.size / 4);
+                    if (GAME_STATE.powerLevel >= 3 && Math.random() < 0.2)
+                        particleSystem.createRainbowTrail(this.x + (Math.random() - 0.5) * 20, this.y + (Math.random() - 0.5) * 20);
+                    // Make UniCat gently scale when in motion
+                    this.scale = 0.98 + Math.sin(Date.now() * 0.01) * 0.02;
+                } else {
+                    this.x = this.targetX;
+                    this.y = this.targetY;
+                    this.scale = 1;
+                }
+                // Idle bounce
+                this.bounceOffset = Math.sin(Date.now() * 0.0012) * 6;
+            }
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y + this.bounceOffset);
+                ctx.scale(this.scale, this.scale);
+                if (GAME_STATE.powerLevel >= 1) {
+                    ctx.shadowBlur = 15 + GAME_STATE.powerLevel * 5;
+                    ctx.shadowColor = '#f69';
+                }
+                if (GAME_STATE.powerLevel >= 5) {
+                    const cs = ['#f08', '#f0f', '#80f', '#08f', '#0f8', '#ff0'];
+                    ctx.shadowColor = cs[Math.floor(Date.now() / 200) % cs.length];
+                    ctx.shadowBlur = 25;
+                }
+                ctx.drawImage(this.img, -this.size / 2, -this.size / 2, this.size, this.size);
+                ctx.restore();
+            }
+        }
+
+        // Collectible items: stars, gems, hearts
+        class CollectibleItem {
+            constructor(type, x, y) {
+                this.type = type;
+                // Convert fractional coordinates into absolute positions
+                this.x = x * canvas.width;
+                this.y = y * canvas.height;
+                this.size = 45;
+                this.collected = false;
+                this.pulseOffset = Math.random() * Math.PI * 2;
+                this.rotation = 0;
+            }
+            checkCollision(p) {
+                if (this.collected) return false;
+                const dx = this.x - p.x;
+                const dy = this.y - p.y;
+                return Math.sqrt(dx * dx + dy * dy) < (this.size + p.size) / 2.2;
+            }
+            collect() {
+                this.collected = true;
+                const hudMap = { star: 'stars-hud', gem: 'gems-hud', heart: 'hearts-hud' };
+                const pitchMap = { star: 850, gem: 1050, heart: 650 };
+                const colorMap = { star: '#fb4', gem: '#38f', heart: '#e49' };
+                // Update counters on game state
+                if (this.type === 'star') GAME_STATE.stars++;
+                else if (this.type === 'gem') GAME_STATE.gems++;
+                else if (this.type === 'heart') GAME_STATE.hearts++;
+                // Play sounds
+                audio.playCollect(pitchMap[this.type]);
+                if (this.type === 'heart') audio.playPurr();
+                // HUD feedback
+                const hud = document.getElementById(hudMap[this.type]);
+                hud.classList.add('collected');
+                setTimeout(() => hud.classList.remove('collected'), 300);
+                // Particle explosion
+                particleSystem.createExplosion(this.x, this.y, colorMap[this.type], 35);
+                updateHUD();
+                updatePowerMeter();
+            }
+            update() {
+                this.rotation += 0.02;
+            }
+            draw(ctx) {
+                if (this.collected) return;
+                const pulse = Math.sin(Date.now() * 0.06 * 0.01 + this.pulseOffset) * 7;
+                ctx.save();
+                ctx.translate(this.x, this.y + pulse);
+                ctx.rotate(this.rotation);
+                ctx.shadowBlur = 20;
+                ctx.shadowColor = this.type === 'star' ? '#fb4' : this.type === 'gem' ? '#38f' : '#e49';
+                ctx.font = `${this.size}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const emoji = this.type === 'star' ? '⭐' : this.type === 'gem' ? '💎' : '❤️';
+                ctx.fillText(emoji, 0, 0);
+                ctx.restore();
+            }
+        }
+
+        let player;
+        let items = [];
+        let levelData;
+
+        // Resize the canvas to maintain aspect ratio and reload level positions
+        function resizeCanvas() {
+            const maxW = Math.min(window.innerWidth - 20, 800);
+            const maxH = Math.min(window.innerHeight - 150, 600);
+            const ratio = 800 / 600;
+            let w = maxW;
+            let h = w / ratio;
+            if (h > maxH) {
+                h = maxH;
+                w = h * ratio;
+            }
+            // Actual canvas resolution remains constant for crisp graphics
+            canvas.width = 800;
+            canvas.height = 600;
+            canvas.style.width = w + 'px';
+            canvas.style.height = h + 'px';
+            // Reload current level positions after resize
+            if (levelData) loadLevel(GAME_STATE.currentLevel);
+        }
+
+        // Initialize the game: set up canvas size, audio, load first level
+        function initGame() {
+            resizeCanvas();
+            audio.init();
+            loadLevel(GAME_STATE.currentLevel);
+            player = new Player(canvas.width / 2, canvas.height - 100);
+            showModal('welcome-modal');
+            window.addEventListener('resize', resizeCanvas);
+        }
+
+        // Load a level based on its index
+        function loadLevel(idx) {
+            levelData = LEVELS[idx];
+            items = levelData.items.map(d => new CollectibleItem(d.type, d.x, d.y));
+            document.getElementById('level-name').textContent = levelData.name;
+        }
+
+        // Reset level state: reposition player and reload items
+        function resetLevel() {
+            player = new Player(canvas.width / 2, canvas.height - 100);
+            loadLevel(GAME_STATE.currentLevel);
+            GAME_STATE.levelComplete = false;
+        }
+
+        // Game loop: update and render repeatedly
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Update game state each frame
+        function update() {
+            if (!GAME_STATE.gameStarted || GAME_STATE.levelComplete) return;
+            player.update();
+            particleSystem.update();
+            items.forEach(i => i.update());
+            // Check for collisions
+            items.forEach(i => {
+                if (i.checkCollision(player)) i.collect();
+            });
+            // Detect end of level
+            if (items.every(i => i.collected)) completeLevel();
+        }
+
+        // Render game each frame: background, particles, items, player
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Background gradient
+            const g = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            g.addColorStop(0, levelData.background.start);
+            g.addColorStop(1, levelData.background.end);
+            ctx.fillStyle = g;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            // Draw particles and game objects
+            particleSystem.draw(ctx);
+            items.forEach(i => i.draw(ctx));
+            player.draw(ctx);
+        }
+
+        // Complete the current level and show appropriate modal
+        function completeLevel() {
+            GAME_STATE.levelComplete = true;
+            GAME_STATE.powerLevel++;
+            audio.playVictory();
+            audio.playPowerUp();
+            setTimeout(() => {
+                if (GAME_STATE.currentLevel < LEVELS.length - 1) {
+                    document.getElementById('level-complete-text').textContent = `Amazing! You finished ${levelData.name}! 🎉`;
+                    document.getElementById('power-unlock-text').textContent = `✨ ${levelData.powerUp} ✨`;
+                    showModal('level-complete-modal');
+                    showAchievement(`🌟 ${levelData.powerUp} Unlocked!`);
+                } else {
+                    showModal('game-complete-modal');
+                    showAchievement('🏆 Kenna is a Magical Hero!');
+                }
+            }, 1200);
+        }
+
+        // Proceed to the next level
+        function nextLevel() {
+            GAME_STATE.currentLevel++;
+            if (GAME_STATE.currentLevel < LEVELS.length) {
+                loadLevel(GAME_STATE.currentLevel);
+                resetLevel();
+                hideModal('level-complete-modal');
+            }
+        }
+
+        // Restart the game from the beginning
+        function restartGame() {
+            GAME_STATE = {
+                currentLevel: 0,
+                stars: 0,
+                gems: 0,
+                hearts: 0,
+                powerLevel: 0,
+                soundEnabled: GAME_STATE.soundEnabled,
+                gameStarted: true,
+                levelComplete: false,
+                firstTimePlaying: false
+            };
+            loadLevel(0);
+            resetLevel();
+            updateHUD();
+            updatePowerMeter();
+            hideModal('game-complete-modal');
+        }
+
+        // Update the HUD counters
+        function updateHUD() {
+            document.getElementById('stars').textContent = GAME_STATE.stars;
+            document.getElementById('gems').textContent = GAME_STATE.gems;
+            document.getElementById('hearts').textContent = GAME_STATE.hearts;
+        }
+
+        // Update power meter fill percentage
+        function updatePowerMeter() {
+            const total = levelData.items.length;
+            const collected = items.filter(i => i.collected).length;
+            document.getElementById('power-fill').style.width = ((collected / total) * 100) + '%';
+        }
+
+        // Show a modal by id
+        function showModal(id) {
+            document.getElementById('overlay').classList.add('show');
+            document.getElementById(id).classList.add('show');
+        }
+        // Hide a modal by id
+        function hideModal(id) {
+            document.getElementById('overlay').classList.remove('show');
+            document.getElementById(id).classList.remove('show');
+        }
+        // Show an achievement popup
+        function showAchievement(txt) {
+            const p = document.getElementById('achievement-popup');
+            p.textContent = txt;
+            p.classList.add('show');
+            setTimeout(() => p.classList.remove('show'), 3000);
+        }
+
+        // Handle taps or clicks on the canvas
+        function handleTap(e) {
+            e.preventDefault();
+            if (!GAME_STATE.gameStarted || GAME_STATE.levelComplete) return;
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            // Convert click position into canvas coordinates
+            const x = ((clientX - rect.left) / rect.width) * canvas.width;
+            const y = ((clientY - rect.top) / rect.height) * canvas.height;
+            player.moveTo(x, y);
+            particleSystem.addTapEffect(x, y);
+            // Spawn a small burst of rainbow particles around the tap point
+            for (let i = 0; i < 5; i++) {
+                const a = (Math.PI * 2 * i) / 5;
+                particleSystem.createRainbowTrail(x + Math.cos(a) * 15, y + Math.sin(a) * 15);
+            }
+        }
+
+        // Event listeners
+        canvas.addEventListener('mousedown', handleTap);
+        canvas.addEventListener('touchstart', handleTap, { passive: false });
+        document.getElementById('start-btn').addEventListener('click', () => {
+            GAME_STATE.gameStarted = true;
+            hideModal('welcome-modal');
+        });
+        document.getElementById('next-level-btn').addEventListener('click', nextLevel);
+        document.getElementById('play-again-btn').addEventListener('click', restartGame);
+        document.getElementById('sound-toggle').addEventListener('click', () => {
+            GAME_STATE.soundEnabled = !GAME_STATE.soundEnabled;
+            document.getElementById('sound-toggle').textContent = GAME_STATE.soundEnabled ? '🔊' : '🔇';
+        });
+
+        // Start the game on page load
+        window.addEventListener('load', () => {
+            initGame();
+            gameLoop();
+            // Register the service worker for offline support
+            if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js');
+        });
+    </script>
+</body>
+</html>

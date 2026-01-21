@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Level 1 - Big Chakra Hustle</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Courier New', Courier, monospace;
+      background: radial-gradient(circle, #000010, #0a0a2e);
+      color: white;
+    }
+    canvas {
+      display: block;
+      margin: 0 auto;
+      background: #111122;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let player = { x: 50, y: 300, width: 30, height: 30, speed: 5 };
+    let chakraSacks = [
+      { x: 200, y: 300, collected: false },
+      { x: 400, y: 300, collected: false },
+      { x: 600, y: 300, collected: false }
+    ];
+    let score = 0;
+    let affirmations = [
+      "My vibe is currency.",
+      "Aligned. Activated. Ascended.",
+      "Peace is the highest form of wealth.",
+      "Collect. Vibrate. Transmit."
+    ];
+
+    let keys = {};
+
+    document.addEventListener('keydown', (e) => keys[e.key] = true);
+    document.addEventListener('keyup', (e) => keys[e.key] = false);
+
+    function update() {
+      if (keys['ArrowRight']) player.x += player.speed;
+      if (keys['ArrowLeft']) player.x -= player.speed;
+      if (keys['ArrowUp']) player.y -= player.speed;
+      if (keys['ArrowDown']) player.y += player.speed;
+
+      chakraSacks.forEach(sack => {
+        if (!sack.collected &&
+            player.x < sack.x + 20 &&
+            player.x + player.width > sack.x &&
+            player.y < sack.y + 20 &&
+            player.y + player.height > sack.y) {
+          sack.collected = true;
+          score += 1;
+          let affirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
+          alert("✨ " + affirmation);
+        }
+      });
+    }
+
+    function draw() {
+      ctx.fillStyle = '#1a1a2e';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#00ffff';
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+
+      chakraSacks.forEach(sack => {
+        if (!sack.collected) {
+          ctx.fillStyle = '#ff00ff';
+          ctx.beginPath();
+          ctx.arc(sack.x, sack.y, 10, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '20px Courier New';
+      ctx.fillText('Vibration Score: ' + score, 10, 30);
+    }
+
+    function gameLoop() {
+      update();
+      draw();
+      requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+  </script>
+</body>
+</html>

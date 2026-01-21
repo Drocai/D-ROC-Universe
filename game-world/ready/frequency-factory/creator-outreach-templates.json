@@ -1,0 +1,126 @@
+{
+  "content_type": "Creator Partnership Outreach Templates",
+  "target_creators": ["Music Streamers", "YouTube Music Reviewers", "Music TikTokers", "Podcast Hosts", "Playlist Curators"],
+  "partnership_model": "70/30 revenue split (creator favor), mutual promotion, audience engagement tool",
+  
+  "outreach_strategy": {
+    "research_first": [
+      "Watch 3-5 videos to understand their style",
+      "Note specific moments you can reference",
+      "Check audience size and engagement rate",
+      "Identify their pain points (content gaps, audience engagement)"
+    ],
+    "personalization_critical": [
+      "Reference specific content they made",
+      "Show you understand their audience",
+      "Explain why THIS partnership makes sense for THEM",
+      "Never mass-message"
+    ],
+    "follow_up_sequence": [
+      "Initial DM/Email",
+      "Follow-up after 3 days if no response",
+      "Final follow-up after 7 days",
+      "Move on after that - don't be pushy"
+    ],
+    "partnership_pitch_framework": {
+      "hook": "Reference specific content + credibility builder",
+      "problem": "Identify a challenge they face",
+      "solution": "How Frequency Factory solves it",
+      "proof": "Data, examples, social proof",
+      "offer": "Specific partnership terms",
+      "cta": "Easy next step"
+    }
+  },
+  
+  "templates": {
+    "music_streamer_twitch": {
+      "target": "Twitch/YouTube streamers who review or play music",
+      "ideal_audience_size": "5K-100K followers",
+      "template_versions": {
+        "version_a": {
+          "subject_line": "Partnership idea for your stream",
+          "message": "Hey [Name],\n\nI've been watching your streams for a few weeks now - your breakdown of [specific artist/album] last Tuesday was spot on, especially what you said about [specific point].\n\nI built something that could add a whole new layer to your shows.\n\nIt's called Frequency Factory. Think of it as a gamified A&R platform that runs alongside your stream.\n\nHere's how it works with your content:\n\n**PRE-SHOW:** Your community rates tracks before you go live. Creates hype, gives them something to do between streams.\n\n**DURING SHOW:** You review the top-rated tracks live. Real-time engagement, instant feedback from the community, they see their ratings influence your content.\n\n**POST-SHOW:** Factory stays active after you sign off. Keeps your audience engaged 24/7, even when you're not streaming.\n\nWhy this works:\n- Your audience gets rewarded for engagement (tokens, ranks, badges)\n- You always have quality tracks to review (community pre-filters)\n- Artists pay for submissions (we split 70/30 in your favor)\n- Your community grows stickier - they're invested even when you're offline\n\nI'm not asking you to change your content. I'm offering a tool that amplifies what you already do.\n\nNo cost to you. Just value add.\n\nInterested in a quick call to see if this fits your show?\n\nDrop a reply or DM me.\n\n- [Your Name]\nFounder, Frequency Factory\n\n[Link to platform demo]\n[Link to partnership deck]",
+          "follow_up_1": "(Day 3)\n\nHey [Name],\n\nI know you're busy so I'll keep this short.\n\nFrequency Factory = engagement tool for your music stream.\n- Community rates tracks\n- You review top ones\n- Everyone earns rewards\n- 70/30 split in your favor\n\nWorth a 15-min call?\n\nLet me know.",
+          "follow_up_2": "(Day 7)\n\nLast message, I promise!\n\nIf Frequency Factory isn't a fit for your show, totally cool - I respect that.\n\nBut if you're at all curious, here's a 2-minute video showing exactly how it integrates with streams: [VIDEO LINK]\n\nEither way, keep doing what you're doing. Your content is great.\n\nCheers,\n[Name]"
+        },
+        
+        "version_b_casual": {
+          "subject_line": "Built something for your stream",
+          "message": "Yo [Name],\n\n[Specific compliment about recent content].\n\nGot a partnership idea. Think \"always-on lobby/afterparty for your stream.\"\n\nBasically:\n- Your audience rates music 24/7\n- You review top tracks on stream\n- They earn tokens/ranks/badges\n- Everyone gets addicted\n- You make money from submissions (70/30 your favor)\n\nNo cost. Just value. Amplifies your existing content.\n\nWanna see how it works? 15-min call?\n\nHit me back.\n\n- [Name]"
+        }
+      }
+    },
+    
+    "youtube_music_reviewer": {
+      "target": "YouTubers who do track reviews, reaction videos, or music commentary",
+      "ideal_audience_size": "10K-500K subscribers",
+      "template": {
+        "subject_line": "Collaboration opportunity - music discovery platform",
+        "message": "Hi [Name],\n\nYour [recent video title] showed up in my recommendations last week. The way you broke down [specific element] at [timestamp] was exactly the kind of analysis the music community needs more of.\n\nI'm reaching out because I think there's a natural collaboration between your channel and Frequency Factory.\n\nQuick context: Frequency Factory is a gamified platform where your audience can rate tracks, earn rewards, and help discover new artists. Think SubmitHub meets Twitch culture.\n\nHow this could work with your channel:\n\n**CONTENT PIPELINE:**\n1. Artists submit tracks to Frequency Factory\n2. Your audience rates them (Hook Strength + Production Quality)\n3. Top-rated tracks become your review videos\n4. Your reviews drive more engagement on the platform\n\nResult: You always have quality content to review (community pre-filters), your audience is engaged between uploads, and you earn from submissions.\n\n**REVENUE:**\n- Artists pay to submit tracks ($10-50 depending on tier)\n- You get 70% of submission fees for tracks you review\n- Platform handles all payments, tracking, logistics\n\n**ENGAGEMENT:**\n- Your community gets tokens, ranks, badges\n- They're invested in your content (their ratings matter)\n- Stickier audience, better retention\n\n**YOUR WORKLOAD:**\n- Zero change to your content style\n- Just review tracks the community already validated\n- We handle all tech/support\n\nI'm not trying to change what you do. You're already great at it. I'm just offering infrastructure that makes it easier and more profitable.\n\nWorth exploring?\n\nI put together a partnership deck that shows exactly how this works: [LINK]\n\nOr we can hop on a quick call if you prefer to talk through it.\n\nLet me know your thoughts.\n\nBest,\n[Your Name]\nFounder, Frequency Factory\n\n[Platform Link]\n[Partnership Deck]\n[Calendar Link for Meeting]",
+        "follow_up": "(Day 4)\n\nHey [Name],\n\nFollowing up on my partnership message from earlier this week.\n\nI know you get a ton of these, so I'll be direct:\n\nFrequency Factory = pre-filtered track submissions + engaged community + revenue share.\n\nIf that sounds interesting, check out this deck: [LINK]\n\nIf not, no worries - I respect your time.\n\nEither way, keep making great content.\n\n- [Name]"
+      }
+    },
+    
+    "music_tiktok_influencer": {
+      "target": "TikTokers who post music content, reactions, or discovery",
+      "ideal_audience_size": "50K-1M followers",
+      "template": {
+        "subject_line": "Collab? (music discovery platform)",
+        "message": "Hey [Name]! 👋\n\nYour [recent video topic] came up on my FYP and it was 🔥. The way you [specific thing they did] is exactly the kind of content that makes TikTok great for music discovery.\n\nI'm building Frequency Factory - a platform where your followers can rate music, earn tokens, and discover new artists. Basically gamified A&R.\n\nI think we should collab. Here's what I'm thinking:\n\n📱 **CONTENT COLLAB:**\n- I feature your top-rated tracks from the platform\n- You create content around music discovery challenges\n- We cross-promote (you to my audience, me to yours)\n- Your community gets exclusive perks on the platform\n\n💰 **REVENUE:**\n- You get 70% of any artist submissions that come through your referral\n- No upfront cost to you\n- Passive income from your music content\n\n🎯 **WHAT YOU GET:**\n- Engaged community tool (24/7 engagement)\n- Content ideas (top-rated tracks become your videos)\n- Revenue share\n- First mover advantage (we're just launching)\n\nInterested?\n\nI'm working with [X other creators if applicable] right now and looking for 2-3 more music-focused accounts to partner with.\n\nDM me if this sounds cool and I'll send you the full partnership breakdown.\n\n- [Your Name]\nFounder, Frequency Factory\n\n[Link in bio]\n[Partnership deck]",
+        "follow_up": "(Day 3)\n\nHey! Did you get a chance to check out the Frequency Factory partnership idea?\n\nTL;DR: Your followers rate music, you create content around it, we split revenue 70/30 your favor.\n\nLet me know if you want to explore it. Quick call or I can just send you the deck.\n\n✌️"
+      }
+    },
+    
+    "podcast_host": {
+      "target": "Music podcast hosts",
+      "ideal_audience_size": "5K-50K listeners per episode",
+      "template": {
+        "subject_line": "Guest/Partnership opportunity for [Podcast Name]",
+        "message": "Hi [Name],\n\nI've been listening to [Podcast Name] for a while now - your interview with [guest] was particularly insightful, especially the discussion about [specific topic].\n\nI'm the founder of Frequency Factory, a gamified music discovery platform that's changing how unsigned artists get discovered. I think there's both a great guest segment AND a partnership opportunity here.\n\n**AS A GUEST:**\nI can talk about:\n- The broken music discovery system (and how we're fixing it)\n- Gamification in the music industry\n- How community-driven A&R works\n- Data insights from 10,000+ track ratings\n- The future of artist discovery\n\n**AS A PARTNER:**\nYour podcast listeners could use Frequency Factory to:\n- Rate tracks you discuss on the show\n- Discover artists before you feature them\n- Earn rewards for engagement\n- Influence what music you cover\n\nRevenue opportunity: 70/30 split on artist submissions that come through your show's community.\n\nI'm not pitching you hard here - just wanted to put both options on your radar. Happy to do either, both, or neither depending on what makes sense for your show.\n\nIf you're interested in the guest segment, here's my background: [BRIEF BIO WITH CREDENTIALS]\n\nIf you're interested in the partnership, here's the deck: [LINK]\n\nOr we can just hop on a call and chat about music industry stuff. I'm flexible.\n\nLet me know what sounds interesting.\n\nBest,\n[Your Name]\nFounder, Frequency Factory\n\n[Platform Link]\n[LinkedIn/Social Proof]",
+        "follow_up": "(Day 5)\n\nHey [Name],\n\nCircling back on my email about guesting on [Podcast Name] / partnering with Frequency Factory.\n\nEither avenue works for me. Or happy to just connect and chat shop about the music industry if you're interested in what we're building.\n\nLet me know if any of that resonates.\n\nThanks,\n[Name]"
+      }
+    }
+  },
+  
+  "partnership_deck_outline": {
+    "slide_1": "Hook - \"What if your audience could make money discovering music?\"",
+    "slide_2": "The Problem - Audience engagement drops between content, artists waste money on useless submissions",
+    "slide_3": "The Solution - Frequency Factory as always-on engagement tool",
+    "slide_4": "How It Works - 3-phase model (pre-show, live, post-show)",
+    "slide_5": "Revenue Model - 70/30 split, artist submission fees breakdown",
+    "slide_6": "Your Benefits - Content pipeline, engaged audience, passive revenue",
+    "slide_7": "Audience Benefits - Tokens, ranks, badges, influence",
+    "slide_8": "Proof - Metrics, testimonials, early results",
+    "slide_9": "Integration - How easy it is to implement",
+    "slide_10": "Next Steps - Calendar link for partnership call"
+  },
+  
+  "dos_and_donts": {
+    "DO": [
+      "Research the creator thoroughly before reaching out",
+      "Reference specific content they've made",
+      "Explain the value to THEM, not to you",
+      "Make the next step easy (calendar link, deck)",
+      "Be professional but conversational",
+      "Follow up 2 times max, then move on",
+      "Respect their time and audience"
+    ],
+    "DONT": [
+      "Send mass messages (they can tell)",
+      "Be pushy or aggressive",
+      "Focus on your needs instead of theirs",
+      "Make them do work to understand your offer",
+      "Follow up more than twice",
+      "Disparage other platforms or tools they use",
+      "Promise unrealistic results"
+    ]
+  },
+  
+  "success_metrics": {
+    "response_rate_target": "20-30% (with good personalization)",
+    "conversion_to_call_target": "50% of responses",
+    "conversion_to_partnership_target": "25-30% of calls",
+    "outreach_volume": "10-20 personalized messages per week",
+    "focus": "Quality over quantity - better to partner with 5 great creators than 50 mediocre ones"
+  }
+}

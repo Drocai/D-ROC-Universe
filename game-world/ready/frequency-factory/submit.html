@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Track - Frequency Factory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #00f5ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        .submit-form {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 245, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00f5ff;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 245, 255, 0.2);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .form-group input[type="text"]:focus {
+            outline: none;
+            border-color: #00f5ff;
+            box-shadow: 0 0 15px rgba(0, 245, 255, 0.3);
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            background: rgba(255, 0, 255, 0.1);
+            border: 2px dashed rgba(255, 0, 255, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            background: rgba(255, 0, 255, 0.2);
+            border-color: #ff00ff;
+        }
+
+        .file-upload input[type="file"] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-upload-label {
+            display: block;
+            color: #ff00ff;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .file-upload-hint {
+            color: #888;
+            font-size: 0.85em;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #00f5ff;
+            font-size: 0.9em;
+        }
+
+        .progress-bar {
+            display: none;
+            margin-top: 15px;
+            height: 6px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00f5ff, #ff00ff);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00f5ff, #ff00ff);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1.1em;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 245, 255, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #00f5ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: #ff00ff;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .message.success {
+            background: rgba(0, 255, 100, 0.2);
+            border: 1px solid rgba(0, 255, 100, 0.5);
+            color: #00ff64;
+        }
+
+        .message.error {
+            background: rgba(255, 0, 100, 0.2);
+            border: 1px solid rgba(255, 0, 100, 0.5);
+            color: #ff0064;
+        }
+
+        .auth-required {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .auth-required h2 {
+            margin-bottom: 20px;
+            color: #ff00ff;
+        }
+
+        .auth-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #00f5ff, #ff00ff);
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ FREQUENCY FACTORY</h1>
+            <p>Submit Your Track</p>
+        </div>
+
+        <div id="authRequired" class="auth-required" style="display: none;">
+            <h2>🔐 Sign In Required</h2>
+            <p style="margin-bottom: 20px; color: #888;">You need to be logged in to submit tracks</p>
+            <a href="index.html" class="auth-btn">Go to Login</a>
+        </div>
+
+        <div id="submitForm" style="display: none;">
+            <div id="message" class="message"></div>
+
+            <form class="submit-form" id="trackSubmitForm">
+                <div class="form-group">
+                    <label for="artistName">Artist Name</label>
+                    <input type="text" id="artistName" required placeholder="Enter artist name">
+                </div>
+
+                <div class="form-group">
+                    <label for="trackTitle">Track Title</label>
+                    <input type="text" id="trackTitle" required placeholder="Enter track title">
+                </div>
+
+                <div class="form-group">
+                    <label>Audio File (MP3)</label>
+                    <div class="file-upload" onclick="document.getElementById('audioFile').click()">
+                        <input type="file" id="audioFile" accept="audio/mp3,audio/mpeg" required>
+                        <span class="file-upload-label">📁 Click to Upload MP3</span>
+                        <span class="file-upload-hint">Max size: 10MB</span>
+                        <div id="audioFileName" class="file-name"></div>
+                    </div>
+                    <div class="progress-bar" id="audioProgress">
+                        <div class="progress-fill" id="audioProgressFill"></div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Cover Art (JPG/PNG)</label>
+                    <div class="file-upload" onclick="document.getElementById('coverFile').click()">
+                        <input type="file" id="coverFile" accept="image/jpeg,image/jpg,image/png" required>
+                        <span class="file-upload-label">🎨 Click to Upload Image</span>
+                        <span class="file-upload-hint">Max size: 5MB</span>
+                        <div id="coverFileName" class="file-name"></div>
+                    </div>
+                    <div class="progress-bar" id="coverProgress">
+                        <div class="progress-fill" id="coverProgressFill"></div>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    🚀 Submit Track for Review
+                </button>
+            </form>
+
+            <a href="index.html" class="back-link">← Back to Factory</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+        // Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSLS3v_c9aaCdNXILMEKeyXKEbBP6jKjU",
+            authDomain: "factory-1-e7ef3.firebaseapp.com",
+            projectId: "factory-1-e7ef3",
+            storageBucket: "factory-1-e7ef3.firebasestorage.app",
+            messagingSenderId: "656280780334",
+            appId: "1:656280780334:web:39f5a9f40d6870aea862e7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        let currentUser = null;
+
+        // Check auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                document.getElementById('authRequired').style.display = 'none';
+                document.getElementById('submitForm').style.display = 'block';
+            } else {
+                document.getElementById('authRequired').style.display = 'block';
+                document.getElementById('submitForm').style.display = 'none';
+            }
+        });
+
+        // File input handlers
+        document.getElementById('audioFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || '';
+            document.getElementById('audioFileName').textContent = fileName ? `✓ ${fileName}` : '';
+        });
+
+        document.getElementById('coverFile').addEventListener('change', function(e) {
+            const fileName = e.target.files[0]?.name || '';
+            document.getElementById('coverFileName').textContent = fileName ? `✓ ${fileName}` : '';
+        });
+
+        // Form submission
+        document.getElementById('trackSubmitForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            if (!currentUser) {
+                showMessage('Please sign in first', 'error');
+                return;
+            }
+
+            const artistName = document.getElementById('artistName').value;
+            const trackTitle = document.getElementById('trackTitle').value;
+            const audioFile = document.getElementById('audioFile').files[0];
+            const coverFile = document.getElementById('coverFile').files[0];
+
+            // Validate files
+            if (!audioFile || !coverFile) {
+                showMessage('Please select both audio and cover art files', 'error');
+                return;
+            }
+
+            if (audioFile.size > 10 * 1024 * 1024) {
+                showMessage('Audio file must be less than 10MB', 'error');
+                return;
+            }
+
+            if (coverFile.size > 5 * 1024 * 1024) {
+                showMessage('Cover art must be less than 5MB', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Uploading...';
+
+            try {
+                // Upload audio file
+                const audioPath = `tracks/${Date.now()}_${audioFile.name}`;
+                const audioRef = ref(storage, audioPath);
+                const audioUpload = uploadBytesResumable(audioRef, audioFile);
+
+                document.getElementById('audioProgress').style.display = 'block';
+
+                await new Promise((resolve, reject) => {
+                    audioUpload.on('state_changed',
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            document.getElementById('audioProgressFill').style.width = progress + '%';
+                        },
+                        reject,
+                        resolve
+                    );
+                });
+
+                const audioUrl = await getDownloadURL(audioRef);
+
+                // Upload cover art
+                const coverPath = `covers/${Date.now()}_${coverFile.name}`;
+                const coverRef = ref(storage, coverPath);
+                const coverUpload = uploadBytesResumable(coverRef, coverFile);
+
+                document.getElementById('coverProgress').style.display = 'block';
+
+                await new Promise((resolve, reject) => {
+                    coverUpload.on('state_changed',
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            document.getElementById('coverProgressFill').style.width = progress + '%';
+                        },
+                        reject,
+                        resolve
+                    );
+                });
+
+                const coverUrl = await getDownloadURL(coverRef);
+
+                // Create track document
+                await addDoc(collection(db, 'tracks'), {
+                    artist: artistName,
+                    title: trackTitle,
+                    audioUrl: audioUrl,
+                    coverArt: coverUrl,
+                    submittedBy: currentUser.uid,
+                    submittedByEmail: currentUser.email,
+                    submittedAt: serverTimestamp(),
+                    status: 'pending',
+                    ratings: []
+                });
+
+                showMessage('✅ Track submitted successfully! Awaiting approval.', 'success');
+                document.getElementById('trackSubmitForm').reset();
+                document.getElementById('audioFileName').textContent = '';
+                document.getElementById('coverFileName').textContent = '';
+                document.getElementById('audioProgress').style.display = 'none';
+                document.getElementById('coverProgress').style.display = 'none';
+                document.getElementById('audioProgressFill').style.width = '0%';
+                document.getElementById('coverProgressFill').style.width = '0%';
+
+            } catch (error) {
+                console.error('Submission error:', error);
+                showMessage('Error submitting track: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Submit Track for Review';
+            }
+        });
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMISTICS - Dashboard</title>
+    <link rel="stylesheet" href="css/brutalist.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <nav class="nav">
+            <div class="nav-burger">≡</div>
+            <div class="nav-links">
+                <a href="dashboard.html">DASH</a>
+                <a href="day-log.html">LOG</a>
+                <a href="broadcast.html">BROADCAST</a>
+                <a href="collapse-gate.html">GATE</a>
+                <a href="forum.html">FORUM</a>
+            </div>
+        </nav>
+        
+        <main>
+            <section class="panel-card">
+                <h2 class="task-title">TODAY'S TASK</h2>
+                <div class="task-card">
+                    <h3>DAY 2 - Thought Frequency</h3>
+                    <p class="mb-lg">Track and eliminate low-frequency thought patterns. Record each disruptive thought in your Kill-Log with the counter-phrase used to neutralize it.</p>
+                    
+                    <div class="kill-log-form">
+                        <input type="text" id="thought-killed" placeholder="Thought Killed">
+                        <input type="text" id="phrase-used" placeholder="Phrase Used">
+                        <button class="primary-button" id="submit-kill">SUBMIT KILL</button>
+                    </div>
+                    
+                    <div id="kill-log-history">
+                        <!-- Kill log entries will be dynamically populated here -->
+                        <div class="text-muted">No entries recorded today.</div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="panel-card">
+                <h2 class="task-title">FREQUENCY STATUS</h2>
+                <div class="task-card">
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Current Resonance</span>
+                            <span id="resonance-value">528 Hz</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 62%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-container mt-md">
+                        <div class="progress-label">
+                            <span>Field Strength</span>
+                            <span id="field-strength">62%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 62%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="panel-card">
+                <h2 class="task-title">FRACTURE PATH STATUS</h2>
+                <div class="task-card">
+                    <p>Collapse Gate opens in <span id="collapse-countdown" class="mono-ui">23:45:12</span></p>
+                    <p class="mb-md">Required kills before gate access: <span class="mono-ui">7</span></p>
+                    <a href="collapse-gate.html" class="primary-button">ACCESS GATE</a>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/state.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            checkAuthStatus()
+                .then(user => {
+                    if (!user) {
+                        window.location.href = 'index.html';
+                        return;
+                    }
+                    
+                    // Load user data
+                    loadUserData(user.uid);
+                    
+                    // Update countdown timer
+                    updateCountdown();
+                    
+                    // Handle kill log submissions
+                    document.getElementById('submit-kill').addEventListener('click', function() {
+                        const thought = document.getElementById('thought-killed').value;
+                        const phrase = document.getElementById('phrase-used').value;
+                        
+                        if (thought && phrase) {
+                            // Play sound effect
+                            const killSound = new Audio('media/zap.mp3');
+                            killSound.play();
+                            
+                            // Save kill log
+                            saveKillLog(thought, phrase);
+                            
+                            // Clear form
+                            document.getElementById('thought-killed').value = '';
+                            document.getElementById('phrase-used').value = '';
+                            
+                            // Update kill log history
+                            updateKillLogHistory();
+                        }
+                    });
+                    
+                    // Mobile nav handler
+                    document.querySelector('.nav-burger').addEventListener('click', function() {
+                        document.querySelector('.nav-links').classList.toggle('active');
+                    });
+                });
+        });
+        
+        function updateCountdown() {
+            // This would get the actual collapse gate time from the database
+            // For now, we'll use a placeholder
+            const now = new Date();
+            const target = new Date();
+            target.setHours(now.getHours() + 23);
+            target.setMinutes(now.getMinutes() + 45);
+            target.setSeconds(now.getSeconds() + 12);
+            
+            function update() {
+                const now = new Date();
+                const diff = target - now;
+                
+                if (diff <= 0) {
+                    document.getElementById('collapse-countdown').textContent = '00:00:00';
+                    return;
+                }
+                
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                document.getElementById('collapse-countdown').textContent = 
+                    `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                setTimeout(update, 1000);
+            }
+            
+            update();
+        }
+        
+        function loadUserData(userId) {
+            // In a real app, this would fetch from Firebase
+            // For now, we use placeholder data
+            
+            // Update displayed values
+            document.getElementById('resonance-value').textContent = '528 Hz';
+            document.getElementById('field-strength').textContent = '62%';
+            
+            // Update kill log history
+            updateKillLogHistory();
+        }
+        
+        function saveKillLog(thought, phrase) {
+            // In a real app, this would save to Firebase
+            // For demonstration, we'll use localStorage
+            
+            const kills = JSON.parse(localStorage.getItem('killLogs') || '[]');
+            kills.push({
+                thought,
+                phrase,
+                timestamp: new Date().toISOString()
+            });
+            
+            localStorage.setItem('killLogs', JSON.stringify(kills));
+        }
+        
+        function updateKillLogHistory() {
+            const killLogContainer = document.getElementById('kill-log-history');
+            const kills = JSON.parse(localStorage.getItem('killLogs') || '[]');
+            
+            if (kills.length === 0) {
+                killLogContainer.innerHTML = '<div class="text-muted">No entries recorded today.</div>';
+                return;
+            }
+            
+            // Filter to today's kills only
+            const today = new Date().toDateString();
+            const todayKills = kills.filter(kill => {
+                return new Date(kill.timestamp).toDateString() === today;
+            });
+            
+            if (todayKills.length === 0) {
+                killLogContainer.innerHTML = '<div class="text-muted">No entries recorded today.</div>';
+                return;
+            }
+            
+            // Create HTML for each kill
+            let html = '';
+            todayKills.forEach((kill, index) => {
+                const time = new Date(kill.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                html += `
+                <div class="kill-log-entry">
+                    <div class="kill-log-header">
+                        <span class="kill-log-number">#${index + 1}</span>
+                        <span class="kill-log-time">${time}</span>
+                    </div>
+                    <div class="kill-log-thought">"${kill.thought}"</div>
+                    <div class="kill-log-phrase">→ "${kill.phrase}"</div>
+                </div>
+                `;
+            });
+            
+            killLogContainer.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

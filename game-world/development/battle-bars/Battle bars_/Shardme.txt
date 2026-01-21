@@ -1,0 +1,28 @@
+SYNTAX_SOUL Prototype v0.1
+This is a functional React prototype demonstrating the core "Neural Sculpting" loop of the Syntax Soul game concept.
+Features Implemented
+1. Neural Lattice (Visualization):
+• Displays the AI's current stats (Aggression, Complexity, Flow).
+• Visualizes equipped "Logic Shards" as nodes orbiting a central brain core.
+• Demonstrates the "Glass & Node" aesthetic.
+2. Inventory (Logic Shards):
+• Interactive toggle system: Click shards to equip/unequip them.
+• Real-time logic: Equipping shards immediately alters the AI's stat distribution.
+• Shard Archetypes: Includes Generators (Aggression), Injectors (Vocabulary), Filters (Defense), and Flow Chips (Speed).
+3. Simulation Engine (Live Preview):
+• Dynamic Lyric Generation: The lyrics in the right-hand terminal change based on your stats.
+• High Aggression: Generates hostile, punchy bars.
+• High Complexity: Generates multi-syllabic, intellectual bars.
+• High Flow: Generates rapid-fire, hyphenated text patterns.
+4. Phonic Forge (Training Minigame):
+• A simulated training module where you match patterns to "upload data."
+• Demonstrates how the user actively engages to earn progression resources.
+How to Test the Mechanics
+1. Observe Baseline: Look at the "Live Output Preview" on the right. It should be standard, balanced rap lyrics.
+2. Equip "Scorched Earth": Click the first item in the inventory.
+• Result: Notice the stats (AGG) spike. Click "RERUN SIMULATION." The lyrics become violent and direct.
+3. Equip "Webster's Dark-Web": Unmount Scorched Earth and mount Webster's.
+• Result: Stats (CMP) spike. Rerun simulation. The lyrics become philosophical and use big words.
+4. Try "Tachyon Tongue": Mount the flow chip.
+• Result: Stats (FLW) spike. The lyrics become dense blocks of text representing speed rapping.
+This confirms the core loop: Configure Brain -> Alter Output -> Win Battles.

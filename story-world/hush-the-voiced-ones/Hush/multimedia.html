@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUSH: The Voiced Ones - Multimedia Experience</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        max-height: 720px;
+        background: #0A0A0F;
+        color: #FFFFFF;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .title {
+        color: #C2E7F0;
+        font-size: 72px;
+        font-weight: bold;
+        text-shadow: 0 0 15px rgba(194, 231, 240, 0.5);
+      }
+      
+      .subtitle {
+        color: #FFFFFF;
+        font-size: 36px;
+        font-weight: 300;
+      }
+      
+      .body-text {
+        font-size: 24px;
+      }
+      
+      .accent {
+        color: #FFBF40;
+      }
+      
+      .sound-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        opacity: 0.2;
+        z-index: 0;
+      }
+      
+      .opal-gradient {
+        background: linear-gradient(45deg, #C2E7F0, #C9A6D6, #FFBF40, #0ADFEF);
+        background-size: 400% 400%;
+        animation: gradient 8s ease infinite;
+      }
+      
+      @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .content-wrapper {
+        z-index: 10;
+        position: relative;
+      }
+      
+      .video-frame {
+        border: 2px solid #C2E7F0;
+        box-shadow: 0 0 20px rgba(194, 231, 240, 0.3);
+      }
+      
+      .theme-song-timeline {
+        height: 180px;
+        position: relative;
+      }
+      
+      .timeline-segment {
+        position: absolute;
+        height: 40px;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+      
+      .timeline-segment:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container grid grid-rows-1">
+      <!-- Sound wave decoration -->
+      <svg class="sound-wave" viewBox="0 0 1280 80" preserveAspectRatio="none">
+        <path d="M0,40 Q320,0 640,40 Q960,80 1280,40 L1280,80 L0,80 Z" fill="#C2E7F0"></path>
+      </svg>
+      
+      <div class="content-wrapper flex justify-evenly items-center p-12">
+        <div class="w-2/5 flex flex-col justify-center">
+          <h1 class="title mb-4">Multimedia Experience</h1>
+          <h2 class="subtitle mb-4">Immersive Storytelling</h2>
+          
+          <div class="body-text space-y-4">
+            <p class="mb-6"><span class="accent">Teaser Video:</span> A cinematic introduction to the world of HUSH, showcasing the Silent Plains village and Hush's discovery of her voice.</p>
+            
+            <p class="mb-6"><span class="accent">Theme Song:</span> "The Whisper Awakens" - An instrumental journey from silence to revolution.</p>
+            
+            <div class="flex items-center space-x-4 mt-2">
+              <div class="w-3 h-3 rounded-full" style="background-color: #C2E7F0;"></div>
+              <p>Pilot Episode: "The First Whisper"</p>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+              <div class="w-3 h-3 rounded-full" style="background-color: #FFBF40;"></div>
+              <p>45-minute streaming format</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="w-3/5 flex flex-col justify-center items-center space-y-8">
+          <!-- Teaser Video Screenshot -->
+          <div class="video-frame rounded-lg overflow-hidden">
+            <img src="/home/ubuntu/teaser_ref1.png" alt="Teaser Video Screenshot" class="w-500 h-auto">
+            <div class="bg-black/70 p-2 text-center">
+              <p class="text-sm text-white">Cinematic teaser showcasing the Silent Plains village</p>
+            </div>
+          </div>
+          
+          <!-- Theme Song Visualization -->
+          <div class="theme-song-timeline w-full relative">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gray-700"></div>
+            
+            <!-- Timeline segments -->
+            <div class="timeline-segment" style="left: 0%; width: 16.6%; top: 20px; background-color: #0A0A0F; border: 1px solid #C2E7F0; color: #C2E7F0;">
+              The Silence
+            </div>
+            
+            <div class="timeline-segment" style="left: 16.6%; width: 16.6%; top: 20px; background-color: #C9A6D6; color: #0A0A0F;">
+              The Stirring
+            </div>
+            
+            <div class="timeline-segment" style="left: 33.2%; width: 16.6%; top: 20px; background-color: #C2E7F0; color: #0A0A0F;">
+              The Whisper
+            </div>
+            
+            <div class="timeline-segment" style="left: 49.8%; width: 16.6%; top: 20px; background-color: #0ADFEF; color: #0A0A0F;">
+              The Awakening
+            </div>
+            
+            <div class="timeline-segment" style="left: 66.4%; width: 16.6%; top: 20px; background-color: #FFBF40; color: #0A0A0F;">
+              The Revolution
+            </div>
+            
+            <div class="timeline-segment" style="left: 83%; width: 16.6%; top: 20px; background-color: #0A0A0F; border: 1px solid #C2E7F0; color: #C2E7F0;">
+              The Echo
+            </div>
+            
+            <!-- Sound wave visualization -->
+            <svg width="100%" height="80" viewBox="0 0 600 80" preserveAspectRatio="none" class="mt-16">
+              <!-- The Silence - minimal waves -->
+              <path d="M0,40 Q10,40 20,40 Q30,38 40,40 Q50,42 60,40 Q70,39 80,40 Q90,41 100,40" 
+                    stroke="#C2E7F0" stroke-width="1" fill="none" />
+              
+              <!-- The Stirring - small waves -->
+              <path d="M100,40 Q110,35 120,40 Q130,45 140,40 Q150,35 160,40 Q170,45 180,40 Q190,35 200,40" 
+                    stroke="#C9A6D6" stroke-width="1.5" fill="none" />
+              
+              <!-- The Whisper - medium waves -->
+              <path d="M200,40 Q210,30 220,40 Q230,50 240,40 Q250,30 260,40 Q270,50 280,40 Q290,30 300,40" 
+                    stroke="#C2E7F0" stroke-width="2" fill="none" />
+              
+              <!-- The Awakening - larger waves -->
+              <path d="M300,40 Q310,20 320,40 Q330,60 340,40 Q350,20 360,40 Q370,60 380,40 Q390,20 400,40" 
+                    stroke="#0ADFEF" stroke-width="2.5" fill="none" />
+              
+              <!-- The Revolution - dramatic waves -->
+              <path d="M400,40 Q410,10 420,40 Q430,70 440,40 Q450,10 460,40 Q470,70 480,40 Q490,10 500,40" 
+                    stroke="#FFBF40" stroke-width="3" fill="none" />
+              
+              <!-- The Echo - fading waves -->
+              <path d="M500,40 Q510,30 520,40 Q530,50 540,40 Q550,30 560,40 Q570,45 580,40 Q590,38 600,40" 
+                    stroke="#C2E7F0" stroke-width="2" fill="none" opacity="0.7" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

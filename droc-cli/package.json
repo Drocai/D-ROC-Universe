@@ -1,0 +1,23 @@
+{
+  "name": "droc-cli",
+  "version": "1.0.0",
+  "description": "D-RoC Universe Command Center - Navigate and manage your creative universe",
+  "main": "src/index.js",
+  "bin": {
+    "droc": "./bin/droc.js"
+  },
+  "scripts": {
+    "start": "node bin/droc.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["cli", "droc", "universe", "creative", "management"],
+  "author": "D-RoC",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.0.0",
+    "chalk": "^4.1.2",
+    "fuzzy": "^0.1.3",
+    "inquirer": "^8.2.6",
+    "ora": "^5.4.1"
+  }
+}

@@ -1,0 +1,572 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2822
+\cocoatextscaling1\cocoaplatform1{\fonttbl\f0\fnil\fcharset0 .SFUI-Regular;\f1\fnil\fcharset0 .SFUI-Semibold;\f2\fswiss\fcharset0 Helvetica;
+\f3\fmodern\fcharset0 Courier;\f4\fnil\fcharset0 .AppleSystemUIFontMonospaced-Regular;\f5\fmodern\fcharset0 Courier-Oblique;
+}
+{\colortbl;\red255\green255\blue255;\red255\green255\blue255;\red171\green178\blue191;\red198\green120\blue221;
+\red209\green154\blue102;\red152\green195\blue121;\red224\green108\blue117;\red97\green174\blue238;\red86\green182\blue194;
+\red92\green99\blue112;}
+{\*\expandedcolortbl;;\cssrgb\c100000\c100000\c100000;\cssrgb\c67059\c69804\c74902;\cssrgb\c77647\c47059\c86667;
+\cssrgb\c81961\c60392\c40000;\cssrgb\c59608\c76471\c47451;\cssrgb\c87843\c42353\c45882;\cssrgb\c38039\c68235\c93333;\cssrgb\c33725\c71373\c76078;
+\cssrgb\c36078\c38824\c43922;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 Absolutely \'97 here\'92s a 
+\f1\b production\uc0\u8209 ready starter project
+\f0\b0  configured with:\
+\
+\uc0\u10004  React\
+\uc0\u10004  React Three Fiber (Three.js)\
+\uc0\u10004  Tailwind CSS\
+\uc0\u10004  PWA support (manifest + service worker)\
+\uc0\u10004  Mobile first controls\
+\uc0\u10004  Asset loader + modular scene structure\
+\
+This gives you a 
+\f1\b scalable foundation
+\f0\b0  for your \'93Bull Run: China Shop Chaos\'94 game.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\fs24 \cf0 \
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56550  Project Starter \'97 Folder Structure
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf3 DumbBullPWA/\
+\uc0\u9500 \u9472 \u9472  \cf4 public\cf3 /\
+\uc0\u9474    \u9500 \u9472 \u9472  manifest.json\
+\uc0\u9474    \u9500 \u9472 \u9472  favicon.ico\
+\uc0\u9474    \u9492 \u9472 \u9472  robots.txt\
+\uc0\u9500 \u9472 \u9472  src/\
+\uc0\u9474    \u9500 \u9472 \u9472  assets/\
+\uc0\u9474    \u9474    \u9500 \u9472 \u9472  bull/             \u8592  drop your PNG/GLTF here\
+\uc0\u9474    \u9474    \u9500 \u9472 \u9472  china/\
+\uc0\u9474    \u9474    \u9492 \u9472 \u9472  audio/\
+\uc0\u9474    \u9474        \u9500 \u9472 \u9472  song.mp3\
+\uc0\u9474    \u9474        \u9500 \u9472 \u9472  smash.mp3\
+\uc0\u9474    \u9474        \u9492 \u9472 \u9472  moo.mp3\
+\uc0\u9474    \u9500 \u9472 \u9472  components/\
+\uc0\u9474    \u9474    \u9500 \u9472 \u9472  GameCanvas.jsx\
+\uc0\u9474    \u9474    \u9500 \u9472 \u9472  UIOverlay.jsx\
+\uc0\u9474    \u9474    \u9492 \u9472 \u9472  Controls.jsx\
+\uc0\u9474    \u9500 \u9472 \u9472  scenes/\
+\uc0\u9474    \u9474    \u9492 \u9472 \u9472  MainScene.jsx\
+\uc0\u9474    \u9500 \u9472 \u9472  shaders/\
+\uc0\u9474    \u9474    \u9492 \u9472 \u9472  smashEffect.glsl\
+\uc0\u9474    \u9500 \u9472 \u9472  App.jsx\
+\uc0\u9474    \u9500 \u9472 \u9472  index.css\
+\uc0\u9474    \u9492 \u9472 \u9472  main.jsx\
+\uc0\u9500 \u9472 \u9472  .gitignore\
+\uc0\u9500 \u9472 \u9472  \cf4 package\cf3 .json\
+\uc0\u9500 \u9472 \u9472  tailwind.config.cjs\
+\uc0\u9500 \u9472 \u9472  vite.config.js\
+\uc0\u9492 \u9472 \u9472  service-worker.js
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56516  1) package.json
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf3 \{\
+  \cf5 "name"\cf3 : \cf6 "dumbbull-pwa"\cf3 ,\
+  \cf5 "version"\cf3 : \cf6 "1.0.0"\cf3 ,\
+  \cf5 "type"\cf3 : \cf6 "module"\cf3 ,\
+  \cf5 "scripts"\cf3 : \{\
+    \cf5 "dev"\cf3 : \cf6 "vite"\cf3 ,\
+    \cf5 "build"\cf3 : \cf6 "vite build"\cf3 ,\
+    \cf5 "preview"\cf3 : \cf6 "vite preview"\cf3 ,\
+    \cf5 "serve-sw"\cf3 : \cf6 "workbox injectManifest"\cf3 \
+  \},\
+  \cf5 "dependencies"\cf3 : \{\
+    \cf5 "@react-three/drei"\cf3 : \cf6 "^10.0.0"\cf3 ,\
+    \cf5 "@react-three/fiber"\cf3 : \cf6 "^8.0.0"\cf3 ,\
+    \cf5 "react"\cf3 : \cf6 "^18.0.0"\cf3 ,\
+    \cf5 "react-dom"\cf3 : \cf6 "^18.0.0"\cf3 ,\
+    \cf5 "tailwindcss"\cf3 : \cf6 "^3.0.0"\cf3 \
+  \},\
+  \cf5 "devDependencies"\cf3 : \{\
+    \cf5 "autoprefixer"\cf3 : \cf6 "^10.0.0"\cf3 ,\
+    \cf5 "postcss"\cf3 : \cf6 "^8.0.0"\cf3 ,\
+    \cf5 "vite"\cf3 : \cf6 "^4.0.0"\cf3 ,\
+    \cf5 "workbox-cli"\cf3 : \cf6 "^6.5.0"\cf3 \
+  \}\
+\}
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56516  2) vite.config.js
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 import\cf3  \{ defineConfig \} \cf4 from\cf3  \cf6 'vite'\cf3 ;\
+\cf4 import\cf3  react \cf4 from\cf3  \cf6 '@vitejs/plugin-react'\cf3 ;\
+\
+\cf4 export\cf3  \cf4 default\cf3  defineConfig(\{\
+  \cf5 plugins\cf3 : [react()],\
+  \cf5 build\cf3 : \{\
+    \cf5 rollupOptions\cf3 : \{\
+      \cf5 output\cf3 : \{\
+        \cf5 assetFileNames\cf3 : \cf6 'assets/[name].[hash][extname]'\cf3 \
+      \}\
+    \}\
+  \}\
+\});
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56516  3) Tailwind Setup
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 tailwind.config.cjs
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf3 module.exports = \{\
+  \cf5 content\cf3 : [\cf6 "./index.html"\cf3 , \cf6 "./src/**/*.\{js,jsx\}"\cf3 ],\
+  \cf5 theme\cf3 : \{\
+    \cf5 extend\cf3 : \{\}\
+  \},\
+  \cf5 plugins\cf3 : []\
+\};
+\f2\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 src/index.css
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 @tailwind\cf3  base;\
+\cf4 @tailwind\cf3  components;\
+\cf4 @tailwind\cf3  utilities;\
+\
+\cf7 html\cf3 , \cf7 body\cf3 , \cf8 #root\cf3  \{\
+  \cf6 width\cf3 : \cf5 100%\cf3 ;\
+  \cf6 height\cf3 : \cf5 100%\cf3 ;\
+  \cf6 margin\cf3 : \cf5 0\cf3 ;\
+  \cf6 padding\cf3 : \cf5 0\cf3 ;\
+\}\
+\cf7 canvas\cf3  \{\
+  \cf6 display\cf3 : block;\
+\}
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56516  4) PWA Manifest
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 public/manifest.json
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf3 \{\
+  \cf5 "name"\cf3 : \cf6 "Bull Run: China Shop Chaos"\cf3 ,\
+  \cf5 "short_name"\cf3 : \cf6 "BullRun"\cf3 ,\
+  \cf5 "start_url"\cf3 : \cf6 "."\cf3 ,\
+  \cf5 "display"\cf3 : \cf6 "standalone"\cf3 ,\
+  \cf5 "background_color"\cf3 : \cf6 "#1a1f29"\cf3 ,\
+  \cf5 "theme_color"\cf3 : \cf6 "#e74c3c"\cf3 ,\
+  \cf5 "icons"\cf3 : [\
+    \{\
+      \cf5 "src"\cf3 : \cf6 "icon-192.png"\cf3 ,\
+      \cf5 "sizes"\cf3 : \cf6 "192x192"\cf3 ,\
+      \cf5 "type"\cf3 : \cf6 "image/png"\cf3 \
+    \},\
+    \{\
+      \cf5 "src"\cf3 : \cf6 "icon-512.png"\cf3 ,\
+      \cf5 "sizes"\cf3 : \cf6 "512x512"\cf3 ,\
+      \cf5 "type"\cf3 : \cf6 "image/png"\cf3 \
+    \}\
+  ]\
+\}
+\f2\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 Add 
+\f4 icon-192.png
+\f0  and 
+\f4 icon-512.png
+\f0  inside 
+\f4 public/
+\f0 .\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\fs24 \cf0 \
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56516  5) Service Worker
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 service-worker.js
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 import\cf3  \{ precacheAndRoute \} \cf4 from\cf3  \cf6 'workbox-precaching'\cf3 ;\
+\cf4 import\cf3  \{ registerRoute \} \cf4 from\cf3  \cf6 'workbox-routing'\cf3 ;\
+\cf4 import\cf3  \{ NetworkFirst, StaleWhileRevalidate \} \cf4 from\cf3  \cf6 'workbox-strategies'\cf3 ;\
+\
+precacheAndRoute(self.__WB_MANIFEST);\
+\
+registerRoute(\
+  (\{ request \}) => request.destination === \cf6 'script'\cf3  ||\
+                   request.destination === \cf6 'style'\cf3 ,\
+  \cf4 new\cf3  StaleWhileRevalidate()\
+);\
+\
+registerRoute(\
+  (\{ request \}) => request.destination === \cf6 'document'\cf3 ,\
+  \cf4 new\cf3  NetworkFirst()\
+);
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56524  6) React Entry
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 src/main.jsx
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 import\cf3  React \cf4 from\cf3  \cf6 "react"\cf3 ;\
+\cf4 import\cf3  ReactDOM \cf4 from\cf3  \cf6 "react-dom/client"\cf3 ;\
+\cf4 import\cf3  App \cf4 from\cf3  \cf6 "./App"\cf3 ;\
+\cf4 import\cf3  \cf6 "./index.css"\cf3 ;\
+\
+ReactDOM.createRoot(document.getElementById(\cf6 "root"\cf3 )).render(\
+  <\cf7 React.StrictMode\cf3 ><\cf7 App\cf3  /></\cf7 React.StrictMode\cf3 >\
+);
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56524  7) App Component
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 src/App.jsx
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 import\cf3  React \cf4 from\cf3  \cf6 "react"\cf3 ;\
+\cf4 import\cf3  GameCanvas \cf4 from\cf3  \cf6 "./components/GameCanvas"\cf3 ;\
+\cf4 import\cf3  UIOverlay \cf4 from\cf3  \cf6 "./components/UIOverlay"\cf3 ;\
+\
+\cf4 export\cf3  \cf4 default\cf3  \cf4 function\cf3  App() \{\
+  \cf4 return\cf3  (\
+    <\cf7 div\cf3  \cf5 className\cf3 =\cf6 "w-screen h-screen bg-[#1a1f29] relative"\cf3 >\
+      <\cf7 GameCanvas\cf3  />\
+      <\cf7 UIOverlay\cf3  />\
+    </\cf7 div\cf3 >\
+  );\
+\}
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56524  8) Game Canvas (Three)
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 src/components/GameCanvas.jsx
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 import\cf3  React \cf4 from\cf3  \cf6 "react"\cf3 ;\
+\cf4 import\cf3  \{ Canvas \} \cf4 from\cf3  \cf6 "@react-three/fiber"\cf3 ;\
+\cf4 import\cf3  MainScene \cf4 from\cf3  \cf6 "../scenes/MainScene"\cf3 ;\
+\
+\cf4 export\cf3  \cf4 default\cf3  \cf4 function\cf3  GameCanvas() \{\
+  \cf4 return\cf3  (\
+    <\cf7 Canvas\cf3 \
+      \cf5 orthographic\cf3 \
+      \cf5 camera\cf3 =\cf6 \{\{\cf3  \cf5 position:\cf3  [\cf5 0\cf3 , \cf5 0\cf3 , \cf5 500\cf3 ], \cf5 zoom:\cf3  \cf5 2\cf3  \}\}\
+      \cf5 gl\cf3 =\cf6 \{\{\cf3  \cf5 antialias:\cf3  \cf5 true\cf3  \}\}\
+      \cf5 className\cf3 =\cf6 "w-full h-full"\cf3 \
+    >\
+      <\cf7 MainScene\cf3  />\
+    </\cf7 Canvas\cf3 >\
+  );\
+\}
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56524  9) Main Scene
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 src/scenes/MainScene.jsx
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 import\cf3  React, \{ useRef, useState \} \cf4 from\cf3  \cf6 "react"\cf3 ;\
+\cf4 import\cf3  \{ useFrame, useLoader \} \cf4 from\cf3  \cf6 "@react-three/fiber"\cf3 ;\
+\cf4 import\cf3  * \cf4 as\cf3  THREE \cf4 from\cf3  \cf6 "three"\cf3 ;\
+\
+\cf4 export\cf3  \cf4 default\cf3  \cf4 function\cf3  MainScene() \{\
+  \cf4 const\cf3  bullRef = useRef();\
+  \cf4 const\cf3  [smashEffect, setSmashEffect] = useState(\cf9 false\cf3 );\
+\
+  
+\f5\i \cf10 // load assets once
+\f3\i0 \cf3 \
+  \cf4 const\cf3  bullTexture = useLoader(THREE.TextureLoader, \cf6 "/assets/bull/bull_1.png"\cf3 );\
+\
+  useFrame((state, delta) => \{\
+    \cf4 if\cf3  (bullRef.current) \{\
+      bullRef.current.rotation.y += delta * \cf5 0.5\cf3 ;\
+    \}\
+  \});\
+\
+  \cf4 return\cf3  (\
+    <>\
+      <\cf7 ambientLight\cf3  \cf5 intensity\cf3 =\cf6 \{0.4\}\cf3  />\
+      <\cf7 directionalLight\cf3  \cf5 position\cf3 =\cf6 \{[5,\cf3  \cf5 10\cf3 , \cf5 5\cf3 ]\} \cf5 intensity\cf3 =\cf6 \{1\}\cf3  />\
+\
+      \{/* Bull Mesh */\}\
+      <\cf7 mesh\cf3  \cf5 ref\cf3 =\cf6 \{bullRef\}\cf3  \cf5 position\cf3 =\cf6 \{[0,\cf3  \cf5 -50\cf3 , \cf5 0\cf3 ]\}>\
+        <\cf7 planeGeometry\cf3  \cf5 args\cf3 =\cf6 \{[200,\cf3  \cf5 200\cf3 ]\} />\
+        <\cf7 meshBasicMaterial\cf3  \cf5 map\cf3 =\cf6 \{bullTexture\}\cf3  \cf5 transparent\cf3  />\
+      </\cf7 mesh\cf3 >\
+\
+      \{/* TODO: Add China meshes, physics, smash effects */\}\
+    </>\
+  );\
+\}
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56524  10) UI Overlay
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 src/components/UIOverlay.jsx
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 import\cf3  React, \{ useState \} \cf4 from\cf3  \cf6 "react"\cf3 ;\
+\
+\cf4 export\cf3  \cf4 default\cf3  \cf4 function\cf3  UIOverlay() \{\
+  \cf4 const\cf3  [score, setScore] = useState(\cf5 0\cf3 );\
+\
+  \cf4 return\cf3  (\
+    <\cf7 div\cf3  \cf5 className\cf3 =\cf6 "absolute top-4 left-4 text-white font-bold text-2xl"\cf3 >\
+      Score: \{score\}\
+    </\cf7 div\cf3 >\
+  );\
+\}
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56524  11) Touch Controls (Mobile First)
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 src/components/Controls.jsx
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 import\cf3  React, \{ useEffect, useState \} \cf4 from\cf3  \cf6 "react"\cf3 ;\
+\
+\cf4 export\cf3  \cf4 default\cf3  \cf4 function\cf3  Controls(\{ onMove \}) \{\
+  \cf4 const\cf3  [touchPos, setTouchPos] = useState(\cf9 null\cf3 );\
+\
+  \cf4 function\cf3  handleTouchMove(e) \{\
+    \cf4 const\cf3  touch = e.touches[\cf5 0\cf3 ];\
+    onMove(\{ \cf5 x\cf3 : touch.clientX, \cf5 y\cf3 : touch.clientY \});\
+  \}\
+\
+  useEffect(() => \{\
+    window.addEventListener(\cf6 "touchmove"\cf3 , handleTouchMove);\
+    \cf4 return\cf3  () => window.removeEventListener(\cf6 "touchmove"\cf3 , handleTouchMove);\
+  \}, []);\
+\
+  \cf4 return\cf3  \cf9 null\cf3 ;\
+\}
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56524  12) Shader Example
+\f0\b0\fs34 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs44 \cf2 src/shaders/smashEffect.glsl
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf4 precision\cf3  \cf4 mediump\cf3  \cf5 float\cf3 ;\
+\cf4 varying\cf3  \cf5 vec2\cf3  vUv;\
+\
+\cf5 void\cf3  main() \{\
+  gl_FragColor = \cf5 vec4\cf3 (vUv, \cf5 1.0\cf3 , \cf5 1.0\cf3 );\
+\}
+\f2\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 You\'92ll replace this with proper smash shaders.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\fs24 \cf0 \
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56960  How to Run
+\f2\b0\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf3 npm install\
+npm run dev
+\f2\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 Build for production:
+\f2\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf3 npm run build
+\f2\fs24 \cf0 \
+\
+\
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f1\b\fs56 \cf2 \uc0\u55357 \u56524  What\'92s Next (you can ask me)
+\f0\b0\fs34 \
+\
+\uc0\u9989  Add animated character\
+\uc0\u9989  Load multiple china objects with Instancing\
+\uc0\u9989  Add audio that syncs with hit feedback\
+\uc0\u9989  Add PWA offline caching analytics\
+\uc0\u9989  Implement rage meter + bull transformation\
+\
+Just ask:
+\f2\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f3\fs28 \cf3 Add smash physics + combo meter
+\f2\fs24 \cf0 \
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \'85and I\'92ll generate the code for that too.\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f2\fs24 \cf0 \
+\uc0\u11835 \
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\sl250\slmult1\pardirnatural\partightenfactor0
+
+\f0\fs34 \cf2 \
+Ready to launch your PWA game \uc0\u55357 \u56485 \u55357 \u56322 ? Let\'92s build the mythic bull experience!}

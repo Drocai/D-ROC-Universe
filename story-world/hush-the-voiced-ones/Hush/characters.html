@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUSH: The Voiced Ones - Characters</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        max-height: 720px;
+        background: #0A0A0F;
+        color: #FFFFFF;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .title {
+        color: #C2E7F0;
+        font-size: 72px;
+        font-weight: bold;
+        text-shadow: 0 0 15px rgba(194, 231, 240, 0.5);
+      }
+      
+      .subtitle {
+        color: #FFFFFF;
+        font-size: 36px;
+        font-weight: 300;
+      }
+      
+      .body-text {
+        font-size: 24px;
+      }
+      
+      .accent {
+        color: #FFBF40;
+      }
+      
+      .sound-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        opacity: 0.2;
+        z-index: 0;
+      }
+      
+      .opal-gradient {
+        background: linear-gradient(45deg, #C2E7F0, #C9A6D6, #FFBF40, #0ADFEF);
+        background-size: 400% 400%;
+        animation: gradient 8s ease infinite;
+      }
+      
+      @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .content-wrapper {
+        z-index: 10;
+        position: relative;
+      }
+      
+      .character-card {
+        position: relative;
+        transition: transform 0.3s ease;
+      }
+      
+      .character-card:hover {
+        transform: translateY(-5px);
+      }
+      
+      .character-hush { box-shadow: 0 0 20px rgba(194, 231, 240, 0.4); }
+      .character-mona { box-shadow: 0 0 20px rgba(201, 166, 214, 0.4); }
+      .character-shriek { box-shadow: 0 0 20px rgba(10, 223, 239, 0.4); }
+      .character-laffy { box-shadow: 0 0 20px rgba(255, 153, 0, 0.4); }
+      .character-soba { box-shadow: 0 0 20px rgba(165, 185, 201, 0.4); }
+      .character-alarenix { box-shadow: 0 0 20px rgba(255, 191, 64, 0.4); }
+      
+      .sound-badge {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-weight: bold;
+        font-size: 14px;
+        color: #0A0A0F;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container grid grid-rows-1">
+      <!-- Sound wave decoration -->
+      <svg class="sound-wave" viewBox="0 0 1280 80" preserveAspectRatio="none">
+        <path d="M0,40 Q320,0 640,40 Q960,80 1280,40 L1280,80 L0,80 Z" fill="#C2E7F0"></path>
+      </svg>
+      
+      <div class="content-wrapper p-12">
+        <h1 class="title mb-4 text-center">The Voiced Ones</h1>
+        <h2 class="subtitle mb-8 text-center">Six Women with the Power of Sound</h2>
+        
+        <div class="grid grid-cols-3 gap-6">
+          <!-- Hush -->
+          <div class="character-card character-hush rounded-lg overflow-hidden">
+            <img src="/home/ubuntu/hush_portrait.png" alt="Hush" class="w-full h-140 object-cover">
+            <div class="p-4 bg-black bg-opacity-70">
+              <h3 class="text-xl font-bold" style="color: #C2E7F0;">Hush</h3>
+              <p class="text-sm">The Whisperer</p>
+            </div>
+            <div class="sound-badge" style="background-color: #C2E7F0;">Whisper</div>
+          </div>
+          
+          <!-- Mona -->
+          <div class="character-card character-mona rounded-lg overflow-hidden">
+            <img src="/home/ubuntu/mona_portrait.png" alt="Mona" class="w-full h-140 object-cover">
+            <div class="p-4 bg-black bg-opacity-70">
+              <h3 class="text-xl font-bold" style="color: #C9A6D6;">Mona</h3>
+              <p class="text-sm">The Moaner</p>
+            </div>
+            <div class="sound-badge" style="background-color: #C9A6D6;">Moan</div>
+          </div>
+          
+          <!-- Shriek -->
+          <div class="character-card character-shriek rounded-lg overflow-hidden">
+            <img src="/home/ubuntu/shriek_portrait.png" alt="Shriek" class="w-full h-140 object-cover">
+            <div class="p-4 bg-black bg-opacity-70">
+              <h3 class="text-xl font-bold" style="color: #0ADFEF;">Shriek</h3>
+              <p class="text-sm">The Screamer</p>
+            </div>
+            <div class="sound-badge" style="background-color: #0ADFEF;">Scream</div>
+          </div>
+          
+          <!-- Laffy -->
+          <div class="character-card character-laffy rounded-lg overflow-hidden">
+            <img src="/home/ubuntu/laffy_portrait.png" alt="Laffy" class="w-full h-140 object-cover">
+            <div class="p-4 bg-black bg-opacity-70">
+              <h3 class="text-xl font-bold" style="color: #FF9900;">Laffy</h3>
+              <p class="text-sm">The Laugher</p>
+            </div>
+            <div class="sound-badge" style="background-color: #FF9900;">Laugh</div>
+          </div>
+          
+          <!-- Soba -->
+          <div class="character-card character-soba rounded-lg overflow-hidden">
+            <img src="/home/ubuntu/soba_portrait.png" alt="Soba" class="w-full h-140 object-cover">
+            <div class="p-4 bg-black bg-opacity-70">
+              <h3 class="text-xl font-bold" style="color: #A5B9C9;">Soba</h3>
+              <p class="text-sm">The Sigher</p>
+            </div>
+            <div class="sound-badge" style="background-color: #A5B9C9;">Sigh</div>
+          </div>
+          
+          <!-- Alarenix -->
+          <div class="character-card character-alarenix rounded-lg overflow-hidden">
+            <img src="/home/ubuntu/alarenix_portrait.png" alt="Alarenix" class="w-full h-140 object-cover">
+            <div class="p-4 bg-black bg-opacity-70">
+              <h3 class="text-xl font-bold" style="color: #FFBF40;">Alarenix</h3>
+              <p class="text-sm">The Dialect Queen</p>
+            </div>
+            <div class="sound-badge" style="background-color: #FFBF40;">Full Language</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

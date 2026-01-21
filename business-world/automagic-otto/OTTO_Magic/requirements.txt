@@ -1,0 +1,13 @@
+prefect
+click
+python-dotenv
+openai
+google-generativeai
+google-api-python-client
+google-auth-oauthlib
+google-auth-httplib2
+pytrends
+elevenlabs
+moviepy
+requests
+Pillow

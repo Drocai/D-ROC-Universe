@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequency Factory - Brand Identity Kit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        h3 {
+            font-size: 1.3em;
+            margin: 20px 0 10px 0;
+            color: #555;
+        }
+        
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .logo-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid #e0e0e0;
+            transition: transform 0.3s;
+        }
+        
+        .logo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .logo-card h4 {
+            margin-bottom: 20px;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        .logo-display {
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .logo-display.dark {
+            background: #1a1a2e;
+        }
+        
+        /* Color Palette */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .color-card {
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .color-swatch {
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .color-info {
+            background: white;
+            padding: 15px;
+        }
+        
+        .color-info p {
+            margin: 5px 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .color-info .color-name {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+        
+        /* Download Button */
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        
+        .download-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .usage-note {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="section">
+            <h1>🏭 FREQUENCY FACTORY</h1>
+            <p style="font-size: 1.2em; color: #666; margin-top: 10px;">Brand Identity Kit v1.0</p>
+        </div>
+        
+        <!-- Logo Variations -->
+        <div class="section">
+            <h2>Logo Variations</h2>
+            
+            <div class="logo-grid">
+                <!-- Primary Logo -->
+                <div class="logo-card">
+                    <h4>Primary Logo</h4>
+                    <div class="logo-display">
+                        <svg width="250" height="180" viewBox="0 0 250 180" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Factory Building -->
+                            <rect x="50" y="80" width="150" height="70" fill="#667eea" rx="5"/>
+                            <rect x="60" y="90" width="20" height="30" fill="#764ba2"/>
+                            <rect x="90" y="90" width="20" height="30" fill="#764ba2"/>
+                            <rect x="120" y="90" width="20" height="30" fill="#764ba2"/>
+                            <rect x="150" y="90" width="20" height="30" fill="#764ba2"/>
+                            <rect x="180" y="90" width="20" height="30" fill="#764ba2"/>
+                            
+                            <!-- Smokestack -->
+                            <rect x="160" y="40" width="30" height="40" fill="#764ba2" rx="3"/>
+                            
+                            <!-- Sound Waves -->
+                            <path d="M 165 20 Q 165 10, 175 10 Q 185 10, 185 20" stroke="#FF6B6B" stroke-width="3" fill="none"/>
+                            <path d="M 160 15 Q 160 5, 175 5 Q 190 5, 190 15" stroke="#4ECDC4" stroke-width="3" fill="none"/>
+                            <path d="M 155 10 Q 155 0, 175 0 Q 195 0, 195 10" stroke="#FFE66D" stroke-width="3" fill="none"/>
+                            
+                            <!-- Text -->
+                            <text x="125" y="170" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#667eea">FREQUENCY</text>
+                            <text x="125" y="192" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#764ba2">FACTORY</text>
+                        </svg>
+                    </div>
+                    <button class="download-btn" onclick="downloadLogo('primary')">Download SVG</button>
+                </div>
+                
+                <!-- Icon Only -->
+                <div class="logo-card">
+                    <h4>Icon Only</h4>
+                    <div class="logo-display">
+                        <svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Factory Building -->
+                            <rect x="25" y="55" width="100" height="70" fill="#667eea" rx="5"/>
+                            <rect x="32" y="65" width="15" height="25" fill="#764ba2"/>
+                            <rect x="52" y="65" width="15" height="25" fill="#764ba2"/>
+                            <rect x="72" y="65" width="15" height="25" fill="#764ba2"/>
+                            <rect x="92" y="65" width="15" height="25" fill="#764ba2"/>
+                            
+                            <!-- Smokestack -->
+                            <rect x="85" y="20" width="25" height="35" fill="#764ba2" rx="3"/>
+                            
+                            <!-- Sound Waves -->
+                            <path d="M 90 10 Q 90 3, 97.5 3 Q 105 3, 105 10" stroke="#FF6B6B" stroke-width="2.5" fill="none"/>
+                            <path d="M 87 7 Q 87 0, 97.5 0 Q 108 0, 108 7" stroke="#4ECDC4" stroke-width="2.5" fill="none"/>
+                            <path d="M 84 4 Q 84 -3, 97.5 -3 Q 111 -3, 111 4" stroke="#FFE66D" stroke-width="2.5" fill="none"/>
+                        </svg>
+                    </div>
+                    <button class="download-btn" onclick="downloadLogo('icon')">Download SVG</button>
+                </div>
+                
+                <!-- Horizontal Lockup -->
+                <div class="logo-card">
+                    <h4>Horizontal Lockup</h4>
+                    <div class="logo-display">
+                        <svg width="350" height="100" viewBox="0 0 350 100" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Factory Icon -->
+                            <rect x="10" y="25" width="60" height="50" fill="#667eea" rx="3"/>
+                            <rect x="15" y="32" width="10" height="18" fill="#764ba2"/>
+                            <rect x="28" y="32" width="10" height="18" fill="#764ba2"/>
+                            <rect x="41" y="32" width="10" height="18" fill="#764ba2"/>
+                            <rect x="54" y="32" width="10" height="18" fill="#764ba2"/>
+                            <rect x="50" y="10" width="15" height="15" fill="#764ba2" rx="2"/>
+                            <path d="M 53 5 Q 53 1, 57.5 1 Q 62 1, 62 5" stroke="#FF6B6B" stroke-width="1.5" fill="none"/>
+                            <path d="M 51 3 Q 51 -1, 57.5 -1 Q 64 -1, 64 3" stroke="#4ECDC4" stroke-width="1.5" fill="none"/>
+                            
+                            <!-- Text -->
+                            <text x="85" y="50" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#667eea">FREQUENCY</text>
+                            <text x="85" y="72" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#764ba2">FACTORY</text>
+                        </svg>
+                    </div>
+                    <button class="download-btn" onclick="downloadLogo('horizontal')">Download SVG</button>
+                </div>
+                
+                <!-- Monochrome Dark -->
+                <div class="logo-card">
+                    <h4>Monochrome (Dark Backgrounds)</h4>
+                    <div class="logo-display dark">
+                        <svg width="200" height="140" viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Factory Building -->
+                            <rect x="40" y="50" width="120" height="60" fill="white" rx="4"/>
+                            <rect x="48" y="58" width="16" height="25" fill="#e0e0e0"/>
+                            <rect x="72" y="58" width="16" height="25" fill="#e0e0e0"/>
+                            <rect x="96" y="58" width="16" height="25" fill="#e0e0e0"/>
+                            <rect x="120" y="58" width="16" height="25" fill="#e0e0e0"/>
+                            <rect x="128" y="25" width="24" height="25" fill="white" rx="2"/>
+                            <path d="M 132 18 Q 132 12, 140 12 Q 148 12, 148 18" stroke="white" stroke-width="2.5" fill="none"/>
+                            <text x="100" y="130" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="white">FREQUENCY FACTORY</text>
+                        </svg>
+                    </div>
+                    <button class="download-btn" onclick="downloadLogo('mono-dark')">Download SVG</button>
+                </div>
+            </div>
+            
+            <div class="usage-note">
+                <strong>Usage Guidelines:</strong> Use Primary Logo on light backgrounds. Use Icon Only for app icons and favicons. Use Horizontal Lockup for website headers. Use Monochrome version on dark or busy backgrounds where color contrast is needed.
+            </div>
+        </div>
+        
+        <!-- Color Palette -->
+        <div class="section">
+            <h2>Color Palette</h2>
+            
+            <div class="color-grid">
+                <!-- Primary Purple -->
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #667eea;">
+                        PRIMARY
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">Royal Purple</div>
+                        <p><strong>HEX:</strong> #667eea</p>
+                        <p><strong>RGB:</strong> 102, 126, 234</p>
+                        <p><strong>Use:</strong> Primary brand color, buttons, headers</p>
+                    </div>
+                </div>
+                
+                <!-- Secondary Purple -->
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #764ba2;">
+                        SECONDARY
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">Deep Violet</div>
+                        <p><strong>HEX:</strong> #764ba2</p>
+                        <p><strong>RGB:</strong> 118, 75, 162</p>
+                        <p><strong>Use:</strong> Accents, gradients, shadows</p>
+                    </div>
+                </div>
+                
+                <!-- Accent Coral -->
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #FF6B6B;">
+                        ACCENT 1
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">Energetic Coral</div>
+                        <p><strong>HEX:</strong> #FF6B6B</p>
+                        <p><strong>RGB:</strong> 255, 107, 107</p>
+                        <p><strong>Use:</strong> CTAs, highlights, alerts</p>
+                    </div>
+                </div>
+                
+                <!-- Accent Teal -->
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #4ECDC4;">
+                        ACCENT 2
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">Fresh Teal</div>
+                        <p><strong>HEX:</strong> #4ECDC4</p>
+                        <p><strong>RGB:</strong> 78, 205, 196</p>
+                        <p><strong>Use:</strong> Success states, badges, icons</p>
+                    </div>
+                </div>
+                
+                <!-- Accent Yellow -->
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #FFE66D; color: #333;">
+                        ACCENT 3
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">Vibrant Yellow</div>
+                        <p><strong>HEX:</strong> #FFE66D</p>
+                        <p><strong>RGB:</strong> 255, 230, 109</p>
+                        <p><strong>Use:</strong> Highlights, warnings, gold tier</p>
+                    </div>
+                </div>
+                
+                <!-- Dark -->
+                <div class="color-card">
+                    <div class="color-swatch" style="background: #1a1a2e;">
+                        DARK
+                    </div>
+                    <div class="color-info">
+                        <div class="color-name">Midnight Navy</div>
+                        <p><strong>HEX:</strong> #1a1a2e</p>
+                        <p><strong>RGB:</strong> 26, 26, 46</p>
+                        <p><strong>Use:</strong> Text, backgrounds, contrast</p>
+                    </div>
+                </div>
+            </div>
+            
+            <h3>Gradient Combinations</h3>
+            <div style="margin-top: 20px;">
+                <div style="height: 80px; border-radius: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-bottom: 10px;">
+                    Primary Gradient: #667eea → #764ba2
+                </div>
+                <div style="height: 80px; border-radius: 10px; background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-bottom: 10px;">
+                    Warm Gradient: #FF6B6B → #FF8E53
+                </div>
+                <div style="height: 80px; border-radius: 10px; background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                    Cool Gradient: #4ECDC4 → #44A08D
+                </div>
+            </div>
+        </div>
+        
+        <!-- Typography -->
+        <div class="section">
+            <h2>Typography</h2>
+            
+            <h3>Primary Font: Inter / SF Pro / Segoe UI</h3>
+            <div style="margin: 20px 0; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                <p style="font-size: 2em; font-weight: bold; margin-bottom: 10px;">The Quick Brown Fox Jumps</p>
+                <p style="font-size: 1.5em; margin-bottom: 10px;">Regular weight for body text</p>
+                <p style="font-size: 1.2em; font-weight: 600;">Semibold for emphasis and headers</p>
+            </div>
+            
+            <h3>Scale & Hierarchy</h3>
+            <div style="margin: 20px 0;">
+                <p style="font-size: 2.5em; font-weight: bold; color: #667eea; margin: 10px 0;">H1 - 40px / Bold</p>
+                <p style="font-size: 2em; font-weight: bold; color: #764ba2; margin: 10px 0;">H2 - 32px / Bold</p>
+                <p style="font-size: 1.5em; font-weight: 600; color: #333; margin: 10px 0;">H3 - 24px / Semibold</p>
+                <p style="font-size: 1.2em; color: #555; margin: 10px 0;">Body - 18px / Regular</p>
+                <p style="font-size: 1em; color: #666; margin: 10px 0;">Small - 16px / Regular</p>
+            </div>
+        </div>
+        
+        <!-- Download All -->
+        <div class="section" style="text-align: center;">
+            <h2>Export Package</h2>
+            <p style="margin: 20px 0; color: #666;">All logos are vector SVG format - infinitely scalable with no quality loss</p>
+            <button class="download-btn" onclick="downloadAll()" style="font-size: 1.2em; padding: 20px 40px;">📦 Download Complete Brand Kit</button>
+        </div>
+    </div>
+    
+    <script>
+        function downloadLogo(type) {
+            alert(`Logo "${type}" ready for export. Right-click the logo and "Save Image As" or use browser dev tools to extract SVG code.`);
+        }
+        
+        function downloadAll() {
+            alert('Brand Kit includes:\n\n✓ 4 Logo Variations (SVG)\n✓ Complete Color Palette (HEX/RGB)\n✓ Typography Guidelines\n✓ Usage Documentation\n\nSave this HTML file and extract individual SVG elements as needed.');
+        }
+    </script>
+</body>
+</html>

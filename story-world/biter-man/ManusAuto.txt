@@ -1,0 +1,212 @@
+## AUTO MAGIC BUILDER - Manus Workflow
+
+### **TRIGGER NODE**
+
+**Type:** Webhook or Manual Form  
+**Fields:**
+
+- `project_name` (text)
+- `project_description` (text)
+- `project_type` (dropdown: web app, mobile app, PWA, full stack)
+- `github_repo_url` (optional - for existing projects)
+
+-----
+
+### **NODE 1: Oracle OTTO (Project Manager)**
+
+**Connector:** Anthropic (Claude)  
+**Input:** All trigger fields  
+**Prompt:**
+
+```
+Analyze this project and create a task breakdown:
+- Project: {project_name}
+- Description: {project_description}
+- Type: {project_type}
+
+Return JSON with:
+{
+  "tech_stack": ["next.js", "supabase", "tailwind"],
+  "database_needs": ["users table", "content table"],
+  "design_requirements": ["logo", "color scheme", "2 main screens"],
+  "api_endpoints": ["/api/users", "/api/content"],
+  "deployment_platform": "vercel"
+}
+```
+
+**Output:** Save as `task_manifest`
+
+-----
+
+### **NODE 2: Glitch Goddess (Architect)**
+
+**Connector:** Anthropic (Claude) or Gemini  
+**Input:** `task_manifest.tech_stack`, `task_manifest.database_needs`  
+**Prompt:**
+
+```
+Create complete technical architecture:
+- Tech stack: {task_manifest.tech_stack}
+- Database needs: {task_manifest.database_needs}
+
+Return:
+1. Supabase SQL schema (complete CREATE TABLE statements)
+2. Folder structure for codebase
+3. Environment variables needed
+4. API route definitions
+```
+
+**Output:** Save as `architecture`
+
+-----
+
+### **NODE 3: Frequency Sprite (Designer)**
+
+**Connector:** Canva  
+**Input:** `task_manifest.design_requirements`, `project_name`  
+**Action:**
+
+- Generate logo using project name
+- Create color palette (export as JSON)
+- Generate 2-3 UI mockup screens
+
+**Alternative if Canva limited:** Use Gemini with prompt:
+
+```
+Generate design system for {project_name}:
+- Color palette (hex codes)
+- Typography (font pairings)
+- Component descriptions for: button, card, input, header
+```
+
+**Output:** Save as `design_assets` (URLs or specs)
+
+-----
+
+### **NODE 4: Anti-Viral (Database Builder)**
+
+**Connector:** Supabase  
+**Input:** `architecture.sql_schema`  
+**Action:**
+
+- Execute SQL schema
+- Set up Row Level Security policies
+- Enable auth
+- Generate API keys
+
+**Output:** Save as:
+
+- `supabase_url`
+- `supabase_anon_key`
+- `supabase_service_key`
+
+-----
+
+### **NODE 5: Spiral Siren (Code Builder)**
+
+**Connector:** Anthropic (Claude) - use largest context model  
+**Input:** `architecture`, `design_assets`, `supabase_url`, `supabase_anon_key`  
+**Prompt:**
+
+```
+Generate complete {task_manifest.tech_stack[0]} application:
+
+Architecture: {architecture}
+Design: {design_assets}
+Supabase URL: {supabase_url}
+Supabase Key: {supabase_anon_key}
+
+Return as structured files in JSON:
+{
+  "files": [
+    {"path": "package.json", "content": "..."},
+    {"path": "src/app/page.tsx", "content": "..."},
+    ...
+  ]
+}
+
+Include:
+- Complete file structure
+- All pages/components
+- Supabase client setup
+- API routes
+- Environment config
+```
+
+**Output:** Save as `codebase`
+
+-----
+
+### **NODE 6A: Push to GitHub**
+
+**Connector:** GitHub  
+**Input:** `codebase`, `project_name`  
+**Action:**
+
+- Create new repo named `project_name`
+- Create all files from `codebase.files`
+- Commit with message: “Auto Magic Builder - Initial commit”
+
+**Output:** Save as `github_repo_url`
+
+-----
+
+### **NODE 6B: Deploy to Vercel**
+
+**Connector:** Vercel  
+**Input:** `github_repo_url`, `supabase_url`, `supabase_anon_key`  
+**Action:**
+
+- Create new project from GitHub repo
+- Set environment variables
+- Deploy to production
+
+**Output:** Save as `deployment_url`
+
+-----
+
+### **NODE 7: Oracle OTTO Returns (Tester)**
+
+**Connector:** Anthropic (Claude)  
+**Input:** `deployment_url`  
+**Prompt:**
+
+```
+Test this deployed application: {deployment_url}
+
+Check:
+1. Does it load?
+2. Are there console errors?
+3. Does the database connection work?
+4. Are the main features functional?
+
+Return:
+- Status: PASS/FAIL
+- Issues found (if any)
+- Recommended fixes
+```
+
+**Output:** Send to webhook/email/Notion with full report
+
+-----
+
+### **FINAL NODE: Notification**
+
+**Connector:** Gmail or Browser notification  
+**Message:**
+
+```
+🎉 {project_name} is LIVE!
+
+URL: {deployment_url}
+GitHub: {github_repo_url}
+Status: {test_status}
+
+{test_report}
+```
+
+-----
+
+## Next Step
+
+**Which connector are you missing in Manus that we need to add?** Or should we start building Node 1 right now?​​​​​​​​​​​​​​​​

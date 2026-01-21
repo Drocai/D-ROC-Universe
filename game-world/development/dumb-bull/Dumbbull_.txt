@@ -1,0 +1,26 @@
+=====================================================
+DUMB BULL IN A CHINA SHOP - GAME ASSET MANIFEST
+To make your game look and sound perfect, you need to add the
+following files to the same folder as your 'index.html':
+1. CHARACTER SPRITES (From your upload)
+1. Rename your uploaded character images to match these filenames.
+The game code looks for these exact names:
+• bull_1.png  (Use for the main running character)
+• bull_2.png  (Optional: Can be used for "Smashing" frame)
+1. Note: Ensure they are transparent PNGs for the best look.
+2. MUSIC TRACK (From your previous Zip)
+2. Locate "Dumb Bull in a China Shop D RoC.mp3" from the
+previous extraction we did.
+• Rename it to: song.mp3
+• Place it in the same folder.
+3. OPTIONAL: CHINA TEXTURES
+3. The game currently uses 3D primitives for the "China".
+If you want custom vases, add a texture named:
+• vase_texture.jpg
+=====================================================
+HOW TO HOST THIS (PWA)
+1. Create a GitHub Repository.
+2. Upload index.html, song.mp3, and your png files.
+3. Enable "GitHub Pages" in the repository settings.
+4. Your game will be live at username.github.io/dumbbull
+Go dominate! 🐂

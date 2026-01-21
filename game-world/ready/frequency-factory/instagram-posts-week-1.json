@@ -1,0 +1,313 @@
+{
+  "content_type": "Instagram Posts - Week 1",
+  "platform": "Instagram",
+  "duration": "7 days",
+  "post_frequency": "2-3 per day",
+  "research_basis": "2025 music discovery trends + gamification engagement data",
+  "notes": "All posts are READY TO USE - copy/paste and customize with your specific tracks/artists",
+  
+  "posts": [
+    {
+      "day": "Monday",
+      "post_id": "MON_01",
+      "post_type": "Carousel (Track Rating)",
+      "optimal_time": "9:00 AM",
+      "slides": [
+        {
+          "slide_1": "Visual: Screenshot of platform showing a track with 8.5 Hook Strength rating",
+          "text_overlay": "JUST RATED: THIS HOOK IS FIRE 🔥"
+        },
+        {
+          "slide_2": "Visual: Close-up of rating interface",
+          "text_overlay": "Hook Strength: 8.5/10\nProduction Quality: 7.8/10"
+        },
+        {
+          "slide_3": "Visual: Track details + artist info",
+          "text_overlay": "Artist: [Artist Name]\nGenre: [Genre]\nSubmitted: Today"
+        },
+        {
+          "slide_4": "Visual: CTA graphic with platform link",
+          "text_overlay": "YOUR TURN - Rate it yourself\nLink in bio 👆"
+        }
+      ],
+      "caption": "Clock in, Factory Operatives 🏭\n\nJust reviewed this track and the hook GRABBED me in the first 10 seconds. That's what we look for.\n\nHook Strength: 8.5/10 ⚡\nProduction Quality: 7.8/10 🎛️\n\nBut here's the thing - YOUR rating matters just as much as mine. The factory runs on collective wisdom, not just one person's opinion.\n\nWould you rate this hook higher? Lower? Why?\n\nDrop your rating in the comments and let's discuss. This is how A&R really works - debate, refinement, consensus.\n\n👉 Rate tracks, earn tokens, climb the ranks from Intern to Executive.\n\nLink in bio to start your shift.\n\n#FrequencyFactory #AROperative #MusicDiscovery #NewMusic #IndieMusic #MusicReview #UnsignedArtist #ARLife #HookStrength",
+      "engagement_prompt": "What would you rate this hook? Drop your number 1-10 👇",
+      "engagement_strategy": "Ask for specific ratings to spark debate",
+      "hashtags": 9,
+      "expected_reach": "High - rating debates drive comments"
+    },
+    
+    {
+      "day": "Monday",
+      "post_id": "MON_02",
+      "post_type": "Reel (Platform Tutorial)",
+      "optimal_time": "5:00 PM",
+      "video_length": "22 seconds",
+      "script": {
+        "hook_0_3sec": "[Screen recording of platform] \"This is how you turn music taste into actual money.\"",
+        "value_3_15sec": "[Show rating interface] \"Clock in. Pick a track. Rate the hook 1-10. Rate production 1-10. Submit. Earn tokens. Repeat.\"\n[Quick cuts showing: clicking track → rating sliders → token animation → rank badge]",
+        "engagement_15_19sec": "\"Think you have good taste? Prove it.\"",
+        "cta_19_22sec": "\"Link in bio. Start your shift.\" [Show @frequencyfactory handle]"
+      },
+      "text_overlay": [
+        "How to get PAID for your music taste",
+        "1. Rate the hook (1-10)",
+        "2. Rate production (1-10)",
+        "3. Earn tokens",
+        "4. Get promoted",
+        "Link in bio 👆"
+      ],
+      "caption": "The factory is hiring 🏭\n\nNo experience necessary. Just honest opinions about music.\n\nHere's how it works:\n\n1️⃣ Clock in to Frequency Factory\n2️⃣ Listen to submitted tracks\n3️⃣ Rate Hook Strength (is it catchy?)\n4️⃣ Rate Production Quality (does it sound good?)\n5️⃣ Earn tokens for every rating\n6️⃣ Climb ranks: Intern → Associate → Manager → Director → Executive\n7️⃣ Spend tokens in the factory store (merch, vinyl, exclusive access)\n\nYour ratings help artists understand what works. The more accurate you are, the faster you advance.\n\nThis is A&R democratized. No gatekeepers. Just people who love music.\n\nReady to clock in?\n\n#FrequencyFactory #MusicDiscovery #AROperative #NewMusic #GetPaid #MusicJobs #IndieMusic #MusicReview",
+      "engagement_prompt": "What rank would you want to reach first? Comment 👇",
+      "audio": "Use trending audio about money/work",
+      "hashtags": 8,
+      "expected_reach": "Very High - Tutorial content saves & shares"
+    },
+    
+    {
+      "day": "Tuesday",
+      "post_id": "TUE_01",
+      "post_type": "Static Post (Community Spotlight)",
+      "optimal_time": "10:00 AM",
+      "visual": "Screenshot of top-rated track with certification badge + artist photo",
+      "caption": "🏭 FACTORY CERTIFIED 🏭\n\nThis track just hit 90+ average rating from 50+ operatives.\n\nThat means it's CERTIFIED.\n\nArtist: @[artisthandle]\nTrack: \"[Track Name]\"\nGenre: [Genre]\n\nAverage Ratings:\n🎣 Hook Strength: 9.2/10\n🎛️ Production Quality: 8.9/10\n\nWhat made this track stand out:\n- Hook hits in first 8 seconds\n- Clean mix, perfect levels\n- Memorable chorus that sticks\n- Professional-grade production\n- Strong commercial appeal\n\nWhen 50+ people all rate something this high, that's not an accident. That's a pattern. That's a potential hit.\n\nThis is what Factory Certification means - collective validation from real listeners, not algorithm manipulation or paid placements.\n\nCongrats to the artist. This is going places.\n\n👉 Want your track certified? Submit via link in bio.\n\n#FactoryCertified #FrequencyFactory #NewMusic #IndieArtist #MusicDiscovery #ARLife #UnsignedArtist #MusicReview #NewMusicFriday",
+      "engagement_prompt": "Have you heard this track yet? What would YOU rate it?",
+      "engagement_strategy": "Drive traffic to the actual track, tag the artist",
+      "hashtags": 9,
+      "expected_reach": "Medium-High - Artist will share, bringing their audience"
+    },
+    
+    {
+      "day": "Tuesday",
+      "post_id": "TUE_02",
+      "post_type": "Reel (Behind-the-Scenes)",
+      "optimal_time": "6:30 PM",
+      "video_length": "18 seconds",
+      "script": {
+        "hook_0_3sec": "\"Ever wonder how tracks get picked for review?\"",
+        "value_3_14sec": "[Screen recording] \"Every submission goes into the queue. First come, first served. But here's the secret - high ratings move tracks UP the queue for the YouTube channel.\"\n[Show queue interface with ratings visible]",
+        "engagement_14_16sec": "\"So if you want your track reviewed fast...\"",
+        "cta_16_18sec": "\"Make something the people love.\" [Factory logo]"
+      },
+      "text_overlay": [
+        "How tracks get picked",
+        "1. Submit to queue",
+        "2. Community rates it",
+        "3. High ratings = priority",
+        "4. Featured on YT channel",
+        "Make good music = skip the line"
+      ],
+      "caption": "Transparency is everything 🏭\n\nWe don't pick favorites. We don't play politics. We let the ratings decide.\n\nHere's exactly how it works:\n\n📝 Artists submit tracks\n🎧 Community rates them (Hook + Production)\n📊 High-rated tracks move up the queue\n🎬 Top tracks get featured on the YouTube channel\n🏆 Factory Certified tracks (90+) get special promotion\n\nIt's pure meritocracy. The crowd decides what's good.\n\nNo paying for playlist placements. No begging influencers for features. No gaming the algorithm.\n\nJust make music people love, and the factory will recognize it.\n\nThat's the deal.\n\n#FrequencyFactory #MusicDiscovery #IndieMusic #AROperative #UnsignedArtist #NewMusic #Transparent #FairPlay",
+      "engagement_prompt": "Think this system is fair? Let me know 👇",
+      "audio": "Behind-the-scenes trending audio",
+      "hashtags": 8,
+      "expected_reach": "High - Transparency builds trust"
+    },
+    
+    {
+      "day": "Wednesday",
+      "post_id": "WED_01",
+      "post_type": "Carousel (Rating Challenge)",
+      "optimal_time": "11:00 AM",
+      "slides": [
+        {
+          "slide_1": "Bold text: \"WHICH TRACK WOULD YOU CERTIFY?\"",
+          "visual": "Two track covers side by side"
+        },
+        {
+          "slide_2": "Track A details: Artist, genre, current avg rating",
+          "visual": "Track A cover + rating bars"
+        },
+        {
+          "slide_3": "Track B details: Artist, genre, current avg rating",
+          "visual": "Track B cover + rating bars"
+        },
+        {
+          "slide_4": "CTA: \"Vote in comments + rate them yourself\"",
+          "visual": "Factory logo with link prompt"
+        }
+      ],
+      "caption": "A&R CHALLENGE: Which would YOU certify? 🏭\n\nTrack A: [Artist Name] - \"[Track Title]\"\nGenre: [Genre]\nCurrent Rating: 8.3/10\n\nTrack B: [Artist Name] - \"[Track Title]\"\nGenre: [Genre]\nCurrent Rating: 8.1/10\n\nBoth are sitting right below certification threshold (90+). Only one can move forward to the YouTube feature this week.\n\nYour job: Pick the track with more hit potential.\n\nThink about:\n🎣 Which hook is more memorable?\n🎛️ Which production is more polished?\n💰 Which has more commercial appeal?\n📻 Which could you hear on the radio?\n\nThis is exactly what real A&R reps do every day. Tough calls. Limited slots. High stakes.\n\nDrop your pick in the comments (A or B) and WHY.\n\nThen hit the link in bio to rate both tracks yourself. Your rating could be the one that certifies a track.\n\n#FrequencyFactory #ARChallenge #MusicDiscovery #AROperative #NewMusic #IndieMusic #MusicReview #UnsignedArtist #ThisOrThat",
+      "engagement_prompt": "A or B? And tell me WHY 👇",
+      "engagement_strategy": "Binary choice + reasoning = high comment volume",
+      "hashtags": 9,
+      "expected_reach": "Very High - This or That format drives engagement"
+    },
+    
+    {
+      "day": "Wednesday",
+      "post_id": "WED_02",
+      "post_type": "Reel (Success Story)",
+      "optimal_time": "7:00 PM",
+      "video_length": "25 seconds",
+      "script": {
+        "hook_0_3sec": "\"3 months ago, this artist submitted their track to the factory.\"",
+        "story_3_18sec": "[Show timeline visual]\n\"Week 1: Average rating 8.7\"\n\"Week 2: Certified at 9.1\"\n\"Week 4: Featured on YouTube\"\n\"Week 8: Picked up by indie label\"\n\"Week 12: 100K streams\"\n[Show artist reaction or celebration]",
+        "lesson_18_22sec": "\"The factory doesn't predict hits. It reveals them.\"",
+        "cta_22_25sec": "\"Your track could be next.\" [Link in bio graphic]"
+      },
+      "text_overlay": [
+        "From submission to label deal",
+        "8.7 avg rating",
+        "Factory Certified",
+        "YouTube feature",
+        "Label interest",
+        "100K streams",
+        "All in 3 months",
+        "Link in bio 👆"
+      ],
+      "caption": "This is why the factory exists 🏭\n\nArtist: @[artisthandle]\nTrack: \"[Track Name]\"\n\nTimeline:\n✅ Submitted to Frequency Factory\n✅ Rated 8.7/10 by community\n✅ Refined mix based on feedback\n✅ Resubmitted, hit 9.1 certification\n✅ Featured on YouTube channel\n✅ Reached 50K views\n✅ Indie label reached out\n✅ Now at 100K+ streams across platforms\n\nThe ratings told us this track had something. The community validated it. The industry noticed.\n\nThat's the power of collective A&R.\n\nThis artist didn't pay for fake streams or bot followers. They just made good music and let the factory do its job.\n\nYour turn.\n\n👉 Submit your best track. Link in bio.\n\n#FrequencyFactory #SuccessStory #IndieMusic #MusicDiscovery #AROperative #UnsignedArtist #NewMusic #GetSigned #IndieLabel #MusicIndustry",
+      "engagement_prompt": "Drop your Spotify link below if you want the factory to check you out 👇",
+      "audio": "Inspirational trending audio",
+      "hashtags": 10,
+      "expected_reach": "Very High - Success stories inspire + drive submissions"
+    },
+    
+    {
+      "day": "Thursday",
+      "post_id": "THU_01",
+      "post_type": "Static Post (Leaderboard)",
+      "optimal_time": "12:00 PM",
+      "visual": "Leaderboard graphic showing top 10 raters with usernames, ranks, tokens, badges",
+      "caption": "📊 WEEKLY LEADERBOARD - TOP OPERATIVES 📊\n\nThese are the factory's hardest workers this week:\n\n🥇 #1: @[username] - Executive - 2,847 tokens - 127 ratings\n🥈 #2: @[username] - Director - 2,103 tokens - 95 ratings\n🥉 #3: @[username] - Director - 1,892 tokens - 84 ratings\n4️⃣ @[username] - Manager - 1,654 tokens - 73 ratings\n5️⃣ @[username] - Manager - 1,501 tokens - 68 ratings\n\n[Continue for top 10]\n\nTop 3 get special factory badges + bonus tokens this week.\n\n#1 also gets their rating spotlighted on the YouTube channel.\n\nWant to see your name here next week? \n\nClock in. Rate tracks. Earn tokens. Climb the ranks.\n\nThe factory rewards the dedicated. Period.\n\n👉 Link in bio to start your climb.\n\n#FrequencyFactory #Leaderboard #AROperative #MusicDiscovery #Gamification #Competition #GetRanked #EarnTokens #FactoryLife",
+      "engagement_prompt": "What rank are you trying to reach? Tag yourself if you're on the leaderboard 👇",
+      "engagement_strategy": "Public recognition drives motivation + sharing",
+      "hashtags": 9,
+      "expected_reach": "High - People love leaderboards + being recognized"
+    },
+    
+    {
+      "day": "Thursday",
+      "post_id": "THU_02",
+      "post_type": "Reel (Hot Take)",
+      "optimal_time": "8:00 PM",
+      "video_length": "15 seconds",
+      "script": {
+        "hook_0_3sec": "\"Unpopular opinion: Hook matters more than production.\"",
+        "argument_3_12sec": "[B-roll of successful \"low-fi\" hits]\n\"You can have a Grammy-level mix but if the hook doesn't stick in 10 seconds, nobody cares.\"\n\"Meanwhile, a catchy hook with decent production? That's a hit.\"",
+        "cta_12_15sec": "\"Agree or disagree?\" [Comment prompt]"
+      },
+      "text_overlay": [
+        "Hook > Production",
+        "Fight me",
+        "Catchy hook + decent mix = hit",
+        "Perfect mix + weak hook = skip",
+        "This is the hill I die on"
+      ],
+      "caption": "I said what I said 🏭\n\nAt Frequency Factory, we rate two things:\n\n🎣 Hook Strength\n🎛️ Production Quality\n\nAnd here's what the data shows: Tracks with high hook ratings (9+) but medium production (7-8) get certified MORE often than tracks with medium hooks but perfect production.\n\nWhy?\n\nBecause people remember melodies, not EQ curves.\nThey hum hooks, not compression ratios.\nThey share catchy, not technically perfect.\n\nProduction matters. Don't get me wrong. But the hook is king.\n\nIf I have to pick between:\n- Track A: Hook 9/10, Production 7/10\n- Track B: Hook 7/10, Production 9/10\n\nI'm betting on Track A every time.\n\nThat's the hill I die on.\n\nChange my mind in the comments.\n\n#FrequencyFactory #HotTake #MusicProduction #AROperative #MusicTheory #Hooks #Production #MusicDebate #MusicDiscovery",
+      "engagement_prompt": "Hook or Production - what matters more to YOU? 👇",
+      "audio": "Dramatic opinion-style trending audio",
+      "hashtags": 9,
+      "expected_reach": "Very High - Controversial takes drive debate + shares"
+    },
+    
+    {
+      "day": "Friday",
+      "post_id": "FRI_01",
+      "post_type": "Carousel (Weekend Challenge)",
+      "optimal_time": "2:00 PM",
+      "slides": [
+        {
+          "slide_1": "Bold graphic: \"WEEKEND CHALLENGE 🏆\"",
+          "visual": "Factory logo + challenge badge"
+        },
+        {
+          "slide_2": "Challenge rules explained",
+          "visual": "Rule list with icons"
+        },
+        {
+          "slide_3": "Prizes and rewards",
+          "visual": "Token amounts + badges + merch"
+        },
+        {
+          "slide_4": "How to enter CTA",
+          "visual": "Link in bio + deadline"
+        }
+      ],
+      "caption": "🚨 WEEKEND CHALLENGE ALERT 🚨\n\nThis weekend only: DOUBLE TOKEN WEEKEND 🏭\n\nHere's the deal:\n\n🎯 Rate 20+ tracks between Friday 5pm and Sunday 11:59pm\n💰 Earn DOUBLE tokens for every rating\n🏆 Top 10 raters get exclusive \"Weekend Warrior\" badge\n🥇 #1 rater gets featured in Monday's YouTube video\n\nBut here's the catch: Your ratings have to be ACCURATE. \n\nWe track rating consistency against community averages. If you're just spam-clicking random numbers, you get disqualified.\n\nThis is about quality + quantity.\n\nWhy we do this:\n- Artists submit more tracks on weekends\n- We need extra hands to keep the queue moving\n- Weekends are when people have time to really dig in\n- We want to reward the dedicated operatives\n\nReady to grind?\n\n👉 Clock in via link in bio\n⏰ Challenge ends Sunday 11:59pm EST\n💪 Let's see what you got\n\n#FrequencyFactory #WeekendChallenge #AROperative #DoubleTokens #Competition #MusicDiscovery #EarnTokens #FactoryLife #GamificationLife",
+      "engagement_prompt": "Who's going for #1 this weekend? Call it in the comments 👇",
+      "engagement_strategy": "Public commitment increases participation",
+      "hashtags": 9,
+      "expected_reach": "Very High - Challenges drive action + sharing"
+    },
+    
+    {
+      "day": "Friday",
+      "post_id": "FRI_02",
+      "post_type": "Reel (Trending Track Breakdown)",
+      "optimal_time": "9:00 PM",
+      "video_length": "28 seconds",
+      "script": {
+        "hook_0_3sec": "\"This track is at 9.4 rating and here's why it works.\"",
+        "breakdown_3_23sec": "[Play snippet of track]\n\"Hook hits at 0:07 - perfect timing\"\n[Visual: timestamp marker]\n\"Listen to this production detail...\"\n[Isolate specific element - bass, vocal layer, etc.]\n\"And here's the money moment...\"\n[Play chorus hook]\n\"THAT'S why it's certified.\"",
+        "cta_23_28sec": "\"Full review on the channel. Link in bio.\" [Factory logo]"
+      },
+      "text_overlay": [
+        "Why this track is certified",
+        "Hook @ 0:07",
+        "Perfect timing",
+        "Clean production",
+        "Commercial appeal",
+        "9.4/10 rating",
+        "Full review on YouTube"
+      ],
+      "caption": "TRACK BREAKDOWN 🏭\n\nArtist: @[artisthandle]\nTrack: \"[Track Name]\"\nRating: 9.4/10 (Factory Certified)\n\nWhy this works:\n\n🎣 HOOK STRENGTH (9.7/10):\n- Hits in first 7 seconds\n- Instantly memorable melody\n- Chorus sticks after one listen\n- Clear call-and-response structure\n\n🎛️ PRODUCTION QUALITY (9.1/10):\n- Clean mix, perfect levels\n- Vocal sits perfectly in the beat\n- Subtle production details (that reversed vocal at 1:23)\n- Professional master\n\nThis is what certification looks like. Everything in the right place. Nothing wasted.\n\nThe artist understood the assignment.\n\nFull track review on the YouTube channel - link in bio to watch + rate it yourself.\n\n#FrequencyFactory #TrackBreakdown #FactoryCertified #MusicProduction #MusicReview #AROperative #NewMusic #MusicAnalysis #ProducerTips",
+      "engagement_prompt": "What's your favorite production detail in this track? 👇",
+      "audio": "Use snippet of the actual track if possible",
+      "hashtags": 9,
+      "expected_reach": "Very High - Educational content saves + shares"
+    }
+  ],
+  
+  "week_1_summary": {
+    "total_posts": 10,
+    "post_types": {
+      "carousel": 3,
+      "reel": 6,
+      "static": 1
+    },
+    "content_distribution": {
+      "track_reviews": 3,
+      "tutorials": 2,
+      "community_highlights": 2,
+      "challenges": 2,
+      "behind_scenes": 1
+    },
+    "expected_total_reach": "High - Mix of educational, entertaining, and engaging content",
+    "engagement_drivers": [
+      "This or That debates",
+      "Rating challenges",
+      "Leaderboard recognition",
+      "Controversial opinions",
+      "Weekend competition",
+      "Success stories"
+    ]
+  },
+  
+  "adaptation_notes": {
+    "customize_these_elements": [
+      "Replace [Artist Name], [Track Title], [Genre] with real submissions",
+      "Use actual ratings from your platform",
+      "Feature real usernames in leaderboards",
+      "Insert actual artist handles when spotlighting",
+      "Update token amounts based on your economy",
+      "Adjust optimal posting times for your audience timezone"
+    ],
+    "content_refresh_frequency": {
+      "track_spotlights": "Use new submissions daily",
+      "leaderboards": "Update every Thursday",
+      "challenges": "New challenge every Friday",
+      "success_stories": "Feature certified artists within 2 weeks of certification"
+    }
+  },
+  
+  "instagram_specific_best_practices": {
+    "posting_times": "Test 9am, 12pm, 5-6pm, 8-9pm EST - adjust based on your analytics",
+    "hashtag_strategy": "Use 8-10 hashtags, mix of branded + discoverable + trending",
+    "carousel_tips": "First slide must be eye-catching, end with clear CTA",
+    "reel_tips": "Hook in 3 seconds, text overlays essential, use trending audio",
+    "story_strategy": "Post behind-scenes 3-5x daily, use polls and questions stickers",
+    "bio_optimization": "Clear value prop + CTA + link to platform",
+    "link_in_bio": "Use Linktree with: Platform, YouTube, Discord, Submit Track, Token Store"
+  }
+}

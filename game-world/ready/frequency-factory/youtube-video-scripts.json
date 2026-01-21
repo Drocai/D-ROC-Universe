@@ -1,0 +1,128 @@
+{
+  "content_type": "YouTube Video Scripts",
+  "platform": "YouTube Main Channel + YouTube Shorts",
+  "video_types": ["Track Reviews", "Tutorial Content", "Weekly Roundups", "Artist Spotlights", "Behind-the-Scenes"],
+  
+  "youtube_strategy": {
+    "main_channel_length": "8-15 minutes optimal",
+    "shorts_length": "30-60 seconds",
+    "posting_frequency_main": "2-3 videos per week",
+    "posting_frequency_shorts": "1-2 per day",
+    "seo_critical": "Title, description, tags all optimized for search",
+    "thumbnail_importance": "80% of click-through rate",
+    "first_30_seconds": "Must hook viewer or they bounce",
+    "end_screens": "Always link to next video + subscribe prompt"
+  },
+  
+  "main_channel_scripts": [
+    {
+      "video_id": "YT_MAIN_001",
+      "title": "I Rated 50 Tracks in One Day - Here's What I Learned About the Music Industry",
+      "video_type": "Track Review Marathon + Commentary",
+      "length": "12 minutes",
+      "thumbnail_concept": "Split screen - serious face + rating interface showing 50 tracks",
+      "seo_keywords": ["music discovery", "track review", "new music", "unsigned artists", "A&R"],
+      
+      "script": {
+        "00:00_00:30_hook": "I just spent 6 hours rating 50 tracks on Frequency Factory. Half were incredible. Half were... not. And what I learned about why some tracks work and others don't is going to change how you think about making music.\n\nStick around because I'm breaking down the patterns, showing you the certified tracks, and explaining exactly what separates a hit from a miss.\n\nLet's get into it.",
+        
+        "00:30_01:30_setup": "Quick context: Frequency Factory is a platform where anyone can become an A&R operative. You listen to submitted tracks, rate them on Hook Strength and Production Quality, earn tokens, climb ranks.\n\nI'm an Executive rank now, which means I've rated hundreds of tracks. But today I wanted to do something different - marathon 50 tracks in one session and see what patterns emerge.\n\nSo I clocked in, grabbed my headphones, and started rating. Here's what happened.",
+        
+        "01:30_09:00_main_content": "[SECTION 1: THE CERTIFIED TRACKS (3 mins)]\n\"Out of 50 tracks, only 3 hit Factory Certified status - that's a 90+ average rating. Let me show you why these worked.\"\n\n[Play snippet of Track 1]\n\"Track 1: This hook hits at 0:06. Six seconds. That's the magic window. If you don't grab people by then, they're scrolling. Listen to this...\"\n[Break down the hook, explain why it works]\n\"Hook: 9.3/10. Production: 9.0/10. This is getting certified.\"\n\n[Repeat for Tracks 2 and 3]\n\n[SECTION 2: THE COMMON MISTAKES (3 mins)]\n\"Now let's talk about why 35 of these 50 tracks got below an 8. Here are the 5 patterns I saw over and over:\n\n1. THE LATE HOOK PROBLEM\n[Show examples]\n\"12 tracks didn't get to the hook until after 30 seconds. That's way too late. In 2025, you have 10 seconds max. Fix this and your ratings jump immediately.\"\n\n2. MUDDY VOCAL MIXING\n[Show examples]\n\"I couldn't understand the lyrics in 8 different tracks. Not because of accent or style - because the vocals were buried in the mix. EQ your vocals. Make them clear. Non-negotiable.\"\n\n[Continue with other patterns: blown out mastering, generic beats, off-key vocals]\n\n[SECTION 3: THE SURPRISING DISCOVERIES (2 mins)]\n\"But here's what shocked me: 5 tracks that I initially wanted to skip turned out to be really good after I gave them 30 more seconds.\"\n[Examples]\n\"This teaches us something: Sometimes great music doesn't follow the formula. Sometimes it builds. Sometimes it rewards patience.\n\nBut - and this is critical - if you're going to break the rules, everything else needs to be perfect. Your production, your mix, your performance. You don't get to be experimental AND sloppy.\"\n\n[Show specific examples of rule-breaking tracks that worked]",
+        
+        "09:00_11:00_artist_shoutouts": "Alright, here are the artists whose tracks got certified today:\n\n[Show each artist, their track, their rating, why it worked]\n\"@ArtistName - 'Track Title' - 9.3/10 - Go follow them right now. Link in description.\"\n\n[Repeat for all certified artists]\n\n\"These artists understood the assignment. Study their tracks. Learn from what works.\"\n\n[Also give honorable mentions to near-certified tracks]",
+        
+        "11:00_12:00_outro": "So what did I learn from rating 50 tracks in one day?\n\n1. Great hooks are rare. When you have one, you know immediately.\n2. Production mistakes are fixable. Hook problems are fundamental.\n3. Most artists are closer to success than they think - they just need better feedback.\n4. The community ratings at Frequency Factory are shockingly accurate. Collective wisdom is real.\n\nIf you're an artist, submit your track. Link in description. Let the factory rate it. Get real feedback from real listeners.\n\nIf you're a music fan, become an operative. Link in description. Start rating. Earn tokens. Help discover the next wave of talent.\n\nI'll be doing another 50-track marathon next week. Subscribe so you don't miss it.\n\nLeave a comment: What's the ONE thing that makes you skip a track instantly?\n\nSee you in the next one.\"\n\n[END SCREEN: Subscribe + Next Video + Frequency Factory Link]",
+        
+        "description_template": "I rated 50 tracks on Frequency Factory in one day and discovered the patterns that separate hits from misses. In this video, I break down the certified tracks, common mistakes, and surprising discoveries.\n\n🏭 Become an A&R Operative: [Frequency Factory Link]\n\n⏱️ TIMESTAMPS:\n0:00 - Intro\n0:30 - What is Frequency Factory?\n1:30 - The 3 Certified Tracks\n4:30 - 5 Common Mistakes\n9:00 - Artist Shoutouts\n11:00 - Key Takeaways\n\n🎵 CERTIFIED ARTISTS FEATURED:\n[List with links]\n\n📊 STATS FROM THIS SESSION:\n- Tracks rated: 50\n- Average rating: 7.2/10\n- Certified tracks: 3\n- Most common mistake: Late hooks\n\n#MusicDiscovery #TrackReview #NewMusic #UnsignedArtist #FrequencyFactory #ARLife #MusicIndustry #IndieMusic #MusicProduction\n\n---\nMUSIC USED:\n[List all track snippets with artist credit]\n\nDISCLAIMER: All opinions are my own based on Frequency Factory's rating criteria. Check out these artists and form your own opinions!",
+        
+        "tags": ["music discovery", "new music", "track review", "unsigned artists", "indie music", "A&R", "music industry", "frequency factory", "music production", "producer tips", "how to make music", "music feedback", "honest music review"]
+      },
+      "expected_performance": "High - Educational + discovery content + multiple artists will share"
+    },
+    
+    {
+      "video_id": "YT_MAIN_002",
+      "title": "How to Rate Music Like a Professional A&R (Frequency Factory Tutorial)",
+      "video_type": "Educational Tutorial",
+      "length": "10 minutes",
+      "thumbnail_concept": "Person with headphones + rating interface + \"A&R Training\" text",
+      "seo_keywords": ["how to rate music", "A&R tips", "music criticism", "frequency factory tutorial"],
+      
+      "script": {
+        "00:00_00:30_hook": "You're rating music wrong. And I can prove it.\n\nToday I'm going to teach you how to rate tracks like a professional A&R executive. By the end of this video, you'll understand why certain tracks work, how to articulate what makes music good, and how to improve your rating accuracy on Frequency Factory from 60% to 90%+.\n\nThis is A&R training. Let's begin.",
+        
+        "00:30_02:00_framework": "First, understand what you're actually rating:\n\nFrequency Factory has two metrics:\n1. Hook Strength (1-10)\n2. Production Quality (1-10)\n\nThese aren't random. These are the two things that predict commercial success.\n\nHook = Can people remember and sing this?\nProduction = Does it sound professional?\n\nEverything else - lyrics, genre, style, message - that's subjective. But hooks and production? Those are measurable.\n\nLet me show you how to evaluate each one.",
+        
+        "02:00_06:00_hook_training": "[HOOK STRENGTH MASTERCLASS]\n\n\"The hook is the most important 10 seconds of any song. Here's how to rate it:\n\n1. THE 10-SECOND TEST\n[Play example]\n\"Can you remember any part of this after 10 seconds? If yes, it's at least a 7. If no, it's below 6.\"\n\n2. THE HUM TEST\n[Play example]\n\"Could you hum this hook back to me right now? If yes, it's 8+. If no, it's below 7.\"\n\n3. THE VIRAL POTENTIAL TEST\n[Play example]\n\"Could you see this being used in TikTok videos? Could you imagine people singing along? If yes, it's 9+.\"\n\n4. THE TIMING TEST\n[Play examples]\n\"When does the hook hit? \n- 0-10 seconds = Perfect (9-10 potential)\n- 10-20 seconds = Good (7-9 potential)\n- 20-30 seconds = Late (6-8 potential)\n- 30+ seconds = Too late (below 7)\"\n\n5. THE REPETITION TEST\n[Play example]\n\"Listen twice. Does it get better or worse the second time? If better or same = 8+. If worse = below 7.\"\n\nPRACTICE EXERCISE:\n[Play 3 hooks, pause, ask viewers to rate, then reveal community ratings and explain]\n\n\"See? You're already getting better.\",
+        
+        "06:00_09:30_production_training": "[PRODUCTION QUALITY MASTERCLASS]\n\n\"Production is about technical execution. Here's what to listen for:\n\n1. VOCAL CLARITY\n[Bad example vs Good example]\n\"Can you hear every word clearly? If no = below 7. If yes = 7+.\"\n\n2. MIX BALANCE\n[Bad example vs Good example]\n\"Is anything too loud or too quiet? If everything sits perfectly = 8+. If something's buried or overpowering = below 7.\"\n\n3. MASTERING\n[Bad example vs Good example]\n\"Does it sound loud enough without distorting? If yes = 7+. If it's quiet or clipping = below 7.\"\n\n4. SONIC SPACE\n[Good example]\n\"Can you hear each element (vocals, drums, bass, melody) distinctly? If yes = 8+.\"\n\n5. PROFESSIONAL COMPARISON\n[Compare indie track to major label track]\n\"Could this play on the radio next to a major label release and hold its own? If yes = 9+. If it sounds amateur in comparison = below 8.\"\n\nPRACTICE EXERCISE:\n[Play 3 tracks, pause, ask viewers to rate production, reveal ratings and explain]\",
+        
+        "09:30_10:00_outro": "That's the framework. Two simple metrics. Clear evaluation criteria.\n\nYour homework:\n1. Go to Frequency Factory (link below)\n2. Rate 10 tracks using this framework\n3. Compare your ratings to the community average\n4. Adjust your calibration\n5. Repeat until you hit 90%+ accuracy\n\nOnce you master this, you'll never listen to music the same way again. You'll hear hooks, production, potential. You'll think like A&R.\n\nAnd that's a superpower in the music industry.\n\nLink to Frequency Factory in description. Start training.\n\nSubscribe for more A&R education.\n\nSee you in the next one.\"\n\n[END SCREEN]",
+        
+        "description_template": "Learn how to rate music like a professional A&R executive. This tutorial teaches you the framework used by Frequency Factory operatives to evaluate Hook Strength and Production Quality.\n\n🏭 Practice on Frequency Factory: [Link]\n\n⏱️ TIMESTAMPS:\n0:00 - You're Rating Wrong\n0:30 - The Framework\n2:00 - Hook Strength Masterclass\n6:00 - Production Quality Masterclass\n9:30 - Your Homework\n\n📚 RATING CRITERIA SUMMARY:\nHook Strength:\n- 10-Second Test\n- Hum Test\n- Viral Potential\n- Timing Test\n- Repetition Test\n\nProduction Quality:\n- Vocal Clarity\n- Mix Balance\n- Mastering\n- Sonic Space\n- Professional Comparison\n\n🎯 GOAL: Hit 90%+ rating accuracy\n\n#FrequencyFactory #MusicEducation #ARTips #HowToRate #MusicCriticism #ProductionTips #MusicIndustry #Hooks #MusicTheory",
+        
+        "expected_performance": "Very High - Evergreen tutorial content, highly searchable, saves + shares"
+      }
+    },
+    
+    {
+      "video_id": "YT_MAIN_003",
+      "title": "Factory Certified Tracks This Week - New Music You Need to Hear",
+      "video_type": "Weekly Roundup / Discovery",
+      "length": "8 minutes",
+      "thumbnail_concept": "\"FACTORY CERTIFIED\" badge + collage of artist photos",
+      "seo_keywords": ["new music", "music discovery", "certified tracks", "best new music", "unsigned artists"],
+      
+      "script": {
+        "00:00_00:20_hook": "These are the tracks that got Factory Certified this week. All rated 90+ by the community. All deserving your attention right now.\n\nNo playlist politics. No label money. Just pure talent validated by real listeners.\n\nLet's discover some music.",
+        
+        "00:20_07:00_track_features": "[For each certified track - approximately 1 minute each]\n\nTRACK 1:\n\"First up: [Artist Name] - '[Track Title]'\n\n[Play 20-30 second snippet - best part]\n\nCommunity Rating: 9.3/10\nHook: 9.5/10 | Production: 9.1/10\n\nWhy this works:\n[30 seconds of analysis - what makes the hook great, production highlights, why it certified]\n\n'This is the kind of track that labels are looking for. Clean execution, memorable hook, commercial appeal. Go follow @[artist] right now.'\n\n[Show artist's other platforms, streaming links]\n\n---\n\n[Repeat format for 5-7 certified tracks]",
+        
+        "07:00_08:00_outro": "That's this week's Factory Certified lineup. Seven tracks. Seven artists who deserve your support.\n\nLinks to every artist in the description. Go stream them. Follow them. Share them with friends.\n\nThis is how we change the music industry - by celebrating real talent, not algorithm gaming.\n\nIf you're an artist and you want your track reviewed, link in description to submit to Frequency Factory. \n\nIf you're a music fan, link in description to become an operative and help discover next week's certified tracks.\n\nNew roundup every Friday. Subscribe so you don't miss it.\n\nLeave a comment: Which track was your favorite?\n\nSee you next week.\"\n\n[END SCREEN]",
+        
+        "description_template": "This week's Factory Certified tracks - the best new music rated 90+ by the Frequency Factory community.\n\n🏭 Discover & Rate Music: [Link]\n\n🎵 CERTIFIED TRACKS THIS WEEK:\n\n1. [Artist] - \"[Track]\" - 9.3/10\n   Spotify: [link]\n   Instagram: @[handle]\n   \n2. [Artist] - \"[Track]\" - 9.2/10\n   [etc...]\n\n[Continue for all featured tracks]\n\n📊 CERTIFICATION REQUIREMENTS:\n- 50+ community ratings\n- 90+ average score\n- Consistent ratings across operatives\n\nOnly 2-3% of submissions get certified. These artists earned it.\n\n🔔 New certified tracks every Friday - subscribe!\n\n#NewMusic #MusicDiscovery #FactoryCertified #IndieMusic #UnsignedArtist #BestNewMusic #MusicPlaylist #FrequencyFactory",
+        
+        "expected_performance": "High - Discovery content + all featured artists will share + weekly format builds anticipation"
+      }
+    }
+  ],
+  
+  "youtube_shorts_scripts": [
+    {
+      "short_id": "YT_SHORT_001",
+      "title": "Hook Test: Good vs Great",
+      "length": "45 seconds",
+      "script": "Good hook: You remember it after one listen.\n\nGreat hook: You CAN'T STOP singing it.\n\n[Play good hook example] - Rating: 7/10\n[Play great hook example] - Rating: 9/10\n\nHear the difference? \n\nLink in bio to rate tracks on Frequency Factory.\n\n#Shorts #MusicTips #Hooks"
+    },
+    {
+      "short_id": "YT_SHORT_002",
+      "title": "This Got a 9.5",
+      "length": "35 seconds",
+      "script": "[Play track snippet]\n\nCommunity rating: 9.5/10\n\nArtist: @[handle]\n200 followers.\n\nThis is criminal. Everyone go follow them NOW.\n\n#Shorts #HiddenGem #NewMusic"
+    }
+  ],
+  
+  "youtube_seo_strategy": {
+    "title_formula": "[Hook] + [Promise] + [Keyword]",
+    "title_examples": [
+      "I Rated 100 Tracks - Here's What Makes Music Actually Good (Music Discovery)",
+      "How A&R Reps Actually Rate Music + You Can Learn This (Tutorial)",
+      "These Unsigned Artists Are Better Than Your Favorites (New Music)"
+    ],
+    "description_must_include": [
+      "Hook paragraph first 2 lines",
+      "Timestamp breakdown",
+      "All links (Frequency Factory, artist links, etc)",
+      "Keyword-rich summary",
+      "Call-to-action",
+      "Hashtags at bottom"
+    ],
+    "thumbnail_best_practices": {
+      "text_readable_on_mobile": "Use 3-5 words max",
+      "high_contrast": "Bright colors, bold text",
+      "human_face": "Include face showing emotion when possible",
+      "consistent_branding": "Frequency Factory logo in corner"
+    }
+  }
+}

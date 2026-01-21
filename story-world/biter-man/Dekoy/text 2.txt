@@ -1,0 +1,331 @@
+import React, { useState, useEffect } from 'react';
+import { Shield, Lock, Smartphone, Eye, EyeOff, Zap, AlertTriangle, Key, Users, ChevronRight, Check, Menu, X } from 'lucide-react';
+
+interface Feature {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+interface SecurityFeature {
+  title: string;
+  detail: string;
+}
+
+export default function DekoyLanding() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeProfile, setActiveProfile] = useState('real');
+  const [shakeCount, setShakeCount] = useState(0);
+  const [isWiping, setIsWiping] = useState(false);
+
+  const features: Feature[] = [
+    {
+      icon: <Users className="w-6 h-6" />,
+      title: "Multiple Profiles",
+      description: "Create real and decoy profiles with separate apps, files, and settings"
+    },
+    {
+      icon: <Key className="w-6 h-6" />,
+      title: "PIN Suffix Detection",
+      description: "Switch profiles or trigger emergency actions with special PIN codes"
+    },
+    {
+      icon: <AlertTriangle className="w-6 h-6" />,
+      title: "Emergency Wipe",
+      description: "Instant 3-pass military-grade data erasure with fake error screen"
+    },
+    {
+      icon: <Smartphone className="w-6 h-6" />,
+      title: "Shake Trigger",
+      description: "Calibrated accelerometer detection for emergency actions"
+    },
+    {
+      icon: <Eye className="w-6 h-6" />,
+      title: "Stealth Mode",
+      description: "Disguise app as calculator with biometric-protected settings"
+    },
+    {
+      icon: <Lock className="w-6 h-6" />,
+      title: "Content Tagging",
+      description: "Assign specific files and apps to different profiles"
+    }
+  ];
+
+  const securityFeatures: SecurityFeature[] = [
+    { title: "AES-256 Encryption", detail: "Military-grade encryption for all data" },
+    { title: "PBKDF2 Key Derivation", detail: "Secure password-based key generation" },
+    { title: "Zero-Knowledge Architecture", detail: "Your data never leaves your device" },
+    { title: "Android Keystore Integration", detail: "Hardware-backed security keys" },
+    { title: "3-Pass Overwrite", detail: "DoD 5220.22-M standard erasure" },
+    { title: "GDPR Compliant", detail: "Full privacy regulation compliance" }
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveProfile(prev => prev === 'real' ? 'decoy' : 'real');
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleShakeDemo = () => {
+    setShakeCount(prev => {
+      const newCount = prev + 1;
+      if (newCount >= 3) {
+        setIsWiping(true);
+        setTimeout(() => {
+          setIsWiping(false);
+          setShakeCount(0);
+        }, 2000);
+        return 0;
+      }
+      return newCount;
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full bg-gray-900 bg-opacity-95 backdrop-blur-sm z-50 border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-2">
+              <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl">D</span>
+                <div className="w-0.5 h-6 bg-red-500 transform rotate-45 absolute"></div>
+              </div>
+              <span className="text-xl font-bold">DEKOY</span>
+            </div>
+            
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="hover:text-blue-400 transition-colors">Features</a>
+              <a href="#security" className="hover:text-blue-400 transition-colors">Security</a>
+              <a href="#download" className="hover:text-blue-400 transition-colors">Download</a>
+              <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors">
+                Get Started
+              </button>
+            </div>
+
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="md:hidden"
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-gray-800 border-t border-gray-700">
+            <div className="px-4 py-2 space-y-2">
+              <a href="#features" className="block py-2 hover:text-blue-400">Features</a>
+              <a href="#security" className="block py-2 hover:text-blue-400">Security</a>
+              <a href="#download" className="block py-2 hover:text-blue-400">Download</a>
+              <button className="w-full bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg mt-2">
+                Get Started
+              </button>
+            </div>
+          </div>
+        )}
+      </nav>
+
+      {/* Hero Section */}
+      <section className="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              Your Privacy,
+              <span className="text-blue-500"> Your Control</span>
+            </h1>
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
+              Create separate digital lives with instant profile switching and military-grade emergency protection. 
+              Perfect plausible deniability when you need it most.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105">
+                Download for Android
+              </button>
+              <button className="border border-gray-600 hover:border-gray-500 px-8 py-4 rounded-lg text-lg font-semibold transition-colors">
+                iOS Coming Soon
+              </button>
+            </div>
+          </div>
+
+          {/* Interactive Demo */}
+          <div className="bg-gray-800 rounded-2xl p-8 max-w-4xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold">Live Profile Demo</h3>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-400">Current Profile:</span>
+                <span className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  activeProfile === 'real' ? 'bg-green-600' : 'bg-yellow-600'
+                }`}>
+                  {activeProfile === 'real' ? 'Real' : 'Decoy'}
+                </span>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              {activeProfile === 'real' ? (
+                <>
+                  <div className="bg-gray-700 rounded-lg p-4 text-center">
+                    <Shield className="w-8 h-8 mx-auto mb-2 text-green-400" />
+                    <span className="text-sm">Banking</span>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4 text-center">
+                    <Lock className="w-8 h-8 mx-auto mb-2 text-blue-400" />
+                    <span className="text-sm">Passwords</span>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4 text-center">
+                    <Eye className="w-8 h-8 mx-auto mb-2 text-purple-400" />
+                    <span className="text-sm">Photos</span>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4 text-center">
+                    <Zap className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
+                    <span className="text-sm">Work Files</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="bg-gray-700 rounded-lg p-4 text-center">
+                    <div className="bg-gray-600 rounded w-8 h-8 mx-auto mb-2" />
+                    <span className="text-sm">Calculator</span>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4 text-center">
+                    <div className="bg-gray-600 rounded w-8 h-8 mx-auto mb-2" />
+                    <span className="text-sm">Weather</span>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4 text-center">
+                    <div className="bg-gray-600 rounded w-8 h-8 mx-auto mb-2" />
+                    <span className="text-sm">News</span>
+                  </div>
+                  <div className="bg-gray-700 rounded-lg p-4 text-center">
+                    <div className="bg-gray-600 rounded w-8 h-8 mx-auto mb-2" />
+                    <span className="text-sm">Games</span>
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="border-t border-gray-700 pt-4">
+              <button 
+                onClick={handleShakeDemo}
+                className={`w-full py-3 rounded-lg font-medium transition-all ${
+                  isWiping 
+                    ? 'bg-red-600 animate-pulse' 
+                    : 'bg-gray-700 hover:bg-gray-600'
+                }`}
+              >
+                {isWiping ? 'EMERGENCY WIPE ACTIVATED!' : `Shake to Trigger (${shakeCount}/3)`}
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-800">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Powerful Privacy Features</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">
+              Everything you need to maintain multiple digital identities and protect your data under any circumstance.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {features.map((feature, index) => (
+              <div 
+                key={index}
+                className="bg-gray-900 rounded-xl p-6 hover:bg-gray-850 transition-all hover:transform hover:scale-105"
+              >
+                <div className="bg-blue-600 bg-opacity-20 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-400">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Security Section */}
+      <section id="security" className="py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-4xl font-bold mb-6">Military-Grade Security</h2>
+              <p className="text-gray-400 mb-8">
+                Built with the same encryption standards used by governments and military organizations worldwide. 
+                Your data stays on your device, encrypted with industry-leading algorithms.
+              </p>
+              <div className="space-y-4">
+                {securityFeatures.map((feature, index) => (
+                  <div key={index} className="flex items-start space-x-3">
+                    <Check className="w-5 h-5 text-green-500 mt-0.5" />
+                    <div>
+                      <h4 className="font-semibold">{feature.title}</h4>
+                      <p className="text-sm text-gray-400">{feature.detail}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl p-8 relative overflow-hidden">
+              <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+              <div className="relative z-10">
+                <Shield className="w-24 h-24 mb-6 text-white opacity-90" />
+                <h3 className="text-2xl font-bold mb-4">Zero-Knowledge Architecture</h3>
+                <p className="text-gray-100">
+                  We can't see your data, even if we wanted to. Everything is encrypted locally on your device 
+                  with keys only you control.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Download Section */}
+      <section id="download" className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-800">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-6">Ready to Take Control?</h2>
+          <p className="text-xl text-gray-400 mb-8">
+            Join thousands of privacy-conscious users protecting their digital lives with DEKOY.
+          </p>
+          <div className="bg-gray-900 rounded-2xl p-8">
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div>
+                <div className="text-3xl font-bold text-blue-500">10k+</div>
+                <div className="text-gray-400">Downloads</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-green-500">70%</div>
+                <div className="text-gray-400">Retention Rate</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-purple-500">8.5</div>
+                <div className="text-gray-400">NPS Score</div>
+              </div>
+            </div>
+            <button className="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-lg text-lg font-semibold transition-all transform hover:scale-105 flex items-center mx-auto">
+              Download Now
+              <ChevronRight className="w-5 h-5 ml-2" />
+            </button>
+            <p className="text-sm text-gray-500 mt-4">
+              Android 10+ required • iOS version in development
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-8 px-4 border-t border-gray-800">
+        <div className="max-w-7xl mx-auto text-center text-gray-400">
+          <p>© 2025 DEKOY. Privacy is a human right.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}

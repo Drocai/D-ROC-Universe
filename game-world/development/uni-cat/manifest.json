@@ -1,0 +1,10 @@
+{
+  "name": "Kenna's UniCat",
+  "short_name": "UniCat",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fce7f3",
+  "theme_color": "#ec4899",
+  "description": "A magical unicorn-cat adventure for collecting stars, gems, and hearts.",
+  "icons": []
+}

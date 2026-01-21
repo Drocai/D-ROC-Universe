@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DUMB BULL | CHINA SHOP CHAOS</title>
+    
+    <!-- Tailwind for UI -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- React & Three.js Ecosystem -->
+    <script type="importmap">
+        {
+            "imports": {
+                "react": "https://esm.sh/react@18.2.0",
+                "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+                "three": "https://esm.sh/three@0.160.0",
+                "@react-three/fiber": "https://esm.sh/@react-three/fiber@8.15.14",
+                "@react-three/drei": "https://esm.sh/@react-three/drei@9.96.1",
+                "uuid": "https://esm.sh/uuid@9.0.1",
+                "zustand": "https://esm.sh/zustand@4.5.0"
+            }
+        }
+    </script>
+    <script type="module" src="https://esm.sh/run" defer></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Permanent+Marker&display=swap');
+        
+        body {
+            background-color: #050505;
+            color: white;
+            overflow: hidden;
+            font-family: 'Anton', sans-serif;
+            touch-action: none; /* Prevent scroll on mobile */
+        }
+        
+        .glitch-text {
+            animation: glitch 1s linear infinite;
+        }
+
+        @keyframes glitch {
+            2%, 64% { transform: translate(2px,0) skew(0deg); }
+            4%, 60% { transform: translate(-2px,0) skew(0deg); }
+            62% { transform: translate(0,0) skew(5deg); }
+        }
+
+        .hud-text {
+            text-shadow: 2px 2px 0px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        
+        /* Custom Scrollbar for Leaderboard */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
+        import { createRoot } from 'react-dom/client';
+        import * as THREE from 'three';
+        import { Canvas, useFrame, useThree, useLoader } from '@react-three/fiber';
+        import { Text, useTexture, PerspectiveCamera, Stars, Sparkles, Trail, Float, ScreenShake } from '@react-three/drei';
+        import { create } from 'zustand';
+
+        // --- GAME STATE MANAGEMENT ---
+        const useStore = create((set) => ({
+            gameState: 'ready', // ready, playing, gameover
+            score: 0,
+            multiplier: 1,
+            hype: 100, // Health/Timer
+            highScore: localStorage.getItem('dumbbull_highscore') || 0,
+            startGame: () => set({ gameState: 'playing', score: 0, hype: 100, multiplier: 1 }),
+            endGame: (finalScore) => set((state) => {
+                const newHigh = finalScore > state.highScore ? finalScore : state.highScore;
+                localStorage.setItem('dumbbull_highscore', newHigh);
+                return { gameState: 'gameover', highScore: newHigh };
+            }),
+            addScore: (points) => set((state) => ({ score: state.score + (points * state.multiplier), hype: Math.min(state.hype + 5, 100) })),
+            decreaseHype: (amount) => set((state) => ({ hype: Math.max(state.hype - amount, 0) })),
+        }));
+
+        // --- AUDIO MANAGER (Placeholder for the real track) ---
+        const AudioController = ({ playing }) => {
+            const audioRef = useRef(new Audio('./song.mp3'));
+            
+            useEffect(() => {
+                audioRef.current.loop = true;
+                audioRef.current.volume = 0.6;
+                // Preload
+                return () => audioRef.current.pause();
+            }, []);
+
+            useEffect(() => {
+                if (playing) {
+                    audioRef.current.play().catch(e => console.log("Audio autoplay blocked until interaction"));
+                } else {
+                    audioRef.current.pause();
+                    audioRef.current.currentTime = 0;
+                }
+            }, [playing]);
+
+            return null;
+        };
+
+        // --- ASSETS & SHADERS ---
+        // Basic fragment shader for a glitch effect on the floor
+        const FloorShaderMaterial = {
+            uniforms: {
+                uTime: { value: 0 },
+                uColor1: { value: new THREE.Color('#1a1a1a') },
+                uColor2: { value: new THREE.Color('#000000') }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform float uTime;
+                uniform vec3 uColor1;
+                uniform vec3 uColor2;
+                varying vec2 vUv;
+                void main() {
+                    float grid = step(0.95, fract(vUv.x * 10.0)) + step(0.95, fract(vUv.y * 20.0 + uTime * 2.0));
+                    vec3 color = mix(uColor1, uColor2, grid);
+                    gl_FragColor = vec4(color, 1.0);
+                }
+            `
+        };
+
+        // --- COMPONENTS ---
+
+        const BullCharacter = ({ position }) => {
+            const texture = useTexture('./bull_1.png'); // Placeholder: Ensure file exists or it falls back
+            const mesh = useRef();
+            
+            // Subtle hover animation
+            useFrame(({ clock }) => {
+                if (mesh.current) {
+                    mesh.current.position.y = position[1] + Math.sin(clock.getElapsedTime() * 10) * 0.1;
+                    mesh.current.rotation.z = Math.sin(clock.getElapsedTime() * 15) * 0.05;
+                }
+            });
+
+            return (
+                <group position={position}>
+                    <Float speed={5} rotationIntensity={0.2} floatIntensity={0.2}>
+                        <mesh ref={mesh}>
+                            <planeGeometry args={[2, 2]} />
+                            <meshBasicMaterial map={texture} transparent side={THREE.DoubleSide} />
+                        </mesh>
+                    </Float>
+                    <Sparkles count={20} scale={3} size={4} speed={0.4} opacity={0.5} color="#d4af37" />
+                </group>
+            );
+        };
+
+        // Fallback for missing texture
+        function FallbackBull({ position }) {
+             return (
+                <group position={position}>
+                    <mesh rotation={[0,0,0]}>
+                        <boxGeometry args={[1, 1.5, 1]} />
+                        <meshStandardMaterial color="red" />
+                    </mesh>
+                    {/* Horns */}
+                    <mesh position={[0.4, 0.6, 0]}>
+                        <coneGeometry args={[0.1, 0.4, 8]} />
+                        <meshStandardMaterial color="gold" />
+                    </mesh>
+                    <mesh position={[-0.4, 0.6, 0]}>
+                        <coneGeometry args={[0.1, 0.4, 8]} />
+                        <meshStandardMaterial color="gold" />
+                    </mesh>
+                </group>
+            )
+        }
+
+        const SafeBull = (props) => {
+            return (
+                <Suspense fallback={<FallbackBull {...props}/>}>
+                    <BullCharacter {...props} />
+                </Suspense>
+            )
+        }
+
+        const MovingFloor = () => {
+            const mesh = useRef();
+            useFrame((state) => {
+                if(mesh.current) {
+                    mesh.current.material.uniforms.uTime.value = state.clock.getElapsedTime();
+                }
+            });
+
+            return (
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1, 0]} ref={mesh}>
+                    <planeGeometry args={[20, 100]} />
+                    <shaderMaterial args={[FloorShaderMaterial]} transparent />
+                </mesh>
+            );
+        };
+
+        const ParticleExplosion = ({ position, color }) => {
+            const group = useRef();
+            
+            useFrame(() => {
+                if(group.current) {
+                    group.current.children.forEach((child, i) => {
+                        child.position.x += (Math.random() - 0.5) * 0.2;
+                        child.position.y += (Math.random() - 0.5) * 0.2;
+                        child.position.z += (Math.random() - 0.5) * 0.2;
+                        child.rotation.x += 0.1;
+                        child.scale.multiplyScalar(0.9);
+                    });
+                }
+            });
+
+            return (
+                <group position={position} ref={group}>
+                    {Array.from({ length: 8 }).map((_, i) => (
+                        <mesh key={i} position={[0,0,0]}>
+                            <dodecahedronGeometry args={[0.2, 0]} />
+                            <meshStandardMaterial color={color} emissive={color} emissiveIntensity={2} />
+                        </mesh>
+                    ))}
+                </group>
+            );
+        };
+
+        const Collectible = ({ position, type, onCollect }) => {
+            const ref = useRef();
+            const { playerX } = useStore(); // Not real, purely visual in this MVP structure
+            const [collected, setCollected] = useState(false);
+            const zPos = useRef(position[2]);
+
+            useFrame((state, delta) => {
+                if (!collected) {
+                    zPos.current += 10 * delta; // Speed
+                    ref.current.position.z = zPos.current;
+                    ref.current.rotation.y += delta * 2;
+                    ref.current.rotation.x += delta;
+
+                    // Reset if passed camera
+                    if (zPos.current > 5) {
+                        zPos.current = -50 - Math.random() * 20;
+                        ref.current.position.x = (Math.random() - 0.5) * 6;
+                    }
+                }
+            });
+            
+            // Collision logic would go here in a full physics engine
+            // simulating simple distance check for MVP
+            useFrame(() => {
+                if(collected) return;
+                // Basic distance check against player (assumed at 0,0,0 for logic)
+                // In real implementation, pass player pos via store
+            })
+
+            if (collected) return <ParticleExplosion position={ref.current.position} color={type === 'gold' ? '#d4af37' : '#ffffff'} />;
+
+            return (
+                <group ref={ref} position={[position[0], position[1], zPos.current]}>
+                    {type === 'gold' ? (
+                        <mesh onClick={() => { setCollected(true); onCollect(50); }}>
+                            <torusKnotGeometry args={[0.3, 0.1, 64, 8]} />
+                            <meshStandardMaterial color="#d4af37" metalness={1} roughness={0.1} />
+                        </mesh>
+                    ) : (
+                        <mesh onClick={() => { setCollected(true); onCollect(10); }}>
+                            <cylinderGeometry args={[0.3, 0.4, 0.8, 8]} />
+                            <meshStandardMaterial color="white" />
+                        </mesh>
+                    )}
+                </group>
+            );
+        };
+
+        const GameScene = () => {
+            const { addScore, gameState, decreaseHype, hype, endGame, score } = useStore();
+            const playerRef = useRef();
+            const [playerPos, setPlayerPos] = useState([0, 0, 0]);
+
+            // Mouse/Touch movement
+            useFrame(({ mouse }) => {
+                if (gameState === 'playing') {
+                    const targetX = mouse.x * 5;
+                    // Smooth lerp
+                    const newX = playerPos[0] + (targetX - playerPos[0]) * 0.1;
+                    setPlayerPos([newX, 0, 0]);
+                    
+                    // Decrease hype constantly
+                    decreaseHype(0.1);
+                    if(hype <= 0) endGame(score);
+                }
+            });
+
+            // Spawner Logic
+            const items = useMemo(() => {
+                return Array.from({ length: 15 }).map((_, i) => ({
+                    id: i,
+                    x: (Math.random() - 0.5) * 6,
+                    y: 0,
+                    z: -10 - (i * 5),
+                    type: Math.random() > 0.8 ? 'gold' : 'china'
+                }));
+            }, []);
+
+            return (
+                <>
+                    <PerspectiveCamera makeDefault position={[0, 2, 5]} />
+                    <color attach="background" args={['#050505']} />
+                    <fog attach="fog" args={['#050505', 5, 20]} />
+                    
+                    <ambientLight intensity={0.5} />
+                    <pointLight position={[10, 10, 10]} intensity={1} color="#d4af37" />
+                    <spotLight position={[0, 5, 0]} angle={0.3} penumbra={1} intensity={2} color="red" />
+
+                    <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+                    
+                    <SafeBull position={playerPos} />
+                    <MovingFloor />
+
+                    {gameState === 'playing' && items.map(item => (
+                        <Collectible 
+                            key={item.id} 
+                            position={[item.x, item.y, item.z]} 
+                            type={item.type}
+                            onCollect={addScore}
+                        />
+                    ))}
+                    
+                    <ScreenShake maxY={0.05} maxPitch={0.05} maxRoll={0.05} yawFrequency={0.5} pitchFrequency={0.5} rollFrequency={0.5} intensity={hype < 20 ? 1 : 0} />
+                </>
+            );
+        };
+
+        // --- UI OVERLAYS ---
+
+        const HUD = () => {
+            const { score, hype } = useStore();
+            return (
+                <div className="absolute top-0 left-0 w-full p-4 flex justify-between items-start pointer-events-none z-10">
+                    <div className="flex flex-col">
+                        <span className="text-gray-400 text-sm font-bold tracking-widest">SCORE</span>
+                        <span className="text-4xl font-black text-yellow-400 hud-text">{score.toLocaleString()}</span>
+                    </div>
+                    <div className="flex flex-col items-end w-1/3">
+                        <span className="text-gray-400 text-sm font-bold tracking-widest mb-1">HYPE METER</span>
+                        <div className="w-full h-4 bg-gray-800 rounded-full overflow-hidden border border-gray-600">
+                            <div 
+                                className={`h-full transition-all duration-200 ${hype < 30 ? 'bg-red-500 animate-pulse' : 'bg-green-500'}`} 
+                                style={{ width: `${hype}%` }}
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const StartScreen = () => {
+            const { startGame, highScore } = useStore();
+            return (
+                <div className="absolute inset-0 bg-black/80 flex flex-col items-center justify-center z-20 backdrop-blur-sm">
+                    <h1 className="text-6xl md:text-8xl font-black text-white text-center leading-none mb-2 glitch-text">
+                        DUMB BULL
+                    </h1>
+                    <h2 className="text-2xl md:text-4xl font-bold text-red-600 mb-8 font-[Permanent Marker]">
+                        IN A CHINA SHOP
+                    </h2>
+                    
+                    <div className="bg-gray-900/90 p-8 rounded-2xl border-2 border-yellow-500 text-center max-w-md w-full shadow-[0_0_30px_rgba(212,175,55,0.3)]">
+                        <p className="text-gray-300 mb-6 text-lg">
+                            <i className="fas fa-hand-pointer mr-2"></i> 
+                            Drag/Swipe to Move
+                        </p>
+                        <p className="text-gray-300 mb-6 text-lg">
+                            <i className="fas fa-bomb mr-2"></i> 
+                            Smash China = <span className="text-yellow-400 font-bold">HYPE</span>
+                        </p>
+                        
+                        <button 
+                            onClick={startGame}
+                            className="w-full bg-gradient-to-r from-yellow-600 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-black font-black text-2xl py-4 rounded-xl transform hover:scale-105 transition-all shadow-lg"
+                        >
+                            PLAY NOW
+                        </button>
+                        
+                        <div className="mt-6 pt-4 border-t border-gray-700 flex justify-between text-sm text-gray-500">
+                            <span>High Score:</span>
+                            <span className="text-yellow-500 font-bold">{highScore.toLocaleString()}</span>
+                        </div>
+                    </div>
+                    
+                    <div className="mt-8 flex gap-4">
+                        <button className="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-full font-bold flex items-center gap-2">
+                            <i className="fab fa-spotify"></i> Pre-Save
+                        </button>
+                        <button className="bg-red-600 hover:bg-red-500 text-white px-6 py-2 rounded-full font-bold flex items-center gap-2">
+                            <i className="fab fa-youtube"></i> Watch Video
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const GameOverScreen = () => {
+            const { score, highScore, startGame } = useStore();
+            return (
+                <div className="absolute inset-0 bg-black/90 flex flex-col items-center justify-center z-30">
+                    <h2 className="text-5xl font-black text-white mb-2">SHOP CLOSED</h2>
+                    <p className="text-xl text-gray-400 mb-8">You ran out of hype.</p>
+                    
+                    <div className="text-center mb-10">
+                        <div className="text-sm text-gray-500 tracking-widest mb-1">YOUR SCORE</div>
+                        <div className="text-6xl font-black text-yellow-400 mb-2">{score.toLocaleString()}</div>
+                        {score >= highScore && <div className="text-red-500 font-bold animate-bounce">NEW HIGH SCORE!</div>}
+                    </div>
+
+                    <button 
+                        onClick={startGame}
+                        className="bg-white text-black font-black text-xl px-12 py-4 rounded-xl hover:bg-gray-200 transition-all mb-8"
+                    >
+                        PLAY AGAIN
+                    </button>
+
+                    <div className="max-w-md w-full bg-gray-900 rounded-xl p-6 border border-gray-800">
+                        <h3 className="text-center font-bold text-gray-300 mb-4">STREAM "DUMB BULL" NOW</h3>
+                        <div className="grid grid-cols-2 gap-3">
+                            <a href="#" className="flex items-center justify-center gap-2 bg-[#1DB954] text-black font-bold py-3 rounded hover:opacity-90 transition">
+                                <i className="fab fa-spotify"></i> Spotify
+                            </a>
+                            <a href="#" className="flex items-center justify-center gap-2 bg-[#FA243C] text-white font-bold py-3 rounded hover:opacity-90 transition">
+                                <i className="fab fa-apple"></i> Apple Music
+                            </a>
+                            <a href="#" className="flex items-center justify-center gap-2 bg-[#FF0000] text-white font-bold py-3 rounded hover:opacity-90 transition">
+                                <i className="fab fa-youtube"></i> YouTube
+                            </a>
+                            <a href="#" className="flex items-center justify-center gap-2 bg-[#000000] border border-gray-700 text-white font-bold py-3 rounded hover:bg-gray-800 transition">
+                                <i className="fas fa-tshirt"></i> Merch
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const gameState = useStore(state => state.gameState);
+            
+            return (
+                <>
+                    <div className="w-full h-screen relative">
+                        {/* 3D Scene */}
+                        <Canvas dpr={[1, 2]}>
+                            <GameScene />
+                        </Canvas>
+
+                        {/* UI Layers */}
+                        {gameState === 'playing' && <HUD />}
+                        {gameState === 'ready' && <StartScreen />}
+                        {gameState === 'gameover' && <GameOverScreen />}
+                    </div>
+                    
+                    {/* Audio Controller */}
+                    <AudioController playing={gameState === 'playing'} />
+                </>
+            );
+        };
+
+        const root = createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
+

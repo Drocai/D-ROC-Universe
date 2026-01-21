@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Frequency Factory — Submission & Live Queue</title>
+<style>
+  :root{
+    --bg:#0b0e13;
+    --panel:#121622;
+    --accent:#7ef9ff;
+    --accent2:#b388ff;
+    --accent3:#ffd166;
+    --text:#e6e9ef;
+    --muted:#9aa3b2;
+    --good:#4ade80;
+    --warn:#f97316;
+    --bad:#ef4444;
+    --card:#0f1420;
+    --crown: #ffdf6b;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+    background:
+      radial-gradient(1200px 600px at 10% 0%, #1a1f2e55 0%, transparent 70%),
+      radial-gradient(900px 500px at 90% 0%, #2b134555 0%, transparent 70%),
+      linear-gradient(180deg, #0b0e13, #0a0c12);
+    color:var(--text);
+  }
+  header{
+    display:flex;align-items:center;gap:14px;padding:18px 22px;border-bottom:1px solid #1c2233;
+    position:sticky;top:0;background:#0b0e13cc;backdrop-filter: blur(6px);z-index:10;
+  }
+  .logo{
+    display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.3px;font-size:20px;
+  }
+  .logo .badge{
+    width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+    background: conic-gradient(from 180deg, var(--accent), var(--accent2), var(--accent3), var(--accent));
+    box-shadow: 0 0 24px #7ef9ff44, inset 0 0 18px #ffffff22;
+  }
+  .tagline{color:var(--muted);font-size:13px}
+  main{padding:22px;display:grid;grid-template-columns: 380px 1fr;gap:22px;max-width:1400px;margin:0 auto}
+  @media (max-width: 980px){
+    main{grid-template-columns: 1fr}
+  }
+  .panel{
+    background: var(--panel);
+    border:1px solid #1c2233;
+    border-radius:16px;
+    padding:18px;
+    box-shadow: 0 10px 30px #00000055, inset 0 0 0 1px #ffffff05;
+  }
+  h2{margin:0 0 12px 0;font-size:18px}
+  label{display:block;font-size:13px;color:var(--muted);margin:10px 0 6px}
+  input, select, textarea{
+    width:100%;padding:11px 12px;border-radius:10px;border:1px solid #21283a;background:#0f1420;color:var(--text);
+    outline:none;
+  }
+  input:focus, select:focus, textarea:focus{border-color:#2f3c5f; box-shadow:0 0 0 3px #7ef9ff22}
+  textarea{min-height:88px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:10px;
+    padding:12px 14px;border-radius:12px;border:1px solid #26314b;background:linear-gradient(180deg,#172036,#111728);
+    color:#e9fbff;font-weight:700;cursor:pointer;text-decoration:none;
+    transition:transform .05s ease, box-shadow .2s ease;
+    box-shadow:0 6px 20px #7ef9ff22, inset 0 0 0 1px #7ef9ff11;
+  }
+  .btn:hover{box-shadow:0 8px 26px #7ef9ff33}
+  .btn:active{transform:translateY(1px)}
+  .btn-accent{background:linear-gradient(180deg,#0ea5b6,#087c8a);border-color:#0b6d79}
+  .btn-ghost{background:#121622;border-color:#2a3350;color:#cfe9ff}
+  .success{color:var(--good);font-weight:700;margin-top:8px;font-size:13px}
+  .small{font-size:12px;color:var(--muted)}
+  .divider{height:1px;background:#1c2233;margin:14px -18px}
+  .stats{display:grid;grid-template-columns: repeat(4, 1fr); gap:10px}
+  .stat{
+    background:linear-gradient(180deg,#111726,#0f1420);
+    border:1px solid #1e2842;border-radius:12px;padding:12px;
+  }
+  .stat .k{font-size:22px;font-weight:800}
+  .stat .l{font-size:12px;color:var(--muted)}
+  .monitor{
+    display:grid;grid-template-columns:1.1fr .9fr; gap:16px;
+  }
+  @media (max-width: 1200px){
+    .monitor{grid-template-columns:1fr}
+  }
+  .belt{
+    background:linear-gradient(180deg,#0e1320,#0b101a);
+    border:1px solid #1f2740;border-radius:16px;overflow:hidden;position:relative;
+  }
+  .belt-header{
+    padding:12px 14px;border-bottom:1px dashed #263052;display:flex;align-items:center;justify-content:space-between
+  }
+  .belt-track{
+    display:flex;gap:12px;align-items:center;padding:14px;overflow:hidden;white-space:nowrap;
+    mask-image: linear-gradient(90deg, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  }
+  .belt-track .tile{
+    display:flex;align-items:center;gap:10px;background:#0f1522;border:1px solid #1f2742;border-radius:12px;padding:8px 10px;
+    min-width: 240px; box-shadow: 0 4px 16px #00000055;
+  }
+  .cover{
+    width:44px;height:44px;border-radius:8px;flex:0 0 auto;background:linear-gradient(135deg,#22293d,#131a2b);
+    display:grid;place-items:center;font-weight:900;color:#ffffffcc;border:1px solid #2c3758;
+  }
+  .dot{width:10px;height:10px;border-radius:9999px;margin-left:auto}
+  .queued{background:#374151}
+  .playing{background:var(--good)}
+  .done{background:#6b7280}
+  .nowplaying-card{
+    padding:14px;border-radius:14px;background:linear-gradient(180deg,#12182a,#0f1420);border:1px solid #212a44;
+    display:flex;gap:12px;align-items:center;box-shadow:0 10px 30px #00000055;
+  }
+  .nowplaying-card .bigcover{width:84px;height:84px;border-radius:12px;border:1px solid #2a3558;display:grid;place-items:center;font-weight:900}
+  .score-meters{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .meter{
+    width:calc(50% - 4px);background:#0f1420;border:1px solid #26314e;border-radius:10px;padding:8px
+  }
+  .meter .bar{height:8px;border-radius:6px;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0%}
+  .queue-table{width:100%;border-collapse:separate;border-spacing:0 8px}
+  .queue-table th{font-size:12px;color:var(--muted);text-align:left;padding:0 8px}
+  .queue-table td{background:#0f1420;border:1px solid #1e2842;padding:10px 8px}
+  .queue-table td:first-child{border-radius:10px 0 0 10px}
+  .queue-table td:last-child{border-radius:0 10px 10px 0}
+  .highlight{outline:2px solid var(--accent); box-shadow:0 0 0 4px #7ef9ff22}
+  .stamp{
+    display:inline-flex;align-items:center;gap:6px;background:linear-gradient(180deg,#1d1a07,#100f06);
+    border:1px solid #3a3009;color:#ffeaa7;padding:6px 10px;border-radius:9999px;font-weight:800;font-size:12px
+  }
+  .crown{width:14px;height:14px;display:inline-block;background: radial-gradient(circle at 30% 10%, #fff8, #0000),
+             radial-gradient(circle at 70% 90%, #fff3, #0000), linear-gradient(180deg, #fff3, #0000), var(--crown);
+        clip-path: polygon(0 70%, 18% 70%, 26% 38%, 34% 70%, 45% 70%, 52% 34%, 60% 70%, 70% 70%, 78% 38%, 86% 70%, 100% 70%, 100% 100%, 0 100%);
+  }
+  .pill{display:inline-flex;gap:6px;align-items:center;background:#141a28;border:1px solid #26314e;border-radius:9999px;padding:6px 10px;font-size:12px;color:#cfe0ff}
+  .eta{font-weight:800}
+  .link{color:#9bdfff;text-decoration:none}
+  .link:hover{text-decoration:underline}
+  .footer{padding:26px 22px;color:var(--muted);font-size:12px;text-align:center}
+  .toggle{display:flex;align-items:center;gap:8px;cursor:pointer}
+  .toggle input{width:0;height:0;opacity:0}
+  .switch{width:40px;height:22px;border-radius:9999px;background:#2a334d;position:relative;border:1px solid #364166}
+  .switch:after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#cfe0ff;transition:transform .2s ease}
+  .toggle input:checked + .switch:after{transform: translateX(18px)}
+  .badge-soft{background:#101623;border:1px solid #243051;color:#b6c6ea;padding:4px 8px;border-radius:8px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <div class="badge" aria-hidden="true"></div>
+    <div>
+      <div>Frequency Factory</div>
+      <div class="tagline">Where raw tracks roll in & certified records roll out.</div>
+    </div>
+  </div>
+  <div style="margin-left:auto;display:flex;gap:12px;align-items:center">
+    <span class="badge-soft">Live Queue Monitor</span>
+    <label class="toggle" title="Toggle demo mode (uses local simulation)">
+      <input type="checkbox" id="demoToggle" checked />
+      <span class="switch"></span>
+      <span class="small">Demo mode</span>
+    </label>
+  </div>
+</header>
+
+<main>
+  <!-- SUBMISSION PANEL -->
+  <section class="panel" id="submitPanel">
+    <h2>Submit your track</h2>
+    <p class="small">Drop your info. You’ll get a live ticket and appear on the conveyor within seconds.</p>
+    <div class="divider"></div>
+
+    <form id="submissionForm">
+      <label>Artist / Act Name</label>
+      <input required name="artist" placeholder="e.g., D RoC" />
+
+      <label>Track Title</label>
+      <input required name="title" placeholder="e.g., Frequency Don’t Fold" />
+
+      <div class="row">
+        <div>
+          <label>Email (to track your spot)</label>
+          <input required type="email" name="email" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label>Best 45s Timestamp</label>
+          <input name="timestamp" placeholder="e.g., 0:45" />
+        </div>
+      </div>
+
+      <label>Streaming Link (YouTube / Spotify / SoundCloud)</label>
+      <input required name="link" placeholder="https://..." />
+
+      <div class="row">
+        <div>
+          <label>Genre Lane</label>
+          <select name="genre">
+            <option>Hip-Hop / Rap</option>
+            <option>R&B / Soul</option>
+            <option>Pop</option>
+            <option>Alternative</option>
+            <option>Electronic</option>
+          </select>
+        </div>
+        <div>
+          <label>AI-assisted?</label>
+          <select name="ai">
+            <option value="No" selected>No</option>
+            <option>Yes</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Notes to Reviewers (optional)</label>
+      <textarea name="notes" placeholder="Anything we should know?"></textarea>
+
+      <div style="display:flex;gap:10px;align-items:center;margin-top:12px">
+        <button class="btn btn-accent" type="submit">Get Ticket & Join Conveyor</button>
+        <a class="btn btn-ghost" href="#liveMonitor">Jump to Live Monitor</a>
+      </div>
+      <div id="submitSuccess" class="success" style="display:none"></div>
+    </form>
+
+    <div class="divider"></div>
+    <p class="small">
+      <span class="stamp"><span class="crown"></span> Certified by Frequency Factory</span>
+      — Winners are stamped & featured on our Receipts Wall. Skips are optional and never guarantee a win.
+    </p>
+  </section>
+
+  <!-- LIVE MONITOR PANEL -->
+  <section class="panel" id="liveMonitor">
+    <h2 style="display:flex;align-items:center;gap:12px">Factory Monitor <span class="pill"><span>Queue</span> <span id="queueCount">0</span></span></h2>
+    <div class="stats" style="margin:10px 0 14px">
+      <div class="stat">
+        <div class="k" id="nowPlayingStat">—</div>
+        <div class="l">Now Playing</div>
+      </div>
+      <div class="stat">
+        <div class="k" id="avgWait">—</div>
+        <div class="l">Avg Wait (mm:ss)</div>
+      </div>
+      <div class="stat">
+        <div class="k" id="skipsToday">0</div>
+        <div class="l">Skips Purchased Today</div>
+      </div>
+      <div class="stat">
+        <div class="k" id="weekendSpots">5</div>
+        <div class="l">Weekend Bracket Spots Left</div>
+      </div>
+    </div>
+
+    <div class="monitor">
+      <div class="belt">
+        <div class="belt-header">
+          <div class="small">Conveyor Order (left → right): queued · up next · processing · done</div>
+          <div>
+            <input id="highlightEmail" placeholder="Highlight my email…" style="padding:8px 10px;border-radius:10px;border:1px solid #26314e;background:#0f1420;color:#cfe0ff" />
+          </div>
+        </div>
+        <div class="belt-track" id="beltTrack" aria-live="polite"></div>
+      </div>
+
+      <div class="nowplaying-card" id="nowPlayingCard">
+        <div class="bigcover" id="nowCover">FF</div>
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div style="font-weight:800" id="nowTitle">—</div>
+            <span class="pill" id="nowArtist">—</span>
+            <a class="link" id="nowLink" href="#" target="_blank" rel="noopener">Open track</a>
+          </div>
+          <div class="score-meters" id="meters">
+            <!-- Meters injected here -->
+          </div>
+        </div>
+        <div>
+          <button class="btn" id="skipBtn" title="Purchase a skip to move up the line">Pay for Skip</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:16px">
+      <table class="queue-table" id="queueTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Artist</th>
+            <th>Track</th>
+            <th>ETA</th>
+            <th>Lane</th>
+            <th>Ticket</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div class="small" style="margin-top:8px">
+        ETAs are estimates. Skips move you forward but do not replace or kick others—just reorders fairly.
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  © <span id="year"></span> Frequency Factory — “Where raw tracks roll in & certified records roll out.”
+</footer>
+
+<script>
+/* CONFIG */
+const DEMO = { enabled: true };
+const AVG_REVIEW_SECONDS = 75; // 1:15 per track average window
+const API = {
+  // If you wire to a backend later, set DEMO.enabled=false and implement these endpoints:
+  submit: '/api/submit',         // POST JSON {artist,title,email,link,timestamp,genre,ai,notes} -> {ticket, id}
+  queue: '/api/queue',           // GET -> [{...queueItem}]
+  skip: '/api/skip',             // POST JSON {ticket} -> {ok:true,newPosition}
+  ws:   '/ws'                    // WebSocket that emits {type:'queue'|'now'|'metrics', data:...}
+};
+
+/* UTIL */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const pad = n => n.toString().padStart(2,'0');
+const rand = (a,b)=> Math.floor(Math.random()*(b-a+1))+a;
+
+function timeFmt(sec){
+  const m = Math.floor(sec/60), s=sec%60;
+  return `${pad(m)}:${pad(s)}`;
+}
+function initials(str='FF'){
+  const s = str.trim().split(/\s+/).map(w=>w[0]?.toUpperCase()).slice(0,2).join('');
+  return s || 'FF';
+}
+function hue(seed){ return (seed*57)%360 }
+function coverStyle(seed){
+  return `background: conic-gradient(from ${seed*13}deg, #172037, #0f192e, #11182a);`;
+}
+
+/* STATE */
+let queue = [];
+let now = null;
+let metrics = { skipsToday: 0, weekendSpots: 5 };
+let myEmailHighlight = '';
+
+/* DEMO DATA */
+function demoSeed(){
+  const demoArtists = [
+    ['D RoC','Crown Pressure'],
+    ['FondG','Late Night Leverage'],
+    ['KIAI','Golden Siren'],
+    ['Biter-Man','Grill God'],
+    ['Nova Reign','Palm Heat'],
+    ['Worc Eracs','Ash Wings'],
+    ['Manifest','Stamp It'],
+    ['D RoC','Numbers Don\'t Lie'],
+    ['FondG','Stream Surge'],
+  ];
+  queue = demoArtists.map((pair,i)=> ({
+    id: 'demo-'+i,
+    ticket: 'FF-'+(1000+i),
+    artist: pair[0],
+    title: pair[1],
+    email: (i%3===0?'you@example.com':'demo'+i+'@mail.com'),
+    link: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    timestamp: '0:'+pad(rand(10,59)),
+    genre: ['Hip-Hop / Rap','R&B / Soul','Alternative'][i%3],
+    ai: (i%4===0?'Yes':'No'),
+    notes: '',
+    seed: i+1,
+    status: (i===0?'playing':'queued'),
+    submittedAt: Date.now()- (i*60*1000)
+  }));
+  now = queue[0];
+  metrics.skipsToday = 3 + rand(0,4);
+  metrics.weekendSpots = 5;
+}
+demoSeed();
+
+/* RENDER */
+function renderStats(){
+  $('#queueCount').textContent = Math.max(queue.length- (now?1:0), 0);
+  $('#skipsToday').textContent = metrics.skipsToday;
+  $('#weekendSpots').textContent = metrics.weekendSpots;
+  $('#nowPlayingStat').textContent = now ? '1' : '—';
+  const avgWait = Math.max(0, (queue.length-1)*AVG_REVIEW_SECONDS);
+  $('#avgWait').textContent = timeFmt(avgWait);
+}
+
+function meterRow(name,val){
+  val = Math.max(0, Math.min(100, val));
+  return `<div class="meter">
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span>${name}</span><b>${val}</b></div>
+    <div class="bar" style="width:${val}%"></div>
+  </div>`;
+}
+
+function renderNow(){
+  const card = $('#nowPlayingCard');
+  if(!now){ card.style.opacity=.5; return; }
+  $('#nowTitle').textContent = now.title;
+  $('#nowArtist').textContent = now.artist;
+  $('#nowLink').href = now.link || '#';
+  $('#nowCover').textContent = initials(now.title);
+  $('#nowCover').setAttribute('style', `border:1px solid #2a3558; ${coverStyle(now.seed||1)}`);
+
+  const meters = $('#meters');
+  const scores = now.scores || {
+    Hook: rand(60,95), Vocals: rand(55,90), Mix: rand(55,90), Originality: rand(50,95), Replay: rand(40,90)
+  };
+  now.scores = scores;
+  meters.innerHTML = [
+    meterRow('Hook', scores.Hook),
+    meterRow('Vocals', scores.Vocals),
+    meterRow('Mix', scores.Mix),
+    meterRow('Originality', scores.Originality),
+    meterRow('Replay', scores.Replay),
+  ].join('');
+
+  // animate bars
+  $$('#meters .bar').forEach(el=>{
+    el.style.width='0%';
+    setTimeout(()=> el.style.width = el.getAttribute('style').match(/width:\s*([^;]+)/)[1], 30);
+  });
+}
+
+function renderBelt(){
+  const el = $('#beltTrack');
+  el.innerHTML = '';
+  const items = queue.slice(1, 12); // show a slice
+  items.forEach((q,i)=>{
+    const tile = document.createElement('div');
+    tile.className = 'tile';
+    if (myEmailHighlight && q.email === myEmailHighlight) tile.classList.add('highlight');
+    tile.innerHTML = `
+      <div class="cover" style="${coverStyle(q.seed||i+2)}">${initials(q.title)}</div>
+      <div style="min-width:0">
+        <div style="font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${q.title}</div>
+        <div class="small" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${q.artist} • ${q.genre}</div>
+      </div>
+      <div class="dot queued" title="queued"></div>
+    `;
+    el.appendChild(tile);
+  });
+  // simple marquee animation
+  let ofs = 0;
+  function tick(){
+    ofs -= 0.5;
+    el.style.transform = `translateX(${ofs}px)`;
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+function renderTable(){
+  const tbody = $('#queueTable tbody');
+  tbody.innerHTML='';
+  const list = queue.slice(1); // exclude now
+  list.forEach((q,i)=>{
+    const tr = document.createElement('tr');
+    const etaSec = (i+1)*AVG_REVIEW_SECONDS;
+    tr.innerHTML = `
+      <td>${i+1}</td>
+      <td>${q.artist}</td>
+      <td>${q.title}</td>
+      <td><span class="eta">${timeFmt(etaSec)}</span></td>
+      <td>${q.genre}</td>
+      <td>${q.ticket}</td>
+      <td><button class="btn btn-ghost" data-skip="${q.ticket}">Skip (+)</button></td>
+    `;
+    if (myEmailHighlight && q.email === myEmailHighlight) tr.querySelectorAll('td').forEach(td=>td.classList.add('highlight'));
+    tbody.appendChild(tr);
+  });
+}
+
+function renderAll(){
+  renderStats();
+  renderNow();
+  renderBelt();
+  renderTable();
+}
+renderAll();
+
+/* FORM SUBMIT */
+$('#submissionForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const fd = new FormData(e.target);
+  const data = Object.fromEntries(fd.entries());
+  data.seed = rand(1,360);
+  data.status = 'queued';
+  data.submittedAt = Date.now();
+  if (DEMO.enabled || $('#demoToggle').checked){
+    const ticket = 'FF-'+rand(2000,9000);
+    data.ticket = ticket;
+    data.id = 'local-'+ticket;
+    queue.push(data);
+    $('#submitSuccess').style.display='block';
+    $('#submitSuccess').textContent = `Ticket ${ticket} created. You’re on the conveyor.`;
+    e.target.reset();
+    renderAll();
+  } else {
+    try{
+      const resp = await fetch(API.submit, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+      const json = await resp.json();
+      $('#submitSuccess').style.display='block';
+      $('#submitSuccess').textContent = `Ticket ${json.ticket} created. You’re on the conveyor.`;
+      e.target.reset();
+    }catch(err){
+      alert('Submit failed. Try demo mode or check backend.');
+    }
+  }
+});
+
+/* HIGHLIGHT MY EMAIL */
+$('#highlightEmail').addEventListener('input', (e)=>{
+  myEmailHighlight = e.target.value.trim();
+  renderBelt();
+  renderTable();
+});
+
+/* SKIP BUTTONS */
+document.body.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button[data-skip]');
+  if (!btn) return;
+  const ticket = btn.getAttribute('data-skip');
+  openCheckout(ticket);
+});
+$('#skipBtn').addEventListener('click', ()=>{
+  if (now) openCheckout(now.ticket || 'FF-NOW');
+});
+
+function openCheckout(ticket){
+  // Demo checkout
+  metrics.skipsToday++;
+  // Move selected ticket up by 2 slots (demo rule)
+  const idx = queue.findIndex(q=>q.ticket===ticket);
+  if (idx>1){
+    const item = queue.splice(idx,1)[0];
+    const target = Math.max(1, idx-2);
+    queue.splice(target,0,item);
+    renderAll();
+    alert(`Skip purchased for ticket ${ticket}. You moved closer to the front.`);
+  }else{
+    alert('Already at or near the front.');
+  }
+}
+
+/* SIMPLE DEMO PLAYER LOOP */
+function tickPlayer(){
+  if (!now && queue.length){
+    now = queue.shift();
+  }
+  let elapsed = (now.elapsed||0)+1;
+  now.elapsed = elapsed;
+  if (elapsed >= AVG_REVIEW_SECONDS){
+    // finish current, stamp if high hook score
+    if ((now.scores?.Hook||70) >= 85) {
+      // Could append to winners UI; for demo, just console
+      console.log('Certified winner:', now.title);
+    }
+    // Next track
+    now = queue.shift();
+    if (now) now.status='playing';
+  }
+  renderAll();
+}
+setInterval(()=>{
+  if ($('#demoToggle').checked){
+    DEMO.enabled = true;
+    tickPlayer();
+  }
+}, 1000);
+
+/* YEAR */
+$('#year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>

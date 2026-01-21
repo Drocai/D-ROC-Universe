@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequency Factory - Asset Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .asset-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .asset-item:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .asset-preview {
+            width: 100%;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .asset-preview img {
+            max-width: 80%;
+            max-height: 120px;
+        }
+        
+        .asset-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .asset-details {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: transform 0.2s;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #4ECDC4;
+            color: white;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .color-box {
+            height: 100px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+        
+        .color-box:hover {
+            transform: scale(1.05);
+        }
+        
+        .color-label {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .copy-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4ECDC4;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+        }
+        
+        .copy-notification.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .download-all {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            border-radius: 20px;
+            color: white;
+        }
+        
+        .download-all h2 {
+            color: white;
+            border: none;
+            margin-bottom: 20px;
+        }
+        
+        .btn-large {
+            padding: 20px 50px;
+            font-size: 1.3em;
+            background: white;
+            color: #4ECDC4;
+            border: none;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn-large:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="copy-notification" id="copyNotification">
+        ✓ Copied to clipboard!
+    </div>
+    
+    <div class="header">
+        <h1>🏭 FREQUENCY FACTORY</h1>
+        <p style="font-size: 1.3em; margin-top: 10px;">Asset Manager & Exporter</p>
+    </div>
+    
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-number">32+</div>
+                <div class="stat-label">Assets Ready</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Logo Versions</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">14</div>
+                <div class="stat-label">Badges</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Brand Colors</div>
+            </div>
+        </div>
+        
+        <!-- Logos -->
+        <div class="section">
+            <h2>📱 Logo Variations</h2>
+            <div class="asset-grid">
+                <div class="asset-item" onclick="viewAsset('logos/primary-logo.svg')">
+                    <div class="asset-preview">
+                        <img src="logos/primary-logo.svg" alt="Primary Logo">
+                    </div>
+                    <div class="asset-name">Primary Logo</div>
+                    <div class="asset-details">250x180px • Full brand</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); downloadAsset('logos/primary-logo.svg', 'ff-primary-logo.svg')">Download</button>
+                    </div>
+                </div>
+                
+                <div class="asset-item" onclick="viewAsset('logos/icon-only.svg')">
+                    <div class="asset-preview">
+                        <img src="logos/icon-only.svg" alt="Icon Only">
+                    </div>
+                    <div class="asset-name">Icon Only</div>
+                    <div class="asset-details">150x150px • App icon</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); downloadAsset('logos/icon-only.svg', 'ff-icon.svg')">Download</button>
+                    </div>
+                </div>
+                
+                <div class="asset-item" onclick="viewAsset('logos/horizontal-lockup.svg')">
+                    <div class="asset-preview">
+                        <img src="logos/horizontal-lockup.svg" alt="Horizontal">
+                    </div>
+                    <div class="asset-name">Horizontal Lockup</div>
+                    <div class="asset-details">350x100px • Headers</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); downloadAsset('logos/horizontal-lockup.svg', 'ff-horizontal.svg')">Download</button>
+                    </div>
+                </div>
+                
+                <div class="asset-item" onclick="viewAsset('logos/monochrome-dark.svg')">
+                    <div class="asset-preview" style="background: #1a1a2e;">
+                        <img src="logos/monochrome-dark.svg" alt="Monochrome">
+                    </div>
+                    <div class="asset-name">Monochrome</div>
+                    <div class="asset-details">200x140px • Dark BG</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); downloadAsset('logos/monochrome-dark.svg', 'ff-monochrome.svg')">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Certification Badges -->
+        <div class="section">
+            <h2>🏆 Certification Badges</h2>
+            <div class="asset-grid">
+                <div class="asset-item" onclick="viewAsset('badges/certification/bronze-badge.svg')">
+                    <div class="asset-preview">
+                        <img src="badges/certification/bronze-badge.svg" alt="Bronze">
+                    </div>
+                    <div class="asset-name">Bronze Tier</div>
+                    <div class="asset-details">Score: 90-92</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); downloadAsset('badges/certification/bronze-badge.svg', 'bronze-badge.svg')">Download</button>
+                    </div>
+                </div>
+                
+                <div class="asset-item" onclick="viewAsset('badges/certification/silver-badge.svg')">
+                    <div class="asset-preview">
+                        <img src="badges/certification/silver-badge.svg" alt="Silver">
+                    </div>
+                    <div class="asset-name">Silver Tier</div>
+                    <div class="asset-details">Score: 93-95</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); downloadAsset('badges/certification/silver-badge.svg', 'silver-badge.svg')">Download</button>
+                    </div>
+                </div>
+                
+                <div class="asset-item" onclick="viewAsset('badges/certification/gold-badge.svg')">
+                    <div class="asset-preview">
+                        <img src="badges/certification/gold-badge.svg" alt="Gold">
+                    </div>
+                    <div class="asset-name">Gold Tier</div>
+                    <div class="asset-details">Score: 96-98</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); downloadAsset('badges/certification/gold-badge.svg', 'gold-badge.svg')">Download</button>
+                    </div>
+                </div>
+                
+                <div class="asset-item" onclick="viewAsset('badges/certification/platinum-badge.svg')">
+                    <div class="asset-preview">
+                        <img src="badges/certification/platinum-badge.svg" alt="Platinum">
+                    </div>
+                    <div class="asset-name">Platinum Tier</div>
+                    <div class="asset-details">Score: 99-100</div>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" onclick="event.stopPropagation(); downloadAsset('badges/certification/platinum-badge.svg', 'platinum-badge.svg')">Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Color Palette -->
+        <div class="section">
+            <h2>🎨 Brand Color Palette</h2>
+            <div class="color-palette">
+                <div>
+                    <div class="color-box" style="background: #667eea;" onclick="copyColor('#667eea')">
+                        #667eea
+                    </div>
+                    <div class="color-label">Royal Purple<br>(Primary)</div>
+                </div>
+                <div>
+                    <div class="color-box" style="background: #764ba2;" onclick="copyColor('#764ba2')">
+                        #764ba2
+                    </div>
+                    <div class="color-label">Deep Violet<br>(Secondary)</div>
+                </div>
+                <div>
+                    <div class="color-box" style="background: #FF6B6B;" onclick="copyColor('#FF6B6B')">
+                        #FF6B6B
+                    </div>
+                    <div class="color-label">Energetic Coral<br>(Accent)</div>
+                </div>
+                <div>
+                    <div class="color-box" style="background: #4ECDC4;" onclick="copyColor('#4ECDC4')">
+                        #4ECDC4
+                    </div>
+                    <div class="color-label">Fresh Teal<br>(Accent)</div>
+                </div>
+                <div>
+                    <div class="color-box" style="background: #FFE66D; color: #333;" onclick="copyColor('#FFE66D')">
+                        #FFE66D
+                    </div>
+                    <div class="color-label">Vibrant Yellow<br>(Accent)</div>
+                </div>
+                <div>
+                    <div class="color-box" style="background: #1a1a2e;" onclick="copyColor('#1a1a2e')">
+                        #1a1a2e
+                    </div>
+                    <div class="color-label">Midnight Navy<br>(Dark)</div>
+                </div>
+            </div>
+            <p style="margin-top: 20px; color: #666; text-align: center;">Click any color to copy hex code</p>
+        </div>
+        
+        <!-- Download All -->
+        <div class="download-all">
+            <h2>📦 Complete Asset Package</h2>
+            <p style="font-size: 1.2em; margin-bottom: 30px;">
+                All logos, badges, colors, and documentation in one package
+            </p>
+            <button class="btn-large" onclick="window.location.href='../frequency-factory-dashboard.html'">
+                📥 VIEW FULL DASHBOARD
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        function viewAsset(path) {
+            window.open(path, '_blank');
+        }
+        
+        function downloadAsset(path, filename) {
+            const link = document.createElement('a');
+            link.href = path;
+            link.download = filename;
+            link.click();
+            showNotification('Asset ready for download!');
+        }
+        
+        function copyColor(color) {
+            navigator.clipboard.writeText(color).then(() => {
+                showNotification(`Copied ${color}`);
+            });
+        }
+        
+        function showNotification(message) {
+            const notification = document.getElementById('copyNotification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

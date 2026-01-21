@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Frequency Factory - Active Mission Terminal</title>
+    <meta name="description" content="Real-time A&R hub with live voting, gamified shifts, and a token economy." />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tone.js (Web Audio API for music & SFX) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+
+    <!-- Firebase 11.6.1 -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { 
+            getFirestore, doc, getDoc, setDoc, updateDoc, onSnapshot, 
+            collection, query, addDoc, serverTimestamp, writeBatch, limit, orderBy
+        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+
+        // --- GLOBAL FIREBASE VARIABLES (Mandatory) ---
+        // NOTE: YOU MUST REPLACE THE PLACEHOLDERS BELOW WITH YOUR ACTUAL VALUES!
+        const appId = 'frequency-factory-prod'; // <-- Use your project ID or a simple name
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE", // <-- Paste your actual API Key
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID_FROM_FIREBASE"
+        };
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- App State ---
+        let app, db, auth;
+        let userId = null;
+        let userProfile = { tokens: 0, streak: 0, lastLogin: null, name: 'A&R Operative' };
+        let isAuthReady = false;
+        let nowPlaying = null; // The track object currently being reviewed
+        let myRating = null; // User's personal rating for the current track
+        let currentFeedback = { like: false, dislike: false };
+        let currentVoteSub = null; // Unsubscriber for live vote listener
+        let currentFeedbackSub = null; // Unsubscriber for live feedback listener
+        let leaderboardSub = null; // Unsubscriber for leaderboard listener
+        let trackQueueSub = null; // Unsubscriber for track queue
+        let profileSub = null; // Unsubscriber for user profile
+        let UIElements = {}; // Cached UI elements
+        let isSubmitting = false; // Prevents double-submissions
+
+        // --- Gamification State ---
+        const MISSION_INTERVAL_MS = 600000; // 10 minutes for demo
+        const STREAK_GRACE_PERIOD_MS = 24 * 60 * 60 * 1000; // 24 hours
+        let shiftTimer = null;
+        let currentMission = null; // { id: 'rate_one', text: '...', fn: ... }
+        
+        // --- Sound FX Engine (Tone.js) ---
+        let sfx = {};
+        function initSounds() {
+            sfx.click = new Tone.MembraneSynth({
+                pitchDecay: 0.01, octaves: 2, envelope: { attack: 0.001, decay: 0.1, sustain: 0 }
+            }).toDestination();
+            
+            sfx.token = new Tone.Synth({
+                oscillator: { type: 'triangle' },
+                envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.1 }
+            }).toDestination();
+            
+            sfx.mission = new Tone.Synth({
+                oscillator: { type: 'pulse', width: 0.2 },
+                envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.1 }
+            }).toDestination();
+
+            sfx.stamp = new Tone.NoiseSynth({
+                noise: { type: 'white' },
+                envelope: { attack: 0.01, decay: 0.2, sustain: 0.05, release: 0.1 }
+            }).toDestination();
+            
+            sfx.error = new Tone.Synth({
+                oscillator: { type: 'square' },
+                envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.1 }
+            }).toDestination();
+
+            console.log("Sound FX Initialized");
+        }
+
+        // ======= UI Elements Cache =======
+        function cacheUIElements() {
+            UIElements = {
+                // Modals
+                modal: document.getElementById('modal'),
+                modalTitle: document.getElementById('modalTitle'),
+                modalMessage: document.getElementById('modalMessage'),
+                modalClose: document.getElementById('modalClose'),
+                modalBackdrop: document.getElementById('modalBackdrop'),
+                
+                // Mission Modal
+                missionModal: document.getElementById('missionModal'),
+                missionTitle: document.getElementById('missionTitle'),
+                missionText: document.getElementById('missionText'),
+                missionAction: document.getElementById('missionAction'),
+                missionClose: document.getElementById('missionClose'),
+
+                // YouTube
+                youtubeEmbed: document.getElementById('youtubeEmbed'),
+
+                // A&R Dashboard (Tabs)
+                arDashboard: document.getElementById('arDashboard'),
+                tabMyShift: document.getElementById('tabMyShift'),
+                tabLeaderboard: document.getElementById('tabLeaderboard'),
+                panelMyShift: document.getElementById('panelMyShift'),
+                panelLeaderboard: document.getElementById('panelLeaderboard'),
+                
+                // Shift Status Panel
+                shiftStatusCard: document.getElementById('shiftStatusCard'),
+                btnClockIn: document.getElementById('btnClockIn'),
+                shiftStatusText: document.getElementById('shiftStatusText'),
+                shiftTokens: document.getElementById('shiftTokens'),
+                shiftStreak: document.getElementById('shiftStreak'),
+                floatingTokenContainer: document.getElementById('floatingTokenContainer'),
+
+                // Leaderboard Panel
+                leaderboardList: document.getElementById('leaderboardList'),
+
+                // Now Playing
+                nowPlayingCard: document.getElementById('nowPlayingCard'),
+                nowArt: document.getElementById('nowArt'),
+                nowArtist: document.getElementById('nowArtist'),
+                nowTitle: document.getElementById('nowTitle'),
+                certificationStamp: document.getElementById('certificationStamp'),
+                
+                // Rating Inputs
+                inputHook: document.getElementById('inputHook'),
+                inputVibe: document.getElementById('inputVibe'),
+                inputProd: document.getElementById('inputProd'),
+                inputBarz: document.getElementById('inputBarz'),
+                
+                // Quality Gauge
+                qualityGauge: document.getElementById('qualityGauge'),
+                qualityGaugeNeedle: document.getElementById('qualityGaugeNeedle'),
+                qualityGaugeValue: document.getElementById('qualityGaugeValue'),
+
+                // Live Feedback
+                btnLike: document.getElementById('btnLike'),
+                btnDislike: document.getElementById('btnDislike'),
+                likeCount: document.getElementById('likeCount'),
+                dislikeCount: document.getElementById('dislikeCount'),
+                
+                // Submit Button
+                btnSubmitRating: document.getElementById('btnSubmitRating'),
+                
+                // Track Submission
+                submissionForm: document.getElementById('submissionForm'),
+                paymentButtons: document.getElementById('paymentButtons'),
+                submissionFields: document.getElementById('submissionFields'),
+                btnPayOnce: document.getElementById('btnPayOnce'),
+                btnPaySub: document.getElementById('btnPaySub'),
+                submitButton: document.getElementById('submitButton'),
+                submitSpinner: document.getElementById('submitSpinner'),
+                prioritySelect: document.getElementById('prioritySelect'),
+            };
+        }
+
+        // ======= Sound Functions =======
+        function playSound(sound) {
+            if (sfx[sound] && Tone.context.state === 'running') {
+                try {
+                    if (sound === 'token') {
+                        sfx.token.triggerAttackRelease('C5', '8n', Tone.now());
+                        sfx.token.triggerAttackRelease('G5', '8n', Tone.now() + 0.1);
+                    } else if (sound === 'mission') {
+                        sfx.mission.triggerAttackRelease('C4', '8n', Tone.now());
+                        sfx.mission.triggerAttackRelease('E4', '8n', Tone.now() + 0.1);
+                    } else if (sound === 'stamp') {
+                        sfx.stamp.triggerAttackRelease('0.3', Tone.now());
+                    } else if (sound === 'error') {
+                        sfx.error.triggerAttackRelease('C3', '8n', Tone.now());
+                    } else { // click
+                        sfx.click.triggerAttackRelease('C2', '8n', Tone.now());
+                    }
+                } catch (e) {
+                    console.warn(`Sound ${sound} failed to play:`, e);
+                }
+            }
+        }
+        
+        // ======= Animation Functions =======
+        function showFloatingTokens(amount) {
+            const tokenEl = document.createElement('div');
+            tokenEl.className = 'absolute bottom-0 right-0 mb-8 mr-4 px-3 py-1 bg-accent3/90 text-black font-bold rounded-full shadow-lg animate-float-up';
+            tokenEl.textContent = `+${amount} TOKENS`;
+            UIElements.floatingTokenContainer.appendChild(tokenEl);
+            
+            playSound('token');
+            
+            setTimeout(() => {
+                tokenEl.remove();
+            }, 2000); // 2s animation
+        }
+
+        function triggerCertificationStamp() {
+            const stamp = UIElements.certificationStamp;
+            if (stamp.classList.contains('hidden')) {
+                stamp.classList.remove('hidden', 'animate-stamp-out');
+                stamp.classList.add('animate-stamp-in');
+                playSound('stamp');
+                
+                // After animation, lock it in
+                setTimeout(() => {
+                    stamp.classList.remove('animate-stamp-in');
+                }, 500);
+            }
+        }
+        
+        function hideCertificationStamp() {
+            const stamp = UIElements.certificationStamp;
+            if (!stamp.classList.contains('hidden')) {
+                stamp.classList.add('animate-stamp-out');
+                setTimeout(() => {
+                    stamp.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // ======= Firebase Initialization =======
+        async function initFirebase() {
+            try {
+                setLogLevel('debug');
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        console.log("User is signed in:", user.uid);
+                        userId = user.uid;
+                        document.getElementById('authStatus').textContent = `A&R-${userId.substring(0, 4)}`;
+                        await loadUserProfile(userId);
+                        attachAllListeners();
+                        isAuthReady = true;
+                        UIElements.arDashboard.classList.remove('opacity-50', 'pointer-events-none');
+                    } else {
+                        console.log("User is signed out, signing in anonymously...");
+                        document.getElementById('authStatus').textContent = "Connecting...";
+                        isAuthReady = false;
+                        userId = null;
+                        if (initialAuthToken) {
+                            await signInWithCustomToken(auth, initialAuthToken);
+                        } else {
+                            await signInAnonymously(auth);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error("Firebase Init Error:", error);
+                showModal("Fatal Error", `Could not connect to Firebase: ${error.message}`, false);
+            }
+        }
+
+        // ======= Data Loading & Listeners =======
+        
+        async function loadUserProfile(uid) {
+            if (!uid) return;
+            const profileRef = doc(db, `artifacts/${appId}/users/${uid}/profile`, 'main');
+            const profileSnap = await getDoc(profileRef);
+
+            if (profileSnap.exists()) {
+                userProfile = profileSnap.data();
+                console.log("Loaded user profile:", userProfile);
+                
+                // Check for login streak
+                const now = Date.now();
+                const lastLogin = userProfile.lastLogin?.toMillis() || 0;
+                if (now - lastLogin > STREAK_GRACE_PERIOD_MS) {
+                    // Streak broken
+                    userProfile.streak = 0;
+                }
+            } else {
+                // Create new profile
+                userProfile = {
+                    tokens: 0,
+                    streak: 0,
+                    lastLogin: null,
+                    name: `A&R-${uid.substring(0, 4)}`
+                };
+                await setDoc(profileRef, userProfile);
+                console.log("Created new user profile");
+            }
+            
+            // Attach listener for real-time updates to profile (tokens, etc.)
+            if (profileSub) profileSub(); // Unsubscribe old listener
+            profileSub = onSnapshot(profileRef, (doc) => {
+                if (doc.exists()) {
+                    userProfile = doc.data();
+                    updateShiftUI();
+                }
+            });
+        }
+        
+        function attachAllListeners() {
+            if (!isAuthReady || !userId) {
+                console.warn("Auth not ready, skipping listeners.");
+                return;
+            }
+            console.log("Attaching all Firestore listeners...");
+
+            // --- Listener for Track Queue ---
+            // Find the track with the lowest 'order' number that we haven't rated.
+            const tracksRef = collection(db, `artifacts/${appId}/public/data/tracks`);
+            const myRatingsRef = collection(db, `artifacts/${appId}/users/${userId}/my_ratings`);
+
+            if (trackQueueSub) trackQueueSub();
+            trackQueueSub = onSnapshot(query(tracksRef, orderBy("order", "asc"), limit(20)), async (tracksSnap) => {
+                const myRatingsSnap = await getDoc(doc(myRatingsRef, 'all_ratings'));
+                const myRatedIds = myRatingsSnap.exists() ? Object.keys(myRatingsSnap.data()) : [];
+                
+                let nextTrack = null;
+                for (const trackDoc of tracksSnap.docs) {
+                    if (!myRatedIds.includes(trackDoc.id)) {
+                        nextTrack = { id: trackDoc.id, ...trackDoc.data() };
+                        break;
+                    }
+                }
+
+                if (nextTrack) {
+                    if (nowPlaying?.id !== nextTrack.id) {
+                        console.log("New track is up for review:", nextTrack.title);
+                        nowPlaying = nextTrack;
+                        loadNowPlaying();
+                    }
+                } else {
+                    console.log("No unrated tracks left in queue.");
+                    nowPlaying = null;
+                    renderNoTracks();
+                }
+            });
+
+            // --- Listener for Leaderboard ---
+            const profilesRef = collection(db, `artifacts/${appId}/public/data/profiles`);
+            if (leaderboardSub) leaderboardSub();
+            leaderboardSub = onSnapshot(query(profilesRef, orderBy("tokens", "desc"), limit(5)), (snapshot) => {
+                const users = [];
+                snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
+                renderLeaderboard(users);
+            });
+        }
+        
+        function loadNowPlaying() {
+            if (!nowPlaying) {
+                renderNoTracks();
+                return;
+            }
+
+            // Unsubscribe from previous track's listeners
+            if (currentVoteSub) currentVoteSub();
+            if (currentFeedbackSub) currentFeedbackSub();
+
+            myRating = null;
+            currentFeedback = { like: false, dislike: false };
+            renderNowPlaying();
+
+            const trackRef = doc(db, `artifacts/${appId}/public/data/tracks`, nowPlaying.id);
+
+            // --- Listener for Live Votes (Averages) ---
+            const votesRef = collection(trackRef, 'votes');
+            currentVoteSub = onSnapshot(votesRef, (snapshot) => {
+                let scores = { hook: 0, vibe: 0, prod: 0, barz: 0, count: 0 };
+                let myVote = null;
+                
+                snapshot.forEach(doc => {
+                    const vote = doc.data();
+                    scores.hook += vote.hook;
+                    scores.vibe += vote.vibe;
+                    scores.prod += vote.prod;
+                    scores.barz += vote.barz;
+                    scores.count++;
+                    if (doc.id === userId) {
+                        myVote = vote;
+                    }
+                });
+
+                const averages = {
+                    hook: scores.count > 0 ? Math.round(scores.hook / scores.count) : 0,
+                    vibe: scores.count > 0 ? Math.round(scores.vibe / scores.count) : 0,
+                    prod: scores.count > 0 ? Math.round(scores.prod / scores.count) : 0,
+                    barz: scores.count > 0 ? Math.round(scores.barz / scores.count) : 0,
+                };
+                
+                myRating = myVote; // Store my personal rating
+                renderAverages(averages);
+                renderMyRatingInputs(); // Update inputs based on myVote
+            });
+
+            // --- Listener for Live Feedback (Like/Dislike) ---
+            const feedbackRef = collection(trackRef, 'feedback');
+            currentFeedbackSub = onSnapshot(feedbackRef, (snapshot) => {
+                let likes = 0;
+                let dislikes = 0;
+                let myFeedback = { like: false, dislike: false };
+
+                snapshot.forEach(doc => {
+                    const feedback = doc.data();
+                    if (feedback.action === 'like') likes++;
+                    if (feedback.action === 'dislike') dislikes++;
+                    if (doc.id === userId) {
+                        myFeedback = {
+                            like: feedback.action === 'like',
+                            dislike: feedback.action === 'dislike'
+                        };
+                    }
+                });
+                
+                currentFeedback = myFeedback; // Store my personal feedback
+                renderFeedback(likes, dislikes);
+            });
+        }
+
+        // ======= UI Rendering Functions =======
+
+        function renderNoTracks() {
+            UIElements.nowPlayingCard.innerHTML = `
+                <div class="p-8 text-center">
+                    <h3 class="text-2xl font-bold text-white mb-2">Queue Clear!</h3>
+                    <p class="text-muted">You've rated all available tracks. New tracks are submitted all the time, check back soon!</p>
+                </div>
+            `;
+            // If queue is empty, check for a mission
+            if (userProfile.lastLogin && !currentMission) {
+                promptCallToAction(); // No tracks to rate, so prompt a different action
+            }
+        }
+
+        function renderNowPlaying() {
+            if (!nowPlaying) return;
+            UIElements.nowArtist.textContent = nowPlaying.artist;
+            UIElements.nowTitle.textContent = nowPlaying.title;
+            UIElements.nowArt.src = `https://placehold.co/400x400/${getHexColor(nowPlaying.title)}/050510?text=${encodeURIComponent(nowPlaying.artist.substring(0, 2))}&font=inter`;
+            hideCertificationStamp(); // Hide stamp until averages load
+        }
+        
+        function renderMyRatingInputs() {
+            if (myRating) {
+                UIElements.inputHook.value = myRating.hook;
+                UIElements.inputVibe.value = myRating.vibe;
+                UIElements.inputProd.value = myRating.prod;
+                UIElements.inputBarz.value = myRating.barz;
+                UIElements.btnSubmitRating.textContent = "UPDATE RATING";
+                UIElements.btnSubmitRating.classList.add('bg-accent2', 'hover:bg-accent2/80');
+                UIElements.btnSubmitRating.classList.remove('bg-accent3', 'hover:bg-accent3/80', 'text-black');
+            } else {
+                UIElements.inputHook.value = '';
+                UIElements.inputVibe.value = '';
+                UIElements.inputProd.value = '';
+                UIElements.inputBarz.value = '';
+                UIElements.btnSubmitRating.textContent = "SUBMIT RATING";
+                UIElements.btnSubmitRating.classList.remove('bg-accent2', 'hover:bg-accent2/80');
+                UIElements.btnSubmitRating.classList.add('bg-accent3', 'hover:bg-accent3/80', 'text-black');
+            }
+        }
+        
+        function renderAverages(averages) {
+            const finalAvg = calculateAverage(averages);
+            
+            // Update Gauge
+            const rotation = Math.max(-90, Math.min(90, (finalAvg / 100) * 180 - 90));
+            UIElements.qualityGaugeNeedle.style.transform = `rotate(${rotation}deg)`;
+            UIElements.qualityGaugeValue.textContent = finalAvg;
+
+            // Clear old colors
+            UIElements.qualityGauge.classList.remove('text-danger', 'text-yellow-400', 'text-accent3');
+
+            if (finalAvg < 60) UIElements.qualityGauge.classList.add('text-danger');
+            else if (finalAvg < 80) UIElements.qualityGauge.classList.add('text-yellow-400');
+            else UIElements.qualityGauge.classList.add('text-accent3');
+
+            // Check for Certification
+            if (finalAvg >= 90) {
+                triggerCertificationStamp();
+            } else {
+                hideCertificationStamp();
+            }
+        }
+        
+        function renderFeedback(likes, dislikes) {
+            UIElements.likeCount.textContent = likes;
+            UIElements.dislikeCount.textContent = dislikes;
+            
+            UIElements.btnLike.classList.toggle('text-accent3', currentFeedback.like);
+            UIElements.btnLike.classList.toggle('text-muted', !currentFeedback.like);
+            
+            UIElements.btnDislike.classList.toggle('text-danger', currentFeedback.dislike);
+            UIElements.btnDislike.classList.toggle('text-muted', !currentFeedback.dislike);
+        }
+
+        function updateShiftUI() {
+            if (!userProfile) return;
+            UIElements.shiftTokens.textContent = userProfile.tokens || 0;
+            UIElements.shiftStreak.textContent = userProfile.streak || 0;
+
+            if (userProfile.lastLogin) {
+                UIElements.btnClockIn.classList.add('hidden');
+                UIElements.shiftStatusText.textContent = `On Shift (Last active: ${new Date(userProfile.lastLogin.toMillis()).toLocaleTimeString()})`;
+                UIElements.shiftStatusText.classList.remove('hidden');
+            } else {
+                UIElements.btnClockIn.classList.remove('hidden');
+                UIElements.shiftStatusText.classList.add('hidden');
+            }
+        }
+        
+        function renderLeaderboard(users) {
+            UIElements.leaderboardList.innerHTML = '';
+            if (!users || users.length === 0) {
+                UIElements.leaderboardList.innerHTML = '<li class="text-muted text-center text-sm">No operatives on the board.</li>';
+                return;
+            }
+            users.forEach((user, index) => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center justify-between p-2 rounded-lg';
+                li.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-sm w-5 text-center ${index === 0 ? 'text-accent3' : 'text-muted'}">#${index + 1}</span>
+                        <span class="text-sm font-semibold ${user.id === userId ? 'text-accent' : 'text-white'}">${user.name}</span>
+                    </div>
+                    <span class="text-sm font-bold text-accent3">${user.tokens} <span class="text-xs">tokens</span></span>
+                `;
+                UIElements.leaderboardList.appendChild(li);
+            });
+        }
+        
+        // ======= Action Handlers =======
+
+        async function handleClockIn() {
+            playSound('click');
+            if (!isAuthReady || !userId) {
+                showModal("Error", "Not connected. Please wait a moment and try again.", false);
+                return;
+            }
+            
+            const now = Date.now();
+            const lastLogin = userProfile.lastLogin?.toMillis() || 0;
+            let newStreak = userProfile.streak || 0;
+            let tokensEarned = 10; // Base clock-in bonus
+
+            if (now - lastLogin > STREAK_GRACE_PERIOD_MS) {
+                // Streak broken
+                newStreak = 1;
+                tokensEarned += 5; // Bonus for starting a new streak
+            } else if (now - (23 * 60 * 60 * 1000) > lastLogin) { // Only allow streak increment once per day (approx)
+                // Streak continued
+                newStreak++;
+                tokensEarned += newStreak * 2; // Bonus for streak
+            } else {
+                // Already clocked in recently
+                tokensEarned = 0;
+            }
+
+            const batch = writeBatch(db);
+            const privateProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profile`, 'main');
+            const publicProfileRef = doc(db, `artifacts/${appId}/public/data/profiles`, userId);
+            
+            const newTokens = (userProfile.tokens || 0) + tokensEarned;
+            
+            const profileData = {
+                tokens: newTokens,
+                streak: newStreak,
+                lastLogin: serverTimestamp(),
+                name: userProfile.name || `A&R-${userId.substring(0, 4)}`
+            };
+            
+            batch.set(privateProfileRef, profileData, { merge: true });
+            batch.set(publicProfileRef, { 
+                tokens: newTokens, 
+                name: profileData.name 
+            }, { merge: true });
+            
+            await batch.commit();
+            
+            if (tokensEarned > 0) {
+                showFloatingTokens(tokensEarned);
+            }
+            updateShiftUI(); // Instantly update UI
+            startShiftTimer(); // Start the mission timer
+        }
+        
+        async function handleRatingSubmit() {
+            playSound('click');
+            if (!nowPlaying || isSubmitting) return;
+            
+            const scores = {
+                hook: parseInt(UIElements.inputHook.value) || 0,
+                vibe: parseInt(UIElements.inputVibe.value) || 0,
+                prod: parseInt(UIElements.inputProd.value) || 0,
+                barz: parseInt(UIElements.inputBarz.value) || 0,
+            };
+
+            for (let key in scores) {
+                if (scores[key] < 0 || scores[key] > 100 || isNaN(scores[key])) {
+                    showModal("Invalid Score", `Scores must be 0-100. '${key}' is invalid.`, false);
+                    playSound('error');
+                    return;
+                }
+            }
+
+            isSubmitting = true;
+            UIElements.btnSubmitRating.disabled = true;
+            UIElements.btnSubmitRating.textContent = "SAVING...";
+
+            try {
+                const batch = writeBatch(db);
+                
+                // 1. Set the public vote
+                const voteRef = doc(db, `artifacts/${appId}/public/data/tracks/${nowPlaying.id}/votes`, userId);
+                batch.set(voteRef, { ...scores, userId: userId });
+                
+                // 2. Set the private "my_ratings" doc to filter queue
+                const myRatingsRef = doc(db, `artifacts/${appId}/users/${userId}/my_ratings`, 'all_ratings');
+                batch.set(myRatingsRef, { [nowPlaying.id]: true }, { merge: true });
+
+                // 3. Check if this completes a 'rate_one' mission
+                if (currentMission?.id === 'rate_one') {
+                    await awardTokens(10); // Award 10 tokens as specified
+                    console.log("Mission 'rate_one' completed!");
+                    currentMission = null; // Clear the mission
+                }
+
+                await batch.commit();
+                
+            } catch (error) {
+                console.error("Error submitting rating:", error);
+                showModal("Error", `Could not save rating: ${error.message}`, false);
+                playSound('error');
+            } finally {
+                isSubmitting = false;
+                UIElements.btnSubmitRating.disabled = false;
+                // The onSnapshot listener will update the button text
+            }
+        }
+        
+        async function handleFeedback(action) {
+            playSound('click');
+            if (!nowPlaying || !userId) return;
+
+            const feedbackRef = doc(db, `artifacts/${appId}/public/data/tracks/${nowPlaying.id}/feedback`, userId);
+            
+            // If user clicks the same button, retract feedback
+            if ( (action === 'like' && currentFeedback.like) || (action === 'dislike' && currentFeedback.dislike) ) {
+                action = 'none';
+            }
+            
+            try {
+                await setDoc(feedbackRef, { action: action, userId: userId });
+            } catch (error) {
+                console.error("Error submitting feedback:", error);
+                showModal("Error", `Could not save feedback: ${error.message}`, false);
+                playSound('error');
+            }
+        }
+        
+        function handleUnlockSubForm(e) {
+            playSound('click');
+            const type = e.target.dataset.type;
+            // This is a simulation. In a real app, you'd trigger Stripe/payment.
+            console.log(`Simulating payment for: ${type}`);
+            
+            UIElements.paymentButtons.classList.add('hidden');
+            UIElements.submissionFields.classList.remove('hidden');
+            
+            showModal("Payment Successful (Demo)", "Your submission form has been unlocked!");
+        }
+        
+        async function handleTrackSubmission(e) {
+            e.preventDefault();
+            playSound('click');
+            const form = e.target;
+            const artist = form.artist.value.trim();
+            const title = form.title.value.trim();
+            const order = parseInt(UIElements.prioritySelect.value);
+            
+            if (!artist || !title) {
+                showModal('Error', 'Artist and title are required.', false);
+                playSound('error');
+                return;
+            }
+
+            UIElements.submitButton.classList.add('hidden');
+            UIElements.submitSpinner.classList.remove('hidden');
+            
+            try {
+                const newTrack = {
+                    artist,
+                    title,
+                    order, // 1, 2, or 100
+                    submittedAt: serverTimestamp(),
+                    submittedBy: userId
+                };
+                
+                const tracksRef = collection(db, `artifacts/${appId}/public/data/tracks`);
+                await addDoc(tracksRef, newTrack);
+                
+                showModal('Submission Received', `"${title}" by ${artist} has been added to the queue.`);
+                form.reset();
+                UIElements.submissionFields.classList.add('hidden');
+                UIElements.paymentButtons.classList.remove('hidden');
+                
+            } catch (error) {
+                console.error("Error submitting track:", error);
+                showModal("Error", `Could not submit track: ${error.message}`, false);
+                playSound('error');
+            } finally {
+                UIElements.submitButton.classList.remove('hidden');
+                UIElements.submitSpinner.classList.add('hidden');
+            }
+        }
+        
+        // ======= Gamification Logic =======
+        
+        function startShiftTimer() {
+            if (shiftTimer) clearInterval(shiftTimer);
+            console.log("Shift timer started. Mission check in 10 mins.");
+            shiftTimer = setInterval(promptCallToAction, MISSION_INTERVAL_MS);
+        }
+        
+        function promptCallToAction() {
+            // Only prompt if modal is hidden AND no mission is already active
+            if (UIElements.missionModal.classList.contains('hidden') && !currentMission) {
+                const actions = [
+                    {
+                        id: 'rate_one',
+                        text: 'Rate 1 new track to stay on shift and earn 10 tokens.',
+                        buttonText: 'FIND TRACK',
+                        fn: null // No immediate function. Handled by submit button.
+                    },
+                    {
+                        id: 'invite_friend',
+                        text: 'Invite a friend to join Frequency Factory. Both of you earn 20 tokens.',
+                        buttonText: 'COPY INVITE',
+                        fn: () => {
+                            // Use execCommand for iframe compatibility
+                            const dummy = document.createElement('textarea');
+                            document.body.appendChild(dummy);
+                            dummy.value = window.location.href + '?ref=' + userId;
+                            dummy.select();
+                            let success = false;
+                            try {
+                                success = document.execCommand('copy');
+                            } catch (err) {
+                                console.warn('Clipboard copy failed');
+                            }
+                            document.body.removeChild(dummy);
+                            
+                            if (success) {
+                                showModal('Invite Sent', 'Referral link copied to clipboard.');
+                            } else {
+                                showModal('Error', 'Could not copy link. Please copy manually.', false);
+                            }
+                        }
+                    },
+                    {
+                        id: 'share_clip',
+                        text: 'Share your favorite Factory-Certified track on TikTok to earn +30 tokens.',
+                        buttonText: 'OPEN TIKTOK',
+                        fn: () => {
+                            window.open('https://www.tiktok.com/upload', '_blank');
+                        }
+                    }
+                ];
+                
+                // If there are no tracks to rate, don't offer that mission
+                const availableActions = nowPlaying ? actions : actions.filter(a => a.id !== 'rate_one');
+                if (availableActions.length === 0) return; // No actions possible
+                
+                const action = availableActions[Math.floor(Math.random() * availableActions.length)];
+                currentMission = action;
+                
+                playSound('mission');
+                UIElements.missionText.textContent = action.text;
+                UIElements.missionAction.textContent = action.buttonText;
+                UIElements.missionModal.classList.remove('hidden');
+            }
+        }
+        
+        // --- Engagement CTA for idle users ---
+        function promptEngagementCTA() {
+            const idleTime = 300000; // 5 min idle (5 * 60 * 1000)
+            let idleTimer;
+
+            const showIdleModal = () => {
+                // Don't show if another modal is already open
+                if (!UIElements.modal.classList.contains('hidden') || !UIElements.missionModal.classList.contains('hidden')) {
+                    resetTimer(); // Try again after next idle period
+                    return;
+                }
+
+                showModal(
+                    "Still on Shift?",
+                    "Earn +15 tokens for proving you're still active.\nClick below to stay clocked in.",
+                    true
+                );
+                UIElements.modalClose.textContent = "CLAIM +15 TOKENS";
+                UIElements.modalClose.onclick = async () => {
+                    hideModal(); // This will hide and reset the button
+                    await awardTokens(15);
+                    playSound('token');
+                    resetTimer(); // Reset the timer after claim
+                };
+            };
+            
+            const resetTimer = () => {
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(showIdleModal, idleTime);
+            };
+
+            ['mousemove','keydown','click','scroll','touchstart'].forEach(e =>
+                document.addEventListener(e, resetTimer, false)
+            );
+            resetTimer();
+        }
+
+        async function awardTokens(amount) {
+            if (!userId || amount === 0) return;
+            
+            const newTokens = (userProfile.tokens || 0) + amount;
+            
+            const batch = writeBatch(db);
+            const privateProfileRef = doc(db, `artifacts/${appId}/users/${userId}/profile`, 'main');
+            const publicProfileRef = doc(db, `artifacts/${appId}/public/data/profiles`, userId);
+
+            batch.set(privateProfileRef, { tokens: newTokens }, { merge: true });
+            batch.set(publicProfileRef, { tokens: newTokens }, { merge: true });
+            
+            await batch.commit();
+            showFloatingTokens(amount); // Show visual feedback
+        }
+
+        function showMissionModal(text, buttonText) {
+            UIElements.missionText.textContent = text;
+            UIElements.missionAction.textContent = buttonText || 'ACCEPT';
+            UIElements.missionModal.classList.remove('hidden');
+        }
+        
+        function hideMissionModal() {
+            UIElements.missionModal.classList.add('hidden');
+        }
+
+        // ======= Modal & Helper Functions =======
+        function showModal(title, message, isSuccess = true) {
+            UIElements.modalTitle.textContent = title;
+            UIElements.modalMessage.textContent = message;
+            const container = UIElements.modal.querySelector('.card-panel');
+            container.classList.remove('border-danger', 'border-accent');
+            container.classList.add(isSuccess ? 'border-accent' : 'border-danger');
+            UIElements.modal.classList.remove('hidden');
+        }
+        function hideModal() {
+            UIElements.modal.classList.add('hidden');
+            // Reset modal button to default state after any modal closes
+            UIElements.modalClose.textContent = "GOT IT";
+            UIElements.modalClose.onclick = null; // Remove dynamic click handler
+        }
+        
+        function calculateAverage(scores) {
+            if (!scores) return 0;
+            const vals = Object.values(scores).filter(v => typeof v === 'number');
+            if (!vals.length) return 0;
+            return Math.round(vals.reduce((a, b) => a + b, 0) / vals.length);
+        }
+
+        function getHexColor(str) {
+            if (!str) str = "default";
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                hash = str.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            let color = '';
+            for (let i = 0; i < 3; i++) {
+                let value = (hash >> (i * 8)) & 0xFF;
+                color += ('00' + value.toString(16)).substr(-2);
+            }
+            return color;
+        }
+
+        // ======= Initializer =======
+        function initApp() {
+            console.log("Initializing App...");
+            cacheUIElements();
+            
+            // Start audio context on any user click
+            const startAudio = () => {
+                if (Tone.context.state !== 'running') {
+                    Tone.start().then(() => {
+                        console.log("Audio Context Started");
+                        initSounds();
+                        // Play click on first interaction
+                        playSound('click');
+                    });
+                } else {
+                    // If context is already running, just play click
+                    playSound('click');
+                }
+                // Remove this listener after first interaction
+                document.body.removeEventListener('click', startAudio);
+                document.body.removeEventListener('touchend', startAudio);
+            };
+            
+            document.body.addEventListener('click', startAudio);
+            document.body.addEventListener('touchend', startAudio);
+
+            initFirebase();
+            promptEngagementCTA(); // Start the idle timer
+            
+            // --- Attach Event Listeners ---
+            UIElements.submissionForm.addEventListener('submit', handleTrackSubmission);
+            UIElements.btnPayOnce.addEventListener('click', handleUnlockSubForm);
+            UIElements.btnPaySub.addEventListener('click', handleUnlockSubForm);
+            UIElements.btnSubmitRating.addEventListener('click', handleRatingSubmit);
+            UIElements.btnLike.addEventListener('click', () => handleFeedback('like'));
+            UIElements.btnDislike.addEventListener('click', () => handleFeedback('dislike'));
+            UIElements.btnClockIn.addEventListener('click', handleClockIn);
+            UIElements.modalClose.addEventListener('click', () => {
+                // If a custom onclick was assigned (like for the idle prompt),
+                // it will run. If not, we just hide the modal.
+                // The custom onclick *must* call hideModal() itself.
+                if (!UIElements.modalClose.onclick) {
+                    hideModal();
+                }
+            });
+            UIElements.modalBackdrop.addEventListener('click', hideModal); // Backdrop always just hides+resets
+            
+            // Mission Modal Listeners
+            UIElements.missionClose.addEventListener('click', () => {
+                playSound('error'); // 'Skip' sound
+                hideMissionModal();
+                currentMission = null; // Clear the mission on skip
+            });
+
+            UIElements.missionAction.addEventListener('click', async () => {
+                playSound('click');
+                if (!currentMission) return;
+
+                const missionToExecute = currentMission; // Capture mission
+                
+                // 1. Execute the function (invite, share)
+                if (missionToExecute.fn) {
+                    await missionToExecute.fn(); 
+                }
+
+                // 2. Award tokens ONLY for non-rating missions
+                if (missionToExecute.id === 'invite_friend') {
+                    await awardTokens(20); // User's requested 20
+                } else if (missionToExecute.id === 'share_clip') {
+                    await awardTokens(30); // User's requested 30
+                }
+                
+                // 3. Hide modal. 
+                hideMissionModal();
+                
+                // 4. Clear mission *only if it's not* a rating mission.
+                // Rating mission stays active until handleRatingSubmit is called.
+                if (missionToExecute.id !== 'rate_one') {
+                    currentMission = null; 
+                }
+            });
+
+
+            // Tab listeners
+            UIElements.tabMyShift.addEventListener('click', () => {
+                playSound('click');
+                UIElements.tabMyShift.classList.add('border-accent', 'text-accent');
+                UIElements.tabLeaderboard.classList.remove('border-accent', 'text-accent');
+                UIElements.panelMyShift.classList.remove('hidden');
+                UIElements.panelLeaderboard.classList.add('hidden');
+            });
+            UIElements.tabLeaderboard.addEventListener('click', () => {
+                playSound('click');
+                UIElements.tabLeaderboard.classList.add('border-accent', 'text-accent');
+                UIElements.tabMyShift.classList.remove('border-accent', 'text-accent');
+                UIElements.panelLeaderboard.classList.remove('hidden');
+                UIElements.panelMyShift.classList.add('hidden');
+            });
+
+            console.log("Frequency Factory Terminal is live.");
+        }
+
+        // --- Run the App ---
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+    </script>
+
+
+    <style>
+        :root {
+            --bg: #050510;
+            --panel: #10101E; /* Deeper blue-purple */
+            --card: #1A1A2E;
+            --accent: #00FFFF; /* Electric Cyan */
+            --accent2: #FF00FF; /* Neon Magenta */
+            --accent3: #7CFC00; /* Neon Lime Green */
+            --text: #E0FFFF;
+            --muted: #8090A0;
+            --danger: #FF6347; /* Tomato Red */
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', ui-sans-serif, system-ui;
+            background-image: radial-gradient(circle at 50% 0%, #1a1a2e, var(--bg) 60%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .card-panel {
+            background-color: var(--panel);
+            border: 1px solid rgba(0, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3), 0 0 20px rgba(0, 255, 255, 0.05);
+        }
+        .form-input {
+            background-color: var(--bg);
+            border: 1px solid #334;
+            color: var(--text);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .form-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            outline: none;
+        }
+        .rating-input {
+            background-color: var(--bg);
+            border: 1px solid #445;
+            color: var(--accent);
+            border-radius: 6px;
+            width: 100%;
+            height: 40px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 700;
+            -moz-appearance: textfield;
+        }
+        .rating-input::-webkit-outer-spin-button,
+        .rating-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        .rating-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+            outline: none;
+        }
+        .btn { border-radius: 8px; font-weight: 600; transition: all 0.2s ease; cursor: pointer; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-glow { box-shadow: 0 0 15px rgba(0, 255, 255, 0.2); }
+        .btn-glow:not(:disabled):hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0, 255, 255, 0.4); }
+        
+        .spinner {
+            width: 1.5rem; height: 1.5rem; border-radius: 50%;
+            border: 3px solid var(--panel); border-top-color: var(--accent);
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Custom Animations */
+        @keyframes float-up {
+            0% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-50px); }
+        }
+        .animate-float-up {
+            animation: float-up 2s ease-out forwards;
+        }
+        
+        @keyframes stamp-in {
+            0% { transform: scale(3) rotate(45deg); opacity: 0; }
+            60% { transform: scale(1) rotate(-10deg); opacity: 1; }
+            80% { transform: scale(1.1) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .animate-stamp-in {
+            transform-origin: center;
+            animation: stamp-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        
+        @keyframes stamp-out {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.5); }
+        }
+        .animate-stamp-out {
+            animation: stamp-out 0.3s ease-in forwards;
+        }
+    </style>
+</head>
+
+<body class="p-4 md:p-8 max-w-7xl mx-auto">
+    
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row justify-between items-center pb-4 border-b border-accent/20 mb-6">
+        <div class="flex items-center gap-3">
+            <!-- Logo Placeholder -->
+            <div class="w-12 h-12 bg-panel border-2 border-accent/50 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2z"></path></svg>
+            </div>
+            <div>
+                <h1 class="text-3xl font-extrabold text-white tracking-wider">
+                    Frequency Factory
+                </h1>
+                <p class="text-sm text-muted">A&R Operative: <span id="authStatus" class="font-bold text-accent">Connecting...</span></p>
+            </div>
+        </div>
+        <div class="text-center md:text-right mt-4 md:mt-0">
+            <h2 class="text-lg font-bold text-accent2">LIVE A&R TERMINAL</h2>
+            <p class="text-xs text-muted">Real-Time Community Ratings</p>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Center Column: Media & Rating -->
+        <section class="lg:col-span-2 space-y-6">
+
+            <!-- Live Feed Embed -->
+            <div class="card-panel overflow-hidden">
+                <div class="p-4 border-b border-accent/20">
+                    <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                        <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                        LIVE FEED
+                    </h3>
+                </div>
+                <div class="aspect-w-16 aspect-h-9 bg-black">
+                    <!-- Replace VIDEO_ID_HERE with your YouTube video ID -->
+                    <iframe id="youtubeEmbed" class="w-full h-full" 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+                        title="YouTube video player" frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Now Playing Terminal -->
+            <div id="nowPlayingCard" class="card-panel overflow-hidden">
+                <div class="p-5">
+                    <!-- Top section: Art and Track Info -->
+                    <div class="flex flex-col md:flex-row items-start gap-5">
+                        <div class="w-full md:w-48 h-48 flex-shrink-0 rounded-lg shadow-lg overflow-hidden relative">
+                            <img id="nowArt" src="https://placehold.co/400x400/10101E/8090A0?text=FF&font=inter" alt="Album Art" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/400x400/10101E/8090A0?text=Error&font=inter'">
+                            <!-- CERTIFICATION STAMP -->
+                            <div id="certificationStamp" class="hidden absolute inset-0 flex items-center justify-center">
+                                <div class="w-40 h-40 border-4 border-accent3 rounded-full flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm">
+                                    <span class="text-2xl font-extrabold text-accent3">FACTORY</span>
+                                    <span class="text-lg font-bold text-white">CERTIFIED</span>
+                                    <span class="text-2xl">🏭</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="px-3 py-1 bg-accent text-black text-xs font-bold rounded-full animate-pulse">🔴 NOW REVIEWING</span>
+                            
+                            <h3 id="nowArtist" class="text-3xl font-bold text-white truncate mt-2">Loading Artist...</h3>
+                            <p id="nowTitle" class="text-xl text-muted truncate">Loading Title...</p>
+                        </div>
+                    </div>
+
+                    <!-- Rating Input Section -->
+                    <div class="mt-5 pt-4 border-t border-accent/10">
+                        <h4 class="text-sm font-semibold text-muted text-center mb-2">MY A&R RATING (0-100)</h4>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                            <div>
+                                <label for="inputHook" class="text-xs text-muted mb-1 block text-center">Hook</label>
+                                <input type="number" id="inputHook" min="0" max="100" class="rating-input" placeholder="--">
+                            </div>
+                            <div>
+                                <label for="inputVibe" class="text-xs text-muted mb-1 block text-center">Vibe</label>
+                                <input type="number" id="inputVibe" min="0" max="100" class="rating-input" placeholder="--">
+                            </div>
+                            <div>
+                                <label for="inputProd" class="text-xs text-muted mb-1 block text-center">Prod</label>
+                                <input type="number" id="inputProd" min="0" max="100" class="rating-input" placeholder="--">
+                            </div>
+                            <div>
+                                <label for="inputBarz" class="text-xs text-muted mb-1 block text-center">Barz</label>
+                                <input type="number" id="inputBarz" min="0" max="100" class="rating-input" placeholder="--">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Averages & Feedback -->
+                    <div class="mt-4 pt-4 border-t border-accent/10 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Quality Gauge -->
+                        <div class="flex flex-col items-center justify-center p-4 bg-card rounded-lg">
+                            <h4 class="text-sm font-semibold text-muted mb-2">FACTORY AVERAGE</h4>
+                            <div id="qualityGauge" class="relative w-36 h-20 overflow-hidden">
+                                <!-- Gauge background -->
+                                <div class="absolute top-0 left-0 w-full h-full border-t-[1.5rem] border-l-[1.5rem] border-r-[1.5rem] border-panel rounded-t-full"></div>
+                                <div class="absolute top-0 left-0 w-full h-full border-t-[1.5rem] border-l-[1.5rem] border-r-[1.5rem] border-transparent rounded-t-full"
+                                     style="clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 50% 100%, 0% 100%);">
+                                    <div class="w-full h-full bg-gradient-to-r from-danger via-yellow-400 to-accent3" style="transform: rotate(180deg);"></div>
+                                </div>
+                                <!-- Needle -->
+                                <div id="qualityGaugeNeedle" class="absolute bottom-0 left-1/2 w-0.5 h-16 bg-white transition-transform duration-500" style="transform-origin: bottom center; transform: rotate(0deg);"></div>
+                                <div class="absolute bottom-0 left-1/2 w-4 h-4 bg-white rounded-full -translate-x-1/2 translate-y-1/2"></div>
+                            </div>
+                            <div id="qualityGaugeValue" class="text-4xl font-bold text-white -mt-4">0</div>
+                        </div>
+                        
+                        <!-- Live Like/Dislike -->
+                        <div class="flex flex-col items-center justify-center p-4 bg-card rounded-lg">
+                            <h4 class="text-sm font-semibold text-muted mb-3">LIVE FEEDBACK</h4>
+                            <div class="flex items-center gap-6">
+                                <button id="btnLike" class="flex flex-col items-center text-muted hover:text-accent3 transition-colors">
+                                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path><path d="M5 3a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2V9a1 1 0 10-2 0v6H5V5h2a1 1 0 100-2H5z"></path></svg>
+                                    <span id="likeCount" class="text-xl font-bold">0</span>
+                                </button>
+                                <button id="btnDislike" class="flex flex-col items-center text-muted hover:text-danger transition-colors">
+                                    <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20"><path d="M9 17a1 1 0 100-2H6.414l6.293-6.293a1 1 0 10-1.414-1.414L5 13.586V11a1 1 0 10-2 0v5a1 1 0 001 1h5z"></path><path d="M15 17a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v6a1 1 0 102 0V5h10v10H9a1 1 0 100 2h6z"></path></svg>
+                                    <span id="dislikeCount" class="text-xl font-bold">0</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="btnSubmitRating" class="w-full h-12 text-lg font-bold rounded-md mt-4 btn btn-glow bg-accent3 text-black hover:bg-accent3/80">
+                        SUBMIT RATING
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Right Column: Dashboard & Submission -->
+        <section class="lg:col-span-1 space-y-6">
+
+            <!-- A&R Dashboard (Tabs) -->
+            <div id="arDashboard" class="card-panel opacity-50 pointer-events-none relative overflow-hidden">
+                <!-- Floating Token Container -->
+                <div id="floatingTokenContainer" class="absolute inset-0 w-full h-full pointer-events-none z-50"></div>
+                
+                <!-- Tabs -->
+                <div class="flex border-b border-accent/20">
+                    <button id="tabMyShift" class="flex-1 p-3 text-sm font-bold border-b-2 border-accent text-accent transition-colors">
+                        MY SHIFT
+                    </button>
+                    <button id="tabLeaderboard" class="flex-1 p-3 text-sm font-bold border-b-2 border-transparent text-muted hover:text-white transition-colors">
+                        LEADERBOARD
+                    </button>
+                </div>
+                
+                <!-- My Shift Panel -->
+                <div id="panelMyShift" class="p-4">
+                    <div id="shiftStatusCard" class="bg-card rounded-lg p-4 text-center">
+                        <button id="btnClockIn" class="w-full h-11 bg-accent text-black rounded-md hover:bg-accent/80 btn btn-glow">
+                            🏭 CLOCK IN FOR SHIFT
+                        </button>
+                        <p id="shiftStatusText" class="text-sm text-accent3 hidden">On Shift</p>
+                    </div>
+
+                    <div class="mt-4 grid grid-cols-2 gap-3">
+                        <div class="bg-card p-3 rounded-lg text-center">
+                            <label class="text-xs text-muted block">TOKENS</label>
+                            <div id="shiftTokens" class="text-2xl font-bold text-accent3">0</div>
+                        </div>
+                        <div class="bg-card p-3 rounded-lg text-center">
+                            <label class="text-xs text-muted block">STREAK</label>
+                            <div id="shiftStreak" class="text-2xl font-bold text-white">0 <span class="text-sm">days</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Leaderboard Panel -->
+                <div id="panelLeaderboard" class="p-4 hidden">
+                    <ul id="leaderboardList" class="space-y-1">
+                        <li class="text-muted text-center text-sm p-4">Loading leaderboard...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Submit Your Track -->
+            <div class="card-panel p-5">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+                    <span class="text-xl">🎵</span> Submit Your Track
+                </h3>
+                
+                <!-- Payment Simulation -->
+                <div id="paymentButtons" class="space-y-3">
+                    <p class="text-xs text-muted text-center">Submissions require a "Paid to Play" fee to support the A&R process.</p>
+                    <button id="btnPayOnce" data-type="once" class="w-full h-11 bg-accent2 text-white rounded-md hover:bg-accent2/80 btn btn-glow">
+                        1-TIME SLOT ($5 USD)
+                    </button>
+                    <button id="btnPaySub" data-type="sub" class="w-full h-11 bg-card border border-accent2 text-accent2 rounded-md hover:bg-accent2/10 btn">
+                        MONTHLY ACCESS ($20 USD)
+                    </button>
+                </div>
+                
+                <!-- Submission Form (Hidden) -->
+                <form id="submissionForm" class="hidden space-y-4" novalidate>
+                    <div id="submissionFields">
+                        <p class="text-sm text-accent3 text-center font-bold mb-3">✅ Submission Unlocked!</p>
+                        <div>
+                            <label for="form-artist" class="text-xs text-muted block mb-1">Artist Name *</label>
+                            <input id="form-artist" name="artist" placeholder="e.g., D RoC" required class="w-full h-10 px-3 form-input">
+                        </div>
+                        <div>
+                            <label for="form-title" class="text-xs text-muted block mb-1">Track Title *</label>
+                            <input id="form-title" name="title" placeholder="e.g., Factory Freq" required class="w-full h-10 px-3 form-input">
+                        </div>
+                        <div>
+                            <label for="prioritySelect" class="text-xs text-muted block mb-1">Priority *</label>
+                            <select id="prioritySelect" class="w-full h-10 px-3 form-input">
+                                <option value="100">Standard Queue</option>
+                                <option value="2">SLOT #2 (High Priority)</option>
+                                <option value="1">SLOT #1 (Top Priority)</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="submitButton" class="w-full h-11 bg-accent text-black rounded-md hover:bg-accent/80 btn btn-glow">
+                            ⚡ ADD TO QUEUE
+                        </button>
+                        <div id="submitSpinner" class="hidden w-full h-11 flex justify-center items-center">
+                            <div class="spinner"></div>
+                            <span class="ml-3 text-muted">Submitting...</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Global Modal -->
+    <div id="modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-[100]">
+        <div id="modalBackdrop" class="absolute inset-0"></div>
+        <div class="card-panel w-full max-w-md border-2 border-accent shadow-2xl z-10">
+            <div class="p-5 border-b border-accent/20"><h3 id="modalTitle" class="text-xl font-bold text-white">Modal Title</h3></div>
+            <div class="p-5"><p id="modalMessage" class="text-muted text-sm whitespace-pre-line"></p></div>
+            <div class="p-4 bg-card rounded-b-xl text-right"><button id="modalClose" class="h-10 px-6 bg-accent text-black text-sm rounded-md hover:bg-accent/80 btn">GOT IT</button></div>
+        </div>
+    </div>
+    
+    <!-- Mission Modal -->
+    <div id="missionModal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-[101]">
+        <div class="card-panel w-full max-w-md border-2 border-accent2 shadow-2xl z-10">
+            <div class="p-5 border-b border-accent2/20"><h3 id="missionTitle" class="text-xl font-bold text-accent2 animate-pulse">⚡ ACTIVE MISSION</h3></div>
+            <div class="p-5"><p id="missionText" class="text-white text-lg text-center">Rate 1 new track to stay on shift and earn 10 tokens.</p></div>
+            <div class="p-4 bg-card rounded-b-xl flex justify-between">
+                <button id="missionClose" class="h-10 px-6 bg-muted/20 text-muted text-sm rounded-md hover:bg-muted/40 btn">SKIP</button>
+                <button id="missionAction" class="h-10 px-6 bg-accent2 text-white text-sm rounded-md hover:bg-accent2/80 btn">ACCEPT</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

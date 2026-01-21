@@ -1,0 +1,139 @@
+{
+  "content_type": "TikTok Video Scripts",
+  "platform": "TikTok",
+  "optimization_for": "Discovery page algorithm, For You Page, viral potential",
+  
+  "tiktok_strategy": {
+    "video_length": "15-25 seconds ideal",
+    "hook_timing": "Must grab in first 3 seconds",
+    "text_overlays": "Essential - 85% watch without sound",
+    "trending_audio": "Check TikTok Creative Center daily",
+    "posting_frequency": "2-4 per day",
+    "best_times": "7-9am, 12-1pm, 7-11pm EST"
+  },
+  
+  "scripts": [
+    {
+      "id": "TT_001",
+      "title": "Rate Music Get Paid",
+      "length": "18sec",
+      "hook": "[Point at camera] \"Your music taste doesn't pay... until now\"",
+      "body": "[Screen record platform] Rate tracks → Earn tokens → Get promoted → Buy merch",
+      "cta": "[Point up] Link in bio to clock in",
+      "text_overlays": ["POV: Music taste finally pays", "Rate 1-10", "Earn tokens", "Get promoted", "Link in bio ⬆️"],
+      "hashtags": "#FrequencyFactory #MusicTok #MusicDiscovery #GetPaid #SideHustle",
+      "virality": "High - solves relatable problem"
+    },
+    {
+      "id": "TT_002",
+      "title": "Honest Rating POV",
+      "length": "14sec",
+      "hook": "[Serious face] POV: About to rate a track that thinks it's fire",
+      "body": "[Listen] [React] [Pause] [Type 4/10] Sorry not sorry [Shrug]",
+      "text_overlays": ["Artist said it's a banger", "*listens*", "Hook: 4/10", "Someone had to be honest 🤷"],
+      "hashtags": "#POV #MusicReview #HonestReview #FrequencyFactory #MusicTok",
+      "virality": "Very High - POV format + relatable honesty"
+    },
+    {
+      "id": "TT_003",
+      "title": "When Hook HITS",
+      "length": "11sec",
+      "hook": "[Neutral] Me rating another mid track...",
+      "body": "[Track plays] [Surprise] [Head nod] [Eyes widen] [Type 9.5/10] YO?!",
+      "text_overlays": ["Expecting mid", "*hook hits*", "WAIT", "9.5/10", "This needs to blow up"],
+      "hashtags": "#MusicDiscovery #NewMusic #UnderratedArtist #FrequencyFactory",
+      "virality": "Very High - genuine discovery + promotes artist"
+    },
+    {
+      "id": "TT_004",
+      "title": "Hook vs Production Debate",
+      "length": "21sec",
+      "hook": "Hot take: Hook matters MORE than production",
+      "body": "[Show two tracks] Perfect mix + weak hook = skip. Good hook + decent mix = hit. Change my mind.",
+      "text_overlays": ["Controversial opinion", "Hook > Production", "Fight me", "This is the hill I die on"],
+      "hashtags": "#HotTake #MusicProduction #Debate #FrequencyFactory #MusicTok",
+      "virality": "Very High - controversy drives comments/stitches"
+    },
+    {
+      "id": "TT_005",
+      "title": "Rank Progression Flex",
+      "length": "16sec",
+      "hook": "Started as Intern 2 weeks ago...",
+      "body": "[Show progression timeline] Week 1: Intern. Week 2: Manager. Now: Executive. 200 ratings. 1500 tokens.",
+      "cta": "Your turn. Link in bio.",
+      "text_overlays": ["2 weeks ago: Intern", "Now: Executive", "200 ratings done", "1500 tokens earned", "Level up ⬆️"],
+      "hashtags": "#LevelUp #GamingLife #FrequencyFactory #Progress #Grinding",
+      "virality": "High - progression/achievement content performs well"
+    },
+    {
+      "id": "TT_006",
+      "title": "Red Flags That Kill Tracks",
+      "length": "19sec",
+      "hook": "5 things that make me skip a track instantly",
+      "body": "[Fast cuts] 1. Muddy vocals 2. Hook after 30sec 3. Clipping/distortion 4. Generic beat 5. Off-key singing",
+      "text_overlays": ["Instant skip triggers", "1. Can't hear vocals", "2. Hook too late", "3. Blown out audio", "4. Copy-paste beat", "5. Pitch problems"],
+      "hashtags": "#MusicProduction #ProducerTips #MusicReview #RedFlags #FrequencyFactory",
+      "virality": "Very High - educational + controversial = engagement"
+    },
+    {
+      "id": "TT_007",
+      "title": "Factory Certified Celebration",
+      "length": "13sec",
+      "hook": "When a track you rated finally gets Factory Certified",
+      "body": "[Celebration dance] I KNEW IT. My rating: 9.2. Community: 9.3. VALIDATED.",
+      "text_overlays": ["When your 9.2 rating was RIGHT", "Track certified", "Community agrees", "My taste > your taste", "Validation unlocked"],
+      "hashtags": "#Victory #Validated #FrequencyFactory #MusicTaste #ARLife",
+      "virality": "Medium-High - celebration content + relatability"
+    },
+    {
+      "id": "TT_008",
+      "title": "This vs That Format",
+      "length": "15sec",
+      "hook": "Which would YOU certify?",
+      "body": "[Split screen] Track A: Perfect production, weak hook. Track B: Good hook, decent mix. [Poll graphic] Vote in comments.",
+      "text_overlays": ["Track A:", "Perfect mix + weak hook", "VS", "Track B:", "Good hook + decent mix", "Drop your pick 👇"],
+      "hashtags": "#ThisOrThat #MusicDebate #FrequencyFactory #Poll #MusicTok",
+      "virality": "Very High - binary choices drive massive comments"
+    },
+    {
+      "id": "TT_009",
+      "title": "Hidden Gem Discovery",
+      "length": "17sec",
+      "hook": "Just discovered this artist with 200 followers",
+      "body": "[Play track snippet] HOW is this not viral yet? [Show rating: 9/10] Everyone go follow @artist NOW.",
+      "text_overlays": ["200 followers", "Deserves 200K", "Hook: 9/10", "Production: 8.5/10", "Go support them →"],
+      "hashtags": "#HiddenGem #UnderratedArtist #MusicDiscovery #NewArtist #FrequencyFactory",
+      "virality": "Very High - altruistic content + artist will share"
+    },
+    {
+      "id": "TT_010",
+      "title": "Rating Accuracy Flex",
+      "length": "14sec",
+      "hook": "My rating accuracy just hit 94%",
+      "body": "[Show stats screen] 150 ratings. 94% match with community. Executive rank. I'm basically A&R now.",
+      "text_overlays": ["150 ratings completed", "94% accuracy", "Executive rank achieved", "Basically A&R at this point", "Built different 💪"],
+      "hashtags": "#Accuracy #ARLife #FrequencyFactory #Stats #Flex",
+      "virality": "Medium - achievement content, good for community"
+    }
+  ],
+  
+  "content_mix_strategy": {
+    "explainer_videos": "20% - What is FF, how it works",
+    "pov_comedy": "30% - Relatable rating situations",
+    "discovery_moments": "20% - Genuine reactions to good tracks",
+    "educational": "15% - Tips, red flags, how-to-rate",
+    "community_highlights": "10% - Success stories, achievements",
+    "debate_content": "5% - Controversial takes to drive engagement"
+  },
+  
+  "tiktok_best_practices": {
+    "always_use_trending_audio": "Check TikTok Creative Center daily",
+    "hook_formats_that_work": ["POV:", "When...", "Nobody:", "Hot take:", "Just discovered..."],
+    "text_overlay_essentials": "Make it readable in 3 seconds without sound",
+    "duet_stitch_potential": "Create content others can respond to",
+    "cta_placement": "Last 2-3 seconds, point up gesture",
+    "face_on_camera": "Algorithm favors human faces over screen recordings",
+    "pattern_interrupts": "Change scene every 3-5 seconds",
+    "comment_baiting": "Ask questions, create debates, poll options"
+  }
+}

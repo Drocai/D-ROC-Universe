@@ -1,0 +1,243 @@
+{
+  "content_type": "Instagram Posts - Week 2",
+  "platform": "Instagram",
+  "duration": "7 days",
+  "post_frequency": "2-3 per day",
+  "week_2_strategy": "Build on Week 1 momentum, introduce new content formats, deepen community engagement",
+  
+  "posts": [
+    {
+      "day": "Monday",
+      "post_id": "MON_03",
+      "post_type": "Static Post (Weekend Challenge Results)",
+      "optimal_time": "10:00 AM",
+      "visual": "Leaderboard graphic showing Weekend Challenge winners with badges",
+      "caption": "🏆 WEEKEND WARRIORS - CHALLENGE COMPLETE 🏆\n\nThe results are in. You animals went OFF this weekend.\n\nTotal ratings submitted: 2,847\nTotal tokens earned: 5,694 (double token weekend)\nTracks moved to certification: 12\n\nYour Weekend Challenge winners:\n\n🥇 @[username] - 89 ratings - ABSOLUTE MACHINE\n🥈 @[username] - 76 ratings - CERTIFIED GRINDER\n🥉 @[username] - 71 ratings - CONSISTENCY KING/QUEEN\n\nAll three get the exclusive \"Weekend Warrior\" badge + bonus 500 tokens.\n\n#1 gets featured in today's YouTube upload.\n\nTo everyone who participated: You're the reason this factory runs. The queue is clear. Artists are getting heard. The system works because YOU make it work.\n\nNext challenge drops Friday. Rest up.\n\n#FrequencyFactory #WeekendChallenge #Winners #AROperative #Leaderboard #FactoryLife #CommunityWin #MusicDiscovery",
+      "engagement_prompt": "Congrats to the winners! Who's coming for #1 next weekend? 👇",
+      "engagement_strategy": "Public recognition + competitive motivation for next challenge"
+    },
+    
+    {
+      "day": "Monday",
+      "post_id": "MON_04",
+      "post_type": "Reel (User Spotlight)",
+      "optimal_time": "6:00 PM",
+      "video_length": "20 seconds",
+      "script": {
+        "hook_0_3sec": "\"Meet @[username], this week's #1 operative.\"",
+        "story_3_16sec": "[Show their profile stats]\n\"Started as Intern 6 weeks ago\"\n\"Now Executive rank\"\n\"427 ratings completed\"\n\"Average accuracy: 94%\"\n\"Why they rate: 'I love discovering artists before they blow up'\"",
+        "cta_16_20sec": "\"Want to be next week's spotlight? Clock in.\" [Link graphic]"
+      },
+      "text_overlay": [
+        "Operative Spotlight",
+        "@[username]",
+        "Intern → Executive in 6 weeks",
+        "427 ratings",
+        "94% accuracy",
+        "\"I love finding hits early\"",
+        "Your turn - link in bio"
+      ],
+      "caption": "OPERATIVE SPOTLIGHT: @[username] 🏭\n\nThis is why we do this.\n\n@[username] joined 6 weeks ago as an Intern. Skeptical. Just trying it out.\n\nNow? Executive rank. 427 ratings. 94% accuracy against community averages.\n\nWhat changed?\n\n\"I realized my opinion actually matters here. I'm not just shouting into the void on Spotify comments. My ratings influence which artists get promoted. That's real power.\"\n\nThis week alone, @[username] helped certify 3 tracks. One of them is now being considered by an indie label.\n\nThat artist wouldn't have been discovered without operatives like this.\n\nThat's the factory difference.\n\nEveryone starts as an Intern. Anyone can become an Executive. Just put in the work.\n\n👉 Link in bio to start your journey.\n\n#FrequencyFactory #OperativeSpotlight #CommunityHero #AROperative #SuccessStory #FactoryLife #MusicDiscovery #LevelUp",
+      "engagement_prompt": "Tag someone who should join the factory 👇",
+      "audio": "Inspirational/motivational trending audio"
+    },
+    
+    {
+      "day": "Tuesday",
+      "post_id": "TUE_03",
+      "post_type": "Carousel (Rating Philosophy)",
+      "optimal_time": "11:00 AM",
+      "slides": [
+        {
+          "slide_1": "Text: \"HOW TO RATE LIKE A PRO\"",
+          "visual": "Factory badge + rating interface"
+        },
+        {
+          "slide_2": "Hook Strength tips",
+          "visual": "Clock icon + checklist"
+        },
+        {
+          "slide_3": "Production Quality tips",
+          "visual": "Sliders + sound wave visual"
+        },
+        {
+          "slide_4": "Common mistakes to avoid",
+          "visual": "X marks + warning icons"
+        },
+        {
+          "slide_5": "Pro tips for accuracy",
+          "visual": "Star badge + percentage"
+        }
+      ],
+      "caption": "RATING MASTERCLASS 🏭\n\nWant to rate like an Executive? Here's the framework.\n\n🎣 HOOK STRENGTH (1-10):\nWhat to listen for:\n✓ Does it grab you in first 10 seconds?\n✓ Can you remember it after one listen?\n✓ Would you hum this later?\n✓ Is there a clear hook/chorus?\n✓ Could you see this going viral?\n\nDon't rate on:\n✗ Personal genre preference\n✗ Whether you like the artist\n✗ Lyrics content (unless offensive)\n\n🎛️ PRODUCTION QUALITY (1-10):\nWhat to listen for:\n✓ Is the mix clean and balanced?\n✓ Can you hear every element clearly?\n✓ Are the vocals sitting right in the beat?\n✓ Does it sound professional/radio-ready?\n✓ Is the mastering appropriate for the genre?\n\nDon't rate on:\n✗ \"It sounds too polished\" (that's good!)\n✗ Genre conventions you don't understand\n✗ Artistic choices vs technical issues\n\nPRO TIPS:\n• Listen on headphones first, then speakers\n• Rate the track, not the artist's career\n• Compare to similar tracks in the genre\n• Trust your gut but verify with details\n• If unsure between two numbers, go lower\n\nThe more consistent your ratings with the community, the faster you rank up.\n\nSave this post. Reference it before rating.\n\n#FrequencyFactory #RatingGuide #AROperative #MusicProduction #HowToRate #ProTips #AREducation #MusicDiscovery",
+      "engagement_prompt": "What's harder to rate - Hook or Production? Vote in comments 👇",
+      "engagement_strategy": "Educational content saves + future reference"
+    },
+    
+    {
+      "day": "Tuesday",
+      "post_id": "TUE_04",
+      "post_type": "Reel (Quick Tip)",
+      "optimal_time": "7:00 PM",
+      "video_length": "12 seconds",
+      "script": {
+        "hook_0_3sec": "\"The #1 mistake new operatives make...\"",
+        "tip_3_10sec": "[Screen recording] \"They rate too fast. Slow down. Listen to the whole track. First impression matters, but so does the full picture.\"",
+        "cta_10_12sec": "\"Quality > Speed\" [Factory logo]"
+      },
+      "text_overlay": [
+        "Biggest rating mistake",
+        "Going too fast",
+        "Listen to the FULL track",
+        "First impression + full context",
+        "Quality > Speed"
+      ],
+      "caption": "PSA FOR NEW OPERATIVES 🏭\n\nI see people rating tracks in under a minute. That's not enough time.\n\nHere's the right process:\n\n⏱️ 0:00-0:30 - First impression, hook evaluation\n⏱️ 0:30-2:00 - Full listen, production assessment\n⏱️ 2:00-2:30 - Second pass on specific elements\n⏱️ 2:30-3:00 - Final decision + rating submission\n\nTotal time: 3-5 minutes per track\n\nWhy this matters:\n- Accuracy = faster rank progression\n- Artists deserve thoughtful feedback\n- Quick ratings hurt your credibility score\n- The factory rewards quality, not speed\n\nYou're not trying to win \"most ratings.\" You're trying to win \"most accurate ratings.\"\n\nDifferent game. Different strategy.\n\nSlow down. Listen deep. Rate right.\n\n#FrequencyFactory #ProTip #AROperative #RatingTips #QualityFirst #MusicDiscovery #AREducation #SlowDown",
+      "engagement_prompt": "How long do you usually spend per track? Comment below 👇",
+      "audio": "Calm, thoughtful trending audio"
+    },
+    
+    {
+      "day": "Wednesday",
+      "post_id": "WED_03",
+      "post_type": "Static Post (Data Insight)",
+      "optimal_time": "12:00 PM",
+      "visual": "Infographic showing platform stats and insights",
+      "caption": "📊 FACTORY STATS - LAST 30 DAYS 📊\n\nThe numbers don't lie:\n\n🎵 Tracks submitted: 847\n⭐ Average rating: 7.2/10\n🏆 Factory Certified (90+): 23 tracks (2.7%)\n👥 Active operatives: 1,247\n🎯 Total ratings: 12,389\n💰 Tokens distributed: 247,780\n\nWhat this tells us:\n\n1. QUALITY IS RARE\nOnly 2.7% of submissions hit certification. That's tough odds. But it means when something gets certified, it's legit.\n\n2. THE CROWD IS SMART\nAverage rating of 7.2 is exactly right. Most music is decent but not exceptional. The ratings reflect reality.\n\n3. CONSISTENCY MATTERS\nTop 10% of operatives complete 40+ ratings per week. Bottom 50% complete less than 5. The dedicated rise fast.\n\n4. CERTIFICATION WORKS\nOf the 23 certified tracks last month:\n- 8 got label interest\n- 15 crossed 10K streams\n- 4 got playlist placements\n- 2 got sync licensing deals\n\nThe system works because the people work.\n\nThat's you. Keep going.\n\n#FrequencyFactory #DataDriven #Stats #AROperative #MusicIndustry #Numbers #Transparent #FactoryLife #MusicDiscovery",
+      "engagement_prompt": "Which stat surprises you most? Drop it in comments 👇",
+      "engagement_strategy": "Transparency builds trust + credibility"
+    },
+    
+    {
+      "day": "Wednesday",
+      "post_id": "WED_04",
+      "post_type": "Reel (Myth Busting)",
+      "optimal_time": "8:00 PM",
+      "video_length": "24 seconds",
+      "script": {
+        "hook_0_3sec": "\"3 myths about getting your track certified...\"",
+        "myth_busting_3_20sec": "[Text appears on screen]\n\"MYTH 1: Submit at 3am for better chances\" ❌\n\"TRUTH: Queue is first-come-first-served, time doesn't matter\"\n\n\"MYTH 2: Certain genres get higher ratings\" ❌\n\"TRUTH: Every genre has certified tracks, quality matters not genre\"\n\n\"MYTH 3: More submissions = better odds\" ❌\n\"TRUTH: One great track beats 10 mediocre ones\"",
+        "cta_20_24sec": "\"Focus on quality. The factory will notice.\" [Logo]"
+      },
+      "text_overlay": [
+        "Myths about getting certified",
+        "Submit at odd hours? NO",
+        "Certain genres favored? NO",
+        "Spam submissions? NO",
+        "Just make great music? YES"
+      ],
+      "caption": "MYTH BUSTING MONDAY (on a Wednesday) 🏭\n\nLet's clear some things up:\n\n❌ MYTH: \"Submit multiple versions to increase chances\"\n✅ TRUTH: We only review your best version. Multiple submissions hurt you.\n\n❌ MYTH: \"Follow the operatives to get better ratings\"\n✅ TRUTH: Operatives rate blind. They don't see artist names until after rating.\n\n❌ MYTH: \"Pay for expedited review\"\n✅ TRUTH: There is no paid fast-track. Never has been. Never will be.\n\n❌ MYTH: \"Get your friends to rate your track high\"\n✅ TRUTH: Outlier ratings get flagged. The system detects manipulation.\n\n❌ MYTH: \"Certain operatives are tougher raters\"\n✅ TRUTH: All operatives rate multiple tracks. Tough raters balance out. The average is always fair.\n\n✅ THE ONLY TRUTH THAT MATTERS:\nMake great music. Submit it. Let the factory do its job.\n\nNo hacks. No shortcuts. No gaming the system.\n\nJust pure meritocracy.\n\n#FrequencyFactory #MythBusting #AROperative #Truth #Transparent #NoGames #MusicDiscovery #MeritBased #FairPlay",
+      "engagement_prompt": "What other myths should we bust? Comment 👇",
+      "audio": "Myth-busting style trending audio"
+    },
+    
+    {
+      "day": "Thursday",
+      "post_id": "THU_03",
+      "post_type": "Carousel (Genre Deep Dive)",
+      "optimal_time": "1:00 PM",
+      "slides": [
+        {
+          "slide_1": "Text: \"GENRE SPOTLIGHT: [GENRE]\"",
+          "visual": "Genre aesthetic visual"
+        },
+        {
+          "slide_2": "What makes this genre unique",
+          "visual": "Key characteristics list"
+        },
+        {
+          "slide_3": "Rating considerations for this genre",
+          "visual": "Rating scale with genre-specific notes"
+        },
+        {
+          "slide_4": "Certified tracks in this genre this month",
+          "visual": "Track covers + ratings"
+        },
+        {
+          "slide_5": "Submit your [genre] track CTA",
+          "visual": "Link prompt"
+        }
+      ],
+      "caption": "GENRE SPOTLIGHT: [INSERT GENRE] 🏭\n\nThis week we're diving into [Genre]. Here's what operatives should know when rating [genre] tracks:\n\n🎣 HOOK STRENGTH IN [GENRE]:\nWhat to listen for:\n• [Genre-specific hook characteristics]\n• [Typical hook placement timing]\n• [Common hook structures in this genre]\n\n🎛️ PRODUCTION QUALITY IN [GENRE]:\nWhat's expected:\n• [Genre-typical production choices]\n• [Common mixing approaches]\n• [Acceptable vs problematic production decisions]\n\nCERTIFIED [GENRE] TRACKS THIS MONTH:\n1. @[artist] - \"[track]\" - 9.3/10\n2. @[artist] - \"[track]\" - 9.1/10\n3. @[artist] - \"[track]\" - 9.0/10\n\nWHAT MADE THEM WORK:\n• [Common success factors]\n• [What separated them from the pack]\n• [Why operatives rated them highly]\n\nTO ARTISTS MAKING [GENRE]:\nThe factory loves this genre. But don't chase trends. Make what feels authentic. The operatives can tell when you're faking it.\n\n👉 Submit your [genre] track - link in bio\n\n#FrequencyFactory #[GenreHashtag] #GenreSpotlight #AROperative #MusicProduction #[Genre] #MusicDiscovery #NewMusic",
+      "engagement_prompt": "What genre should we spotlight next? Vote below 👇",
+      "engagement_strategy": "Educational + showcases certified artists in that genre"
+    },
+    
+    {
+      "day": "Thursday",
+      "post_id": "THU_04",
+      "post_type": "Reel (Platform Feature Demo)",
+      "optimal_time": "7:30 PM",
+      "video_length": "19 seconds",
+      "script": {
+        "hook_0_3sec": "\"New feature just dropped in the factory...\"",
+        "demo_3_16sec": "[Screen recording of new feature]\n\"You can now compare your rating to the community average\"\n\"See how your taste matches the collective\"\n\"Build your accuracy score\"\n\"Rank up faster\"",
+        "cta_16_19sec": "\"Try it now - link in bio\" [Feature highlight]"
+      },
+      "text_overlay": [
+        "NEW FEATURE",
+        "Compare your ratings",
+        "Your score vs community",
+        "See your accuracy",
+        "Improve faster",
+        "Live now"
+      ],
+      "caption": "🆕 NEW FEATURE ALERT 🆕\n\nYou asked, we built it.\n\nINTRODUCING: RATING COMPARISON TOOL\n\nNow when you rate a track, you can see:\n✅ Your rating\n✅ Community average rating\n✅ Your accuracy score\n✅ How your taste aligns with the collective\n\nWhy this matters:\n• Learn what you over/under-rate\n• Calibrate your ratings\n• Improve your consistency\n• Rank up faster\n• Become a better A&R operative\n\nThis isn't about \"right or wrong.\" There's no objective truth in music.\n\nBut there IS collective wisdom. And understanding how your perspective fits into that wisdom makes you a better rater.\n\nSome of you are consistently tougher critics. That's fine.\nSome of you are more generous. Also fine.\n\nBut being CONSISTENT in your perspective? That's what matters.\n\nCheck out the new tool - link in bio.\n\n#FrequencyFactory #NewFeature #ProductUpdate #AROperative #Platform #TechUpdate #MusicDiscovery #Innovation #UserExperience",
+      "engagement_prompt": "What feature should we build next? Tell us 👇",
+      "audio": "Techy/futuristic trending audio"
+    },
+    
+    {
+      "day": "Friday",
+      "post_id": "FRI_03",
+      "post_type": "Static Post (Community Question)",
+      "optimal_time": "10:00 AM",
+      "visual": "Question graphic with factory aesthetic",
+      "caption": "FRIDAY QUESTION FOR THE FACTORY 🏭\n\n\"What's the ONE thing that makes you skip a track within 10 seconds?\"\n\nI'm not talking about genre preference or personal taste. I mean the IMMEDIATE red flag that makes you think \"nope, not this one.\"\n\nFor me: Muddy vocals. If I can't hear the words clearly in the first few seconds, I'm out.\n\nBut I want to hear from the operatives:\n\n🎤 Bad vocal mixing?\n🎹 Weak intro/hook?\n🎛️ Poor mastering?\n📢 Generic/copied sound?\n⏱️ Slow start (hook too late)?\n🎵 Off-key vocals?\n📊 Blown out levels/clipping?\n\nBe honest. Artists need to hear this.\n\nThis isn't mean. This is helpful. If we know what kills a track instantly, artists can avoid those mistakes.\n\nThat's the whole point of the factory - real feedback from real listeners.\n\nSo drop your instant-skip trigger in the comments.\n\nArtists: Read every single comment. Take notes. Fix it in your next track.\n\n#FrequencyFactory #CommunityQuestion #AROperative #HonestFeedback #MusicProduction #Artists #ProducerTips #RealTalk #SkipTriggers",
+      "engagement_prompt": "Drop your instant-skip trigger below 👇 Artists, pay attention.",
+      "engagement_strategy": "Controversial but valuable discussion, high comment volume expected"
+    },
+    
+    {
+      "day": "Friday",
+      "post_id": "FRI_04",
+      "post_type": "Reel (Challenge Announcement)",
+      "optimal_time": "3:00 PM",
+      "video_length": "21 seconds",
+      "script": {
+        "hook_0_3sec": "\"This weekend's challenge is DIFFERENT...\"",
+        "details_3_18sec": "[Dramatic visuals]\n\"Rate 15 tracks\"\n\"But here's the twist\"\n\"You can only rate tracks you've never heard of the artist\"\n\"No following familiar names\"\n\"Pure discovery mode\"\n\"Top 3 get triple tokens + special badge\"",
+        "cta_18_21sec": "\"Challenge starts NOW. Link in bio.\" [Badge visual]"
+      },
+      "text_overlay": [
+        "Weekend Challenge #2",
+        "Pure Discovery Mode",
+        "15 ratings",
+        "Unknown artists only",
+        "Find the hidden gems",
+        "Triple tokens for top 3",
+        "Starts NOW"
+      ],
+      "caption": "🚨 WEEKEND CHALLENGE #2: PURE DISCOVERY 🚨\n\nLast weekend was about quantity.\nThis weekend is about DISCOVERY.\n\nTHE CHALLENGE:\n📍 Rate 15 tracks this weekend\n📍 All must be from artists you've never heard before\n📍 No rating artists you already follow\n📍 No rating tracks over 5K streams\n📍 Pure discovery mode only\n\nTHE PRIZES:\n🥇 Top discoverer: 3,000 bonus tokens + \"Talent Scout\" badge\n🥈 Second place: 2,000 bonus tokens\n🥉 Third place: 1,000 bonus tokens\n\nHOW WE MEASURE \"TOP DISCOVERER\":\n• Which of YOUR rated tracks get the highest community ratings\n• You're not trying to find popular artists\n• You're trying to find GOOD artists nobody knows yet\n• That's real A&R work\n\nThis is harder than last weekend's challenge.\nBut the winners? You'll earn serious respect.\n\nReady to prove you have real talent-spotting ability?\n\n⏰ Challenge ends Sunday 11:59pm\n👉 Link in bio to start\n\nLet's find some hidden gems.\n\n#FrequencyFactory #WeekendChallenge #Discovery #TalentScout #AROperative #HiddenGems #IndieMusic #UnsignedArtist #MusicDiscovery",
+      "engagement_prompt": "Who's ready to discover the next big thing? Call it 👇",
+      "audio": "Epic challenge-style trending audio"
+    }
+  ],
+  
+  "week_2_summary": {
+    "total_posts": 10,
+    "new_content_angles": [
+      "Challenge results/winners",
+      "User spotlight",
+      "Rating education",
+      "Platform stats transparency",
+      "Myth busting",
+      "Genre deep dive",
+      "New feature announcements",
+      "Community questions",
+      "Discovery-focused challenge"
+    ],
+    "engagement_evolution": "Week 2 deepens community bonds through education, recognition, and more sophisticated challenges",
+    "content_maturity": "Moving from basic intro content to advanced strategy and community building"
+  }
+}

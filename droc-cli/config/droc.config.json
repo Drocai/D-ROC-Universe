@@ -1,0 +1,28 @@
+{
+  "universeRoot": "..",
+  "defaultEditor": "code",
+  "integrations": {
+    "github": {
+      "enabled": true,
+      "repo": "D-RoC-Universe"
+    },
+    "cloudinary": {
+      "enabled": false,
+      "cloudName": ""
+    },
+    "vercel": {
+      "enabled": true
+    },
+    "netlify": {
+      "enabled": true
+    }
+  },
+  "llm": {
+    "contextInjection": true,
+    "provider": "claude"
+  },
+  "ui": {
+    "colorEnabled": true,
+    "showBanner": true
+  }
+}

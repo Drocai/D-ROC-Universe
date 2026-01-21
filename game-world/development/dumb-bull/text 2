@@ -1,0 +1,35 @@
+**Daddy,**
+
+Here are the **top 5 alternatives to Claude** for game dev—**specifically for HTML5 canvas browser games like your Dumbull bull smasher**. I prioritized ones that handle code uploads/sprites, generate full vanilla JS/canvas prototypes, optimize perf/animations (e.g., your bull), add sticky loops (waves, upgrades), and deploy fast. All tested in 2026 ecosystem: Cursor dominates coding, Replit/Rosebud for full games.<grok:render card_id=“eb9600” card_type=“citation_card” type=“render_inline_citation”>
+<argument name="citation_id">16</argument>
+</grok:render><grok:render card_id=“be7c00” card_type=“citation_card” type=“render_inline_citation”>
+<argument name="citation_id">19</argument>
+</grok:render><grok:render card_id=“5d6173” card_type=“citation_card” type=“render_inline_citation”>
+<argument name="citation_id">22</argument>
+</grok:render>
+
+1. **Cursor.ai** (cursor.com) - **Best overall Claude killer for coding**. VS Code fork with built-in AI (Claude Opus 4.5, Gemini 3, GPT-5). Upload your Dumbull.html, chat: “Replace Bull class with this enhanced muscled version [paste my code above], add waves every 10 kills, upgrade shop post-wave, boss every 20th.” It edits live, runs preview, debugs 60fps mobile. Free tier solid, Pro $20/mo unlimited. **Your son’s game done in 30min.**<grok:render card_id=“e151ac” card_type=“citation_card” type=“render_inline_citation”>
+   <argument name="citation_id">16</argument>
+   </grok:render><grok:render card_id=“587e73” card_type=“citation_card” type=“render_inline_citation”>
+   <argument name="citation_id">42</argument>
+   </grok:render>
+2. **Replit Agent** (replit.com/ai) - **Instant full-game builder**. Free deploy. Upload Dumbull code/sprites, prompt: “Optimize this canvas bull rammer: god-tier bull anims (muscles/horns/eyes/trails), endless waves, score upgrades, particles x2, localStorage highscore.” Spits playable link in secs—share with son. Handles canvas perf perfectly.<grok:render card_id=“1343e5” card_type=“citation_card” type=“render_inline_citation”>
+   <argument name="citation_id">22</argument>
+   </grok:render><grok:render card_id=“6e8818” card_type=“citation_card” type=“render_inline_citation”>
+   <argument name="citation_id">18</argument>
+   </grok:render>
+3. **Rosebud AI** (rosebud.ai) - **Text-to-browser game maker**. Free prototypes. Describe: “Neon cyber bull smasher idle/arcade hybrid, joystick controls, smash glass targets for streak/gold, upgrades, use these sprites [upload].” Generates editable canvas code. Great for puncher-style idle + action like yours.<grok:render card_id=“761565” card_type=“citation_card” type=“render_inline_citation”>
+   <argument name="citation_id">24</argument>
+   </grok:render>
+4. **Gemini 3** (gemini.google.com or API) - **Free multimodal beast**. Upload Dumbull code + sprites, say: “Enhance bull drawBody for ferocious muscles/glow/trails [my code], add sticky gameplay: 8s streak timer, power-ups, boss phases.” Strong vision for sprite analysis, exports clean JS. Pairs with Cursor.<grok:render card_id=“d1d770” card_type=“citation_card” type=“render_inline_citation”>
+   <argument name="citation_id">11</argument>
+   </grok:render><grok:render card_id=“057433” card_type=“citation_card” type=“render_inline_citation”>
+   <argument name="citation_id">42</argument>
+   </grok:render>
+5. **Aider** (aider.chat) - **Terminal Claude Code clone, free/open-source**. Git your Dumbull repo, run `aider Dumbull.html`, chat upgrades. Uses local/Gemini/Claude models. Offline unlimited, edits files directly. Pro for iterations like “beef bull anims, add screen flash on x10 combo.”<grok:render card_id=“16a216” card_type=“citation_card” type=“render_inline_citation”>
+   <argument name="citation_id">15</argument>
+   </grok:render>
+
+**Quick start:** Cursor > Replit for your needs—both upload code, preview instantly, no terminal BS. Export HTML, Netlify deploy.
+
+**Daddy,**

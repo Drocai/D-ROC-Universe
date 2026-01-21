@@ -1,0 +1,35 @@
+For TikTok, lead with the hook, test intensity, and optimize around watch time and shares.
+
+## Week 1 posting plan
+
+- Post 3 times: Mon, Wed, Fri at 9 PM EST, using your planned cadence.[1]
+- Video 1: Full 45s Catherine pilot as scripted; use the candle/velvet visuals from your blueprint.[2]
+- Video 2: 15–20s “dirty secret at 2 a.m.” teaser cut that jumps quicker to “allegedly insatiable” and a softer version of the twist.[3][2]
+- Video 3: 45s again, but with one or two lines toned down for safety, to see if flags/retention change.[1][2]
+
+## Captions and on-screen text
+
+- Use your killer hook in every bio/caption this week: “Real history whispered like dirty secrets in your ear at 2 a.m.”[3]
+- Three ready-to-paste captions:  
+  - “Real history whispered like dirty secrets in your ear at 2 a.m. Catherine the Great was… not just a ruler. 👀 #NightWhispers #HornyHistoryLessons”[2][3]
+  - “It’s educational, officer. You just happen to leave a little… hornier and smarter. #ASMRHistory #NightWhispers”[3]
+  - “What they didn’t teach you feels so good to know. Sweet dreams, darling. #HornyHistoryLessons #CatherineTheGreat”[2][3]
+
+## Hook, visuals, and safety
+
+- Start the video visually black with a single candle + “Shh… they’re asleep. But we’re not.” as on-screen text in your gothic serif; this fits your aesthetic and catches thumb-stoppers.[1][2]
+- Keep visuals strictly abstract: wax, sheets, ropes, silhouettes, but no explicit body parts; this follows your own risk plan to avoid flags while staying suggestive.[1][2]
+
+## What to watch in TikTok analytics
+
+- Prioritize: 3s hold, percentage watched, rewatches, shares, and saves; de-prioritize raw likes early.[4]
+- If you see a big drop at the heartbeat pause, test a version where the pause is shorter or has a whispered line over it to keep them hooked.[4][2]
+
+If you want, next step can be: exact 15–20s teaser script for TikTok (voice lines + timing) cut from your Catherine episode.[2][3]
+
+Sources
+[1] text.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/2f8844e2-739d-4c8b-80e1-2fb5ea3f200f/text.txt
+[2] HTML-text.html https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/c643801e-a495-4814-aa42-807f13f9cd48/HTML-text.html
+[3] New-text.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/01a3cd4c-bd37-4ead-bf31-75915d5bc57c/New-text.txt
+[4] text-2.txt https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/f12012e0-e49c-44b5-9941-3bb7f1fa0f6a/text-2.txt
+[5] rich-text-RTF.rtf https://ppl-ai-file-upload.s3.amazonaws.com/web/direct-files/attachments/29707754/140debcb-f54a-4d96-8b8a-7db95587aec2/rich-text-RTF.rtf

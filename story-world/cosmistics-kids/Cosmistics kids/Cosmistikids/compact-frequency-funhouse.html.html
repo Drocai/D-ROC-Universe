@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmistics Kids: Frequency Funhouse</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            color: white;
+            background: linear-gradient(135deg, #2D1B69 0%, #6B46C1 50%, #301B70 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            background-color: rgba(49, 46, 129, 0.8);
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-star {
+            color: #FFD700;
+            font-size: 24px;
+        }
+        
+        h1 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        footer {
+            background-color: rgba(49, 46, 129, 0.8);
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .screen {
+            background-color: rgba(49, 46, 129, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 500px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        h2 {
+            color: #FFD700;
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        .dialogue-box {
+            background-color: rgba(93, 63, 211, 0.3);
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .dialogue-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .character-icon {
+            font-size: 24px;
+        }
+        
+        .character-name {
+            font-weight: 600;
+        }
+        
+        .input-group {
+            width: 100%;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 16px;
+            color: #2D1B69;
+        }
+        
+        button {
+            background: linear-gradient(to right, #8B5CF6, #6366F1);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feedback {
+            color: #FFD700;
+        }
+        
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .restart-btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            background: rgba(79, 70, 229, 0.8);
+        }
+        
+        .energy-meter {
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            width: 24px;
+            height: 150px;
+            background-color: rgba(31, 41, 55, 0.8);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .meter-fill {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50%;
+            background-color: #FFD700;
+            border-radius: 12px;
+            transition: height 0.5s ease-out;
+        }
+        
+        .meter-markers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 4px;
+        }
+        
+        .marker {
+            width: 16px;
+            height: 16px;
+            margin: 0 auto;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+        
+        .marker-high { background-color: #10B981; }
+        .marker-mid { background-color: #FBBF24; }
+        .marker-low { background-color: #EF4444; }
+        
+        .challenge {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .challenge-title {
+            color: #BF5AF2;
+            font-size: 22px;
+            text-align: center;
+        }
+        
+        .affirmation-form {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
+        
+        .affirm-btn {
+            padding: 10px 15px;
+        }
+        
+        .affirmations-list {
+            width: 100%;
+            background-color: rgba(49, 46, 129, 0.5);
+            border-radius: 8px;
+            padding: 12px;
+        }
+        
+        .list-title {
+            color: #FFD700;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .breathing-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgba(45, 168, 156, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-weight: bold;
+            transition: all 1s ease-in-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+        }
+        
+        .breathe-in {
+            transform: scale(1.3);
+            background-color: rgba(79, 209, 197, 0.8);
+        }
+        
+        .breathe-hold {
+            transform: scale(1.3);
+            background-color: rgba(147, 230, 223, 0.9);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+        
+        .breathe-out {
+            transform: scale(1);
+            background-color: rgba(45, 168, 156, 0.6);
+        }
+        
+        .star-area {
+            width: 100%;
+            height: 200px;
+            background-color: rgba(49, 46, 129, 0.3);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(147, 51, 234, 0.5);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .star {
+            position: absolute;
+            font-size: 30px;
+            color: #FFD700;
+            text-shadow: 0 0 10px #FFD700;
+            cursor: pointer;
+            animation: pulse 1.5s infinite ease-in-out;
+            transition: transform 0.2s;
+        }
+        
+        .star:hover {
+            transform: scale(1.3);
+        }
+        
+        .bg-star {
+            position: absolute;
+            color: #FFD700;
+            text-shadow: 0 0 5px #FFD700;
+            opacity: 0.3;
+            animation: twinkle 3s infinite ease-in-out;
+            z-index: -1;
+        }
+        
+        .energy-burst {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 10;
+        }
+        
+        .burst-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.7) 0%, rgba(186, 104, 200, 0.5) 50%, transparent 70%);
+            animation: burst 1.5s ease-out forwards;
+        }
+        
+        .achievement {
+            text-align: center;
+        }
+        
+        .achievement-badge {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(to right, #8B5CF6, #FBBF24);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+        
+        .badge-inner {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #312E81;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+        }
+        
+        .achievement-text {
+            margin-bottom: 15px;
+        }
+        
+        .powers-list {
+            background-color: rgba(49, 46, 129, 0.5);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        
+        .powers-title {
+            color: #FFD700;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+        
+        @keyframes burst {
+            0% { transform: scale(0); opacity: 0.7; }
+            50% { opacity: 0.3; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 600px) {
+            h1 { font-size: 16px; }
+            .energy-meter {
+                top: 70px;
+                right: 10px;
+                width: 20px;
+                height: 120px;
+            }
+            .marker {
+                width: 12px;
+                height: 12px;
+            }
+            .breathing-circle {
+                width: 120px;
+                height: 120px;
+            }
+            .star-area {
+                height: 180px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="background-stars"></div>
+    
+    <header>
+        <div class="logo">
+            <span class="logo-star">★</span>
+            <h1>Cosmistics Kids: Frequency Funhouse</h1>
+        </div>
+        
+        <div id="player-info" class="player-info hidden">
+            <span class="logo-star">★</span>
+            <span id="player-name-display">Explorer</span>
+            <button id="restart-button" class="restart-btn">Restart</button>
+        </div>
+    </header>
+    
+    <main>
+        <!-- Intro Screen -->
+        <div id="intro-screen" class="screen">
+            <h2>Welcome to the Frequency Funhouse!</h2>
+            
+            <div id="intro-dialogue" class="dialogue-box hidden"></div>
+            
+            <div class="input-group">
+                <label for="player-name-input">Enter Your Cosmic Name:</label>
+                <input 
+                    id="player-name-input" 
+                    type="text" 
+                    placeholder="Your name here..."
+                />
+                <p id="name-feedback" class="feedback hidden">Please enter your cosmic name first!</p>
+            </div>
+            
+            <button id="start-game-button">
+                Start Your Cosmic Journey!
+            </button>
+        </div>
+        
+        <!-- Playing Screen -->
+        <div id="playing-screen" class="screen hidden">
+            <!-- Energy Meter -->
+            <div class="energy-meter">
+                <div id="energy-meter-fill" class="meter-fill"></div>
+                <div class="meter-markers">
+                    <div class="marker marker-high"></div>
+                    <div class="marker marker-mid"></div>
+                    <div class="marker marker-low"></div>
+                </div>
+            </div>
+            
+            <!-- Character Dialogue -->
+            <div id="game-dialogue" class="dialogue-box hidden"></div>
+            
+            <!-- Energy Burst Animation -->
+            <div id="energy-effect" class="energy-burst hidden">
+                <div class="burst-circle"></div>
+            </div>
+            
+            <!-- Challenge 1: Affirmation Creation -->
+            <div id="challenge-1" class="challenge hidden">
+                <h3 class="challenge-title">Create Your Affirmation</h3>
+                
+                <div class="affirmation-form">
+                    <input 
+                        id="affirmation-input" 
+                        type="text" 
+                        placeholder="I am..."
+                    />
+                    <button id="affirm-button" class="affirm-btn">
+                        Affirm!
+                    </button>
+                </div>
+                
+                <p id="affirmation-feedback" class="feedback hidden"></p>
+                
+                <div id="affirmations-list" class="affirmations-list hidden">
+                    <h4 class="list-title">Your Affirmations:</h4>
+                    <ul id="affirmations-list-items"></ul>
+                </div>
+            </div>
+            
+            <!-- Challenge 2: Breathing Exercise -->
+            <div id="challenge-2" class="challenge hidden">
+                <h3 class="challenge-title">Cosmic Breathing</h3>
+                
+                <div id="breathing-circle" class="breathing-circle">
+                    <p id="breathing-text">Click to Begin</p>
+                </div>
+                
+                <button id="start-breathing-button">
+                    Start Breathing
+                </button>
+                
+                <p id="breathing-counter">
+                    Completed Breaths: 0 / 3
+                </p>
+            </div>
+            
+            <!-- Challenge 3: Star Collection -->
+            <div id="challenge-3" class="challenge hidden">
+                <h3 class="challenge-title">Collect Cosmic Stars!</h3>
+                
+                <div id="star-collection-area" class="star-area">
+                    <!-- Stars will be dynamically added here -->
+                </div>
+                
+                <p id="stars-counter">
+                    Stars Collected: 0 / 5
+                </p>
+            </div>
+        </div>
+        
+        <!-- Results Screen -->
+        <div id="results-screen" class="screen hidden">
+            <h2>Cosmic Congratulations!</h2>
+            
+            <div class="achievement">
+                <div class="achievement-badge">
+                    <div class="badge-inner">★</div>
+                </div>
+                
+                <p id="results-name" class="achievement-text">
+                    Congratulations Cosmic Explorer! You've mastered the Frequency Funhouse challenges and learned how to tune into your best energy!
+                </p>
+                
+                <div class="powers-list">
+                    <p class="powers-title">Your Frequency Powers:</p>
+                    <ul>
+                        <li>✨ Creating powerful affirmations</li>
+                        <li>✨ Balancing energy through cosmic breathing</li>
+                        <li>✨ Collecting positive energy stars</li>
+                    </ul>
+                </div>
+                
+                <p>
+                    Remember, your words shape your universe! Keep practicing your cosmic skills every day!
+                </p>
+            </div>
+            
+            <button id="play-again-button">
+                Play Again!
+            </button>
+        </div>
+    </main>
+    
+    <footer>
+        <p>Cosmistics Kids: The Frequency Funhouse - Tune into your best energy!</p>
+    </footer>
+    
+    <script>
+        // Game state and variables
+        const gameState = {
+            currentState: 'intro', // intro, playing, results
+            playerName: '',
+            energy: 50,
+            affirmations: [],
+            currentLevel: 1,
+            characterSpeaking: null,
+            breathingState: 'idle', // idle, breatheIn, hold, breatheOut
+            breathingCount: 0,
+            starsCollected: 0,
+            stars: []
+        };
+
+        // Characters data
+        const characters = {
+            cosmo: {
+                name: 'Cosmo',
+                color: '#5D3FD3', // Purple
+                icon: '🌌',
+                dialogue: {
+                    intro: "Hey there, Cosmic Crew! Welcome to the Frequency Funhouse! I'm Cosmo, your cosmic guide to tuning into your best energy!",
+                    greeting: function(name) { return `Awesome to meet you, ${name}! Let's explore how to boost your energy through the power of positive words!`; },
+                    challenge1: "First challenge: Let's create your own positive affirmation! Type a positive phrase about yourself.",
+                    challenge2: "Amazing! Now let's practice cosmic breathing with Zennie to balance your energy!",
+                    challenge3: "Final challenge: Let's charge up your energy with Nova's star power! Click the glowing stars as they appear!",
+                    completion: "COSMIC WORK! You've tuned into your highest frequency! Your energy is now cosmic-level AMAZING!"
+                }
+            },
+            nova: {
+                name: 'Nova',
+                color: '#FFD700', // Gold
+                icon: '⭐',
+                dialogue: {
+                    intro: "Ooooh! Are we gonna vibe up today?! Every thought is a little star waiting to shine!",
+                    challenge: "Click on the stars to collect positive energy! Each star is a powerful affirmation!",
+                    feedback: "We did it! Your energy is cosmic-level high!"
+                }
+            },
+            quency: {
+                name: 'Quency',
+                color: '#00BFFF', // Bright blue
+                icon: '🎵',
+                dialogue: {
+                    intro: "Let's feel our energy waves! Are we buzzing like a happy song, or do we need a power-up?",
+                    feedback: "Oooh! I felt that! Let's go again!"
+                }
+            },
+            zennie: {
+                name: 'Zennie',
+                color: '#48D1CC', // Teal
+                icon: '🧘',
+                dialogue: {
+                    intro: "Breathe in the universe, breathe out the worries.",
+                    instruction: "Follow my lead: Breathe in for 4, hold for 4, breathe out for 6. Focus on your energy flowing.",
+                    feedback: "Beautiful breathing! Your frequency is balanced now."
+                }
+            },
+            bolt: {
+                name: 'Bolt',
+                color: '#FFA500', // Orange
+                icon: '⚡',
+                dialogue: {
+                    intro: "High vibes, high power! Let's get energized!"
+                }
+            }
+        };
+        
+        // Positive affirmations for star collection
+        const positiveAffirmations = [
+            "I AM STRONG!",
+            "I AM BRAVE!",
+            "I AM CREATIVE!",
+            "I AM KIND!",
+            "I CAN DO THIS!",
+            "I AM UNSTOPPABLE!",
+            "I BELIEVE IN MYSELF!",
+            "I SHINE BRIGHTLY!"
+        ];
+
+        // DOM Elements
+        const elements = {
+            // Screens
+            introScreen: document.getElementById('intro-screen'),
+            playingScreen: document.getElementById('playing-screen'),
+            resultsScreen: document.getElementById('results-screen'),
+            
+            // Intro elements
+            playerNameInput: document.getElementById('player-name-input'),
+            startGameButton: document.getElementById('start-game-button'),
+            nameFeedback: document.getElementById('name-feedback'),
+            introDialogue: document.getElementById('intro-dialogue'),
+            
+            // Playing elements
+            playerInfo: document.getElementById('player-info'),
+            playerNameDisplay: document.getElementById('player-name-display'),
+            restartButton: document.getElementById('restart-button'),
+            energyMeterFill: document.getElementById('energy-meter-fill'),
+            gameDialogue: document.getElementById('game-dialogue'),
+            energyEffect: document.getElementById('energy-effect'),
+            
+            // Challenge 1
+            challenge1: document.getElementById('challenge-1'),
+            affirmationInput: document.getElementById('affirmation-input'),
+            affirmButton: document.getElementById('affirm-button'),
+            affirmationFeedback: document.getElementById('affirmation-feedback'),
+            affirmationsList: document.getElementById('affirmations-list'),
+            affirmationsListItems: document.getElementById('affirmations-list-items'),
+            
+            // Challenge 2
+            challenge2: document.getElementById('challenge-2'),
+            breathingCircle: document.getElementById('breathing-circle'),
+            breathingText: document.getElementById('breathing-text'),
+            startBreathingButton: document.getElementById('start-breathing-button'),
+            breathingCounter: document.getElementById('breathing-counter'),
+            
+            // Challenge 3
+            challenge3: document.getElementById('challenge-3'),
+            starCollectionArea: document.getElementById('star-collection-area'),
+            starsCounter: document.getElementById('stars-counter'),
+            
+            // Results elements
+            resultsName: document.getElementById('results-name'),
+            playAgainButton: document.getElementById('play-again-button'),
+            
+            // Other
+            backgroundStars: document.getElementById('background-stars')
+        };
+
+        // Helper Functions
+        
+        // Show dialogue from a character
+        function showDialogue(character, text, duration = 4000) {
+            const dialogueBox = gameState.currentState === 'intro' ? 
+                elements.introDialogue : elements.gameDialogue;
+            
+            dialogueBox.classList.remove('hidden');
+            dialogueBox.style.backgroundColor = `${characters[character].color}40`;
+            dialogueBox.innerHTML = `
+                <div class="dialogue-content">
+                    <span class="character-icon">${characters[character].icon}</span>
+                    <span class="character-name" style="color: ${characters[character].color}">
+                        ${characters[character].name}:
+                    </span>
+                    <p>${text}</p>
+                </div>
+            `;
+            
+            gameState.characterSpeaking = character;
+            
+            // Auto-clear dialogue after duration (unless it's the intro)
+            if (gameState.currentState !== 'intro' || duration === 0) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        dialogueBox.classList.add('hidden');
+                        gameState.characterSpeaking = null;
+                        resolve();
+                    }, duration);
+                });
+            } else {
+                return Promise.resolve();
+            }
+        }
+        
+        // Update energy meter
+        function updateEnergyMeter() {
+            elements.energyMeterFill.style.height = `${gameState.energy}%`;
+            
+            // Update color based on energy level
+            if (gameState.energy < 30) {
+                elements.energyMeterFill.style.backgroundColor = '#EF4444'; // Red
+            } else if (gameState.energy < 70) {
+                elements.energyMeterFill.style.backgroundColor = '#FBBF24'; // Yellow
+            } else {
+                elements.energyMeterFill.style.backgroundColor = '#10B981'; // Green
+            }
+        }
+        
+        // Show energy effect animation
+        function triggerEnergyEffect() {
+            elements.energyEffect.classList.remove('hidden');
+            setTimeout(() => {
+                elements.energyEffect.classList.add('hidden');
+            }, 1500);
+        }
+        
+        // Change game screen
+        function changeScreen(screen) {
+            // Hide all screens
+            elements.introScreen.classList.add('hidden');
+            elements.playingScreen.classList.add('hidden');
+            elements.resultsScreen.classList.add('hidden');
+            
+            // Show the requested screen
+            if (screen === 'intro') {
+                elements.introScreen.classList.remove('hidden');
+                gameState.currentState = 'intro';
+                elements.playerInfo.classList.add('hidden');
+            } else if (screen === 'playing') {
+                elements.playingScreen.classList.remove('hidden');
+                gameState.currentState = 'playing';
+                elements.playerInfo.classList.remove('hidden');
+            } else if (screen === 'results') {
+                elements.resultsScreen.classList.remove('hidden');
+                gameState.currentState = 'results';
+                elements.playerInfo.classList.remove('hidden');
+            }
+        }
+        
+        // Change challenge level
+        function changeLevel(level) {
+            // Hide all challenges
+            elements.challenge1.classList.add('hidden');
+            elements.challenge2.classList.add('hidden');
+            elements.challenge3.classList.add('hidden');
+            
+            // Show the requested challenge
+            if (level === 1) {
+                elements.challenge1.classList.remove('hidden');
+            } else if (level === 2) {
+                elements.challenge2.classList.remove('hidden');
+            } else if (level === 3) {
+                elements.challenge3.classList.remove('hidden');
+            }
+            
+            gameState.currentLevel = level;
+        }
+        
+        // Create background stars
+        function createBackgroundStars() {
+            // Clear existing stars
+            elements.backgroundStars.innerHTML = '';
+            
+            // Create random stars
+            for (let i = 0; i < 30; i++) {
+                const star = document.createElement('div');
+                star.className = 'bg-star';
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.fontSize = `${Math.random() * 15 + 10}px`;
+                star.style.animationDelay = `${Math.random() * 3}s`;
+                star.textContent = '★';
+                elements.backgroundStars.appendChild(star);
+            }
+        }
+        
+        // Generate and show a random star
+        function generateStar() {
+            if (gameState.stars.length < 3 && gameState.currentLevel === 3 && gameState.starsCollected < 5) {
+                const id = Date.now();
+                const x = Math.floor(Math.random() * 80) + 10; // 10% to 90% of width
+                const y = Math.floor(Math.random() * 70) + 10; // 10% to 80% of height
+                const affirmation = positiveAffirmations[Math.floor(Math.random() * positiveAffirmations.length)];
+                
+                const starElement = document.createElement('div');
+                starElement.className = 'star';
+                starElement.textContent = '★';
+                starElement.style.left = `${x}%`;
+                starElement.style.top = `${y}%`;
+                
+                // Add click handler
+                starElement.addEventListener('click', () => collectStar(id, affirmation));
+                
+                // Add to DOM
+                elements.starCollectionArea.appendChild(starElement);
+                
+                // Add to game state
+                gameState.stars.push({ id, element: starElement, affirmation });
+            }
+        }
+        
+        // Collect star
+        function collectStar(id, affirmation) {
+            // Remove the star from DOM and game state
+            gameState.stars = gameState.stars.filter(star => {
+                if (star.id === id) {
+                    star.element.remove();
+                    return false;
+                }
+                return true;
+            });
+            
+            // Increase energy and star count
+            gameState.energy = Math.min(gameState.energy + 10, 100);
+            gameState.starsCollected++;
+            
+            // Update the counter
+            elements.starsCounter.textContent = `Stars Collected: ${gameState.starsCollected} / 5`;
+            
+            // Update energy meter
+            updateEnergyMeter();
+            
+            // Show the affirmation
+            showDialogue('nova', affirmation, 2000);
+            
+            // Show energy effect
+            triggerEnergyEffect();
+            
+            // Complete challenge after collecting 5 stars
+            if (gameState.starsCollected >= 5) {
+                // Clear any remaining stars
+                gameState.stars.forEach(star => star.element.remove());

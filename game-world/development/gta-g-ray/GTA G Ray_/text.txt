@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Clown Theft Auto: G-RAY Protocol</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111;
+      overflow: hidden;
+      font-family: monospace;
+      color: lime;
+    }
+    canvas {
+      display: block;
+      margin: auto;
+      background: #222;
+      border: 3px solid lime;
+    }
+    #cheat-notice {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #000;
+      padding: 8px 12px;
+      border: 1px solid lime;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+  <div id="cheat-notice">Type cheats: <b>PEWPEW</b>, <b>JETSET</b>, <b>GASMEUP</b>, <b>TACOBOMB</b>, <b>CLOWNIN</b>, <b>HOTDOG</b>, <b>G-RAYGOD</b></div>
+  <canvas id="game" width="800" height="500"></canvas>
+
+  <script>
+    const canvas = document.getElementById('game');
+    const ctx = canvas.getContext('2d');
+
+    let keys = {};
+    let bullets = [];
+    let planes = [];
+    let tacos = [];
+    let enemies = [];
+    let hotDogs = [];
+    let codeBuffer = '';
+    let gRayUnlocked = false;
+    let gRayCooldown = 0;
+    let gRayGlowTime = 0;
+    let gRayTextTime = 0;
+
+    const cheatCodes = {
+      'PEWPEW': 'infiniteAmmo',
+      'JETSET': 'spawnPlane',
+      'GASMEUP': 'jetFartMode',
+      'TACOBOMB': 'spawnTacos',
+      'CLOWNIN': 'spawnClowns',
+      'HOTDOG': 'dropHotDog',
+      'G-RAYGOD': 'unlockGRay'
+    };
+
+    const activeCheats = {
+      infiniteAmmo: false,
+      jetFartMode: false
+    };
+
+    const character = {
+      x: 100, y: 400,
+      width: 40, height: 60,
+      color: 'lime',
+      speed: 5,
+      ammo: 10,
+      vy: 0,
+      gravity: 0.6,
+      health: 100
+    };
+
+    function drawCharacter() {
+      ctx.fillStyle = gRayGlowTime > 0 ? 'gold' : character.color;
+      ctx.fillRect(character.x, character.y, character.width, character.height);
+
+      // Eyes
+      ctx.fillStyle = 'white';
+      ctx.fillRect(character.x + 8, character.y + 10, 8, 8);
+      ctx.fillRect(character.x + 24, character.y + 10, 8, 8);
+      ctx.fillStyle = 'black';
+      ctx.fillRect(character.x + 10, character.y + 12, 4, 4);
+      ctx.fillRect(character.x + 26, character.y + 12, 4, 4);
+    }
+
+    function drawBullets() {
+      bullets.forEach(b => {
+        ctx.fillStyle = 'yellow';
+        ctx.fillRect(b.x, b.y, 10, 4);
+        b.x += 10;
+      });
+      bullets = bullets.filter(b => b.x < canvas.width);
+    }
+
+    function drawPlanes() {
+      planes.forEach(p => {
+        ctx.fillStyle = 'cyan';
+        ctx.fillRect(p.x, p.y, 60, 30);
+        ctx.fillStyle = 'black';
+        ctx.fillText('LOLJET', p.x + 5, p.y + 20);
+        p.x -= 2;
+      });
+    }
+
+    function drawTacos() {
+      tacos.forEach(t => {
+        ctx.fillStyle = 'orange';
+        ctx.beginPath();
+        ctx.arc(t.x, t.y, 12, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'red';
+        ctx.fillText('TACO', t.x - 10, t.y + 5);
+        t.y += 2;
+        if (t.y > canvas.height - 20) t.exploded = true;
+      });
+      tacos = tacos.filter(t => !t.exploded);
+    }
+
+    function drawEnemies() {
+      enemies.forEach(e => {
+        ctx.fillStyle = 'purple';
+        ctx.fillRect(e.x, e.y, 30, 50);
+        ctx.fillStyle = 'white';
+        ctx.fillText('🤡', e.x + 5, e.y + 20);
+        e.x -= e.speed;
+      });
+      enemies = enemies.filter(e => e.x > -30);
+    }
+
+    function drawHotDogs() {
+      hotDogs.forEach(h => {
+        ctx.fillStyle = 'brown';
+        ctx.fillRect(h.x, h.y, 20, 10);
+        ctx.fillStyle = 'yellow';
+        ctx.fillText('🌭', h.x + 2, h.y + 8);
+        h.y += 2;
+        if (character.x < h.x + 20 && character.x + character.width > h.x &&
+            character.y < h.y + 10 && character.y + character.height > h.y) {
+          character.health = Math.min(100, character.health + 20);
+          h.collected = true;
+        }
+      });
+      hotDogs = hotDogs.filter(h => !h.collected);
+    }
+
+    function update() {
+      if (keys['ArrowRight']) character.x += character.speed;
+      if (keys['ArrowLeft']) character.x -= character.speed;
+
+      if (activeCheats.jetFartMode && keys[' ']) {
+        character.vy -= 1.5;
+        ctx.fillStyle = 'green';
+        ctx.fillText('PFFFTT!', character.x + 10, character.y + character.height + 10);
+      } else if (keys[' '] && !activeCheats.jetFartMode) {
+        fireBullet();
+      }
+
+      character.vy += character.gravity;
+      character.y += character.vy;
+      if (character.y > 400) {
+        character.y = 400;
+        character.vy = 0;
+      }
+
+      if (gRayCooldown > 0) gRayCooldown--;
+      if (gRayGlowTime > 0) gRayGlowTime--;
+      if (gRayTextTime > 0) gRayTextTime--;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      drawCharacter();
+      drawBullets();
+      drawPlanes();
+      drawTacos();
+      drawEnemies();
+      drawHotDogs();
+
+      if (gRayTextTime > 0) {
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 28px monospace';
+        ctx.fillText('YOU SHOULDN’T HAVE UNLOCKED THIS', 150, 250);
+      }
+
+      ctx.fillStyle = 'lime';
+      ctx.font = '16px monospace';
+      ctx.fillText(`Ammo: ${activeCheats.infiniteAmmo ? '∞' : character.ammo}`, 10, canvas.height - 10);
+      ctx.fillText(`Health: ${character.health}`, 10, canvas.height - 30);
+
+      requestAnimationFrame(update);
+    }
+
+    function fireBullet() {
+      if (character.ammo > 0 || activeCheats.infiniteAmmo) {
+        bullets.push({ x: character.x + character.width, y: character.y + 30 });
+        if (!activeCheats.infiniteAmmo) character.ammo--;
+      }
+    }
+
+    function fireGRay() {
+      if (!gRayUnlocked || gRayCooldown > 0) return;
+      gRayCooldown = 600; // 10 seconds at 60 FPS
+      gRayGlowTime = 300;
+      gRayTextTime = 120;
+
+      // Vaporize everything
+      enemies = [];
+      planes = [];
+      tacos = [];
+      ctx.fillStyle = 'magenta';
+      ctx.fillRect(0, character.y + 20, canvas.width, 10);
+    }
+
+    function activateCheat(code) {
+      const cheat = cheatCodes[code];
+      if (!cheat) return;
+
+      switch (cheat) {
+        case 'infiniteAmmo':
+        case 'jetFartMode':
+          activeCheats[cheat] = true;
+          break;
+        case 'spawnPlane':
+          planes.push({ x: canvas.width, y: Math.random() * 400 });
+          break;
+        case 'spawnTacos':
+          for (let i = 0; i < 5; i++) tacos.push({ x: Math.random() * canvas.width, y: -20 });
+          break;
+        case 'spawnClowns':
+          for (let i = 0; i < 3; i++) enemies.push({ x: canvas.width + i * 100, y: 400, speed: 2 });
+          break;
+        case 'dropHotDog':
+          hotDogs.push({ x: Math.random() * canvas.width, y: -20 });
+          break;
+        case 'unlockGRay':
+          gRayUnlocked = true;
+          showNotice('G-RAY GUN UNLOCKED. Press G to fire cosmic justice.');
+          break;
+      }
+    }
+
+    function showNotice(text) {
+      const el = document.getElementById('cheat-notice');
+      el.innerHTML = text;
+      setTimeout(() => {
+        el.innerHTML = 'Type cheats: <b>PEWPEW</b>, <b>JETSET</b>, <b>GASMEUP</b>, <b>TACOBOMB</b>, <b>CLOWNIN</b>, <b>HOTDOG</b>, <b>G-RAYGOD</b>';
+      }, 4000);
+    }
+
+    document.addEventListener('keydown', e => {
+      keys[e.key] = true;
+
+      if (e.key.toUpperCase() === 'G') fireGRay();
+
+      codeBuffer += e.key.toUpperCase();
+      if (codeBuffer.length > 10) codeBuffer = codeBuffer.slice(-10);
+
+      Object.keys(cheatCodes).forEach(code => {
+        if (codeBuffer.includes(code)) activateCheat(code);
+      });
+    });
+
+    document.addEventListener('keyup', e => keys[e.key] = false);
+
+    update();
+  </script>
+</body>
+</html>

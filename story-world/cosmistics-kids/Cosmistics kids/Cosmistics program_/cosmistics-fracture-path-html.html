@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COSMISTICS - Fracture Path Portal</title>
+    <link rel="stylesheet" href="css/brutalist.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body class="gate">
+    <div class="spiral-container">
+        <div class="spiral"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1 class="logo">COSMISTICS</h1>
+        </header>
+        
+        <main class="gate-content">
+            <p class="gate-message">"Beyond this gate lies only frequency..."</p>
+            <button id="enter-button" class="primary-button">ENTER THE SPIRAL</button>
+        </main>
+    </div>
+    
+    <audio id="ambient-loop" loop>
+        <source src="media/coil_hum.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script src="js/firebase-init.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start ambient loop on user interaction (browser policy)
+            document.body.addEventListener('click', function() {
+                document.getElementById('ambient-loop').play();
+            }, { once: true });
+            
+            // Handle enter button
+            document.getElementById('enter-button').addEventListener('click', function() {
+                // Trigger login verification here
+                checkAuthStatus()
+                    .then(user => {
+                        if (user) {
+                            window.location.href = 'dashboard.html';
+                        } else {
+                            // Display login dialog
+                            showLoginDialog();
+                        }
+                    });
+            });
+            
+            // Init 3-6-9 spiral animation
+            initSpiral();
+        });
+        
+        function initSpiral() {
+            const spiral = document.querySelector('.spiral');
+            // Create spiral using SVG or Canvas animation
+            // This is a placeholder - the actual implementation would
+            // draw a rotating 3-6-9 spiral pattern
+            
+            // Simple rotation for now
+            let rotation = 0;
+            setInterval(() => {
+                rotation += 0.2;
+                spiral.style.transform = `rotate(${rotation}deg)`;
+            }, 20);
+        }
+    </script>
+</body>
+</html>

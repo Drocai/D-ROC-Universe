@@ -1,0 +1,11 @@
+SENTENCE STRUCTURE - BURSTINESS:
+Mix short, punchy fragments with longer, sensory-heavy sentences. Create rhythm and flow that mimics human thought patterns.
+Example:
+❌ “The rain fell steadily, creating puddles on the street, and the neon signs reflected in the water, creating a beautiful but sad atmosphere.”
+✅ “Rain. Constant. Cold. Relentless. The neon signs bleed color into the puddles—purple and pink mixing with oil slicks, creating patterns that look almost intentional. Almost like something is being written in the reflection.”
+Pattern:
+	∙	Short fragment for impact
+	∙	Longer sentence for immersion
+	∙	Medium sentence to transition
+	∙	Short fragment to punctuate
+	∙	Repeat with variation

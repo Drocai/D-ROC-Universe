@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cosmistics Kids — Playable Build v1.0</title>
+  <style>
+    :root{
+      --bg:#0d0f1a;
+      --text:#f7f8fc;
+      --muted:#b9c0d0;
+      --accent:#9adcf7;
+      --accent2:#a7f3d0;
+      --card:#151a2b;
+      --glow: 0 0 24px rgba(154,220,247,0.35), 0 0 48px rgba(167,243,208,0.25);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Arial,sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(154,220,247,.15), transparent 60%),
+        radial-gradient(1000px 500px at 110% 10%, rgba(167,243,208,.10), transparent 60%),
+        #0d0f1a;
+      color:var(--text);
+      min-height:100dvh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .app{
+      width:min(980px, 96vw);
+      min-height: 86dvh;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:18px;
+      padding: clamp(14px, 2.5vw, 24px);
+      box-shadow: 0 10px 30px rgba(0,0,0,.35), var(--glow);
+      backdrop-filter: blur(6px);
+      position: relative;
+      overflow: hidden;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .logo{
+      width:42px;height:42px;border-radius:12px;
+      display:grid;place-items:center;
+      background: conic-gradient(from 200deg, #9adcf7, #a7f3d0, #9adcf7);
+      color:#06121a;font-weight:800;
+      box-shadow: var(--glow);
+    }
+    h1{font-size: clamp(20px, 2.2vw, 26px); margin:0;}
+    .sub{color:var(--muted);font-size: .95rem}
+    .progress{
+      margin: 12px 0 18px;
+      height: 10px; background:#0c1222; border-radius:999px;
+      border:1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+    .bar{height:100%; width:0%; background: linear-gradient(90deg,#9adcf7,#a7f3d0); transition: width .4s ease}
+    .screen{
+      display:none; animation:.35s up ease both;
+      background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.06);
+      border-radius:16px;
+      padding: clamp(16px, 2.5vw, 24px);
+      min-height: 60dvh;
+    }
+    .screen.active{display:block}
+    @keyframes up{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+    .btn{
+      appearance:none; border:none; cursor:pointer;
+      background: linear-gradient(180deg,#1d243b,#141a2d);
+      color:#e9f4ff; font-weight:700; letter-spacing:.2px;
+      padding:14px 18px; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow: var(--glow);
+      transition: transform .08s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btn.primary{background: linear-gradient(180deg,#8cd7ff,#77ecc8); color:#06202b}
+    .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .chips{display:flex; flex-wrap:wrap; gap:10px}
+    .chip{
+      padding:10px 12px;border-radius:999px;background:#141a2d;
+      border:1px solid rgba(255,255,255,0.08);cursor:pointer;color:#e9f4ff
+    }
+    .chip.active{background: linear-gradient(90deg,#8cd7ff33,#77ecc833); border-color:#8cd7ff88}
+    .grid{display:grid;grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap:14px}
+    .card{
+      border:1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      border-radius:14px;padding:14px
+    }
+    .character{
+      display:flex; align-items:center; gap:12px; padding:12px; border-radius:12px;
+      border:1px solid rgba(255,255,255,0.08);
+      background: radial-gradient(300px 140px at -10% -20%, rgba(140,215,255,.2), transparent 60%),
+                  radial-gradient(300px 140px at 120% 20%, rgba(119,236,200,.18), transparent 60%),
+                  rgba(255,255,255,0.02);
+    }
+    .character .em{font-size:30px; width:44px; height:44px; display:grid; place-items:center; background:#0c1222; border-radius:10px;border:1px solid rgba(255,255,255,0.06)}
+    .big{font-size: clamp(24px, 3.6vw, 40px); text-wrap: balance}
+    .center{display:grid; place-items:center; text-align:center}
+    .breath-circle{
+      width:min(60dvw, 300px); aspect-ratio:1/1; border-radius:999px;
+      border:2px dashed rgba(255,255,255,0.18);
+      display:grid;place-items:center; margin: 14px auto;
+      background: radial-gradient(120px circle at 50% 50%, rgba(167,243,208,.2), transparent 70%);
+      transition: transform 4s ease-in-out;
+    }
+    .breath-circle.expand{ transform: scale(1.25) }
+    .stars-area{
+      position:relative; height: 360px; border-radius:12px; overflow:hidden;
+      background: radial-gradient(400px 200px at 50% -20%, rgba(140,215,255,.15), transparent 60%),
+                  #0b1020; border:1px solid rgba(255,255,255,0.08);
+    }
+    .star{
+      position:absolute; width:16px; height:16px; border-radius:999px;
+      background:radial-gradient(circle at 30% 30%, #fff, #b6eefc 60%, transparent 61%);
+      box-shadow: 0 0 14px #9adcf7aa;
+      cursor:pointer;
+      animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float{
+      0%{ transform: translateY(0) }
+      50%{ transform: translateY(-16px) }
+      100%{ transform: translateY(0) }
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+      background:#0c1222; border:1px solid rgba(255,255,255,0.08); color:#e9f4ff
+    }
+    .right{margin-left:auto}
+    .footer{
+      display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:16px;
+      color:var(--muted); font-size:.92rem
+    }
+    .toggle{ display:flex;align-items:center;gap:10px }
+    input[type="checkbox"]{ width:18px; height:18px }
+    .hidden{display:none}
+    a.link{color:#8cd7ff;text-decoration:none;border-bottom:1px dashed #8cd7ff77}
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header>
+      <div class="logo">CK</div>
+      <div>
+        <h1>Cosmistics Kids</h1>
+        <div class="sub">Affirmations • Breathing • Star Collection</div>
+      </div>
+      <div class="right pill" id="statusPill">Step: Start</div>
+    </header>
+
+    <div class="progress"><div class="bar" id="bar"></div></div>
+
+    <!-- START SCREEN -->
+    <section class="screen active" id="screen-start">
+      <div class="grid">
+        <div class="card">
+          <h3>Choose Your Guide</h3>
+          <div class="chips" id="characterChips"></div>
+          <div class="btn-row">
+            <button class="btn primary" id="btnStart">Start Session</button>
+            <button class="btn" id="btnRandom">Random Guide</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Session Settings</h3>
+          <div class="toggle">
+            <label><input type="checkbox" id="toggleSound" checked /> Sound ON</label>
+          </div>
+          <div class="toggle">
+            <label><input type="checkbox" id="toggleSpeak" /> Speak affirmations (browser TTS)</label>
+          </div>
+          <p class="sub">Tip: You can add your own audio later. This demo uses WebAudio beeps & optional speech synthesis.</p>
+        </div>
+        <div class="card">
+          <h3>About</h3>
+          <p>Three quick steps to calm and confidence:</p>
+          <ul>
+            <li>Hear a gentle affirmation from your guide</li>
+            <li>Follow a guided breathing rhythm</li>
+            <li>Tap stars to celebrate your focus</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- AFFIRMATIONS -->
+    <section class="screen" id="screen-affirm">
+      <div class="center">
+        <div class="character">
+          <div class="em" id="charEm">✨</div>
+          <div>
+            <div class="sub">Your guide</div>
+            <div id="charName" style="font-weight:700">Cosmo</div>
+          </div>
+        </div>
+        <div class="big" id="affirmText" style="margin:18px 0;">You shine brightest when you're being you.</div>
+        <div class="btn-row">
+          <button class="btn" id="btnNextAffirm">New Affirmation</button>
+          <button class="btn primary" id="toBreathing">Next: Breathing</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BREATHING -->
+    <section class="screen" id="screen-breath">
+      <div class="center">
+        <div class="pill"><span id="breathLabel">Inhale</span></div>
+        <div class="breath-circle" id="breathCircle"></div>
+        <div class="sub">Follow the rhythm • 3 cycles</div>
+        <div class="btn-row">
+          <button class="btn" id="btnBreathStart">Start Breathing</button>
+          <button class="btn primary" id="toStars" disabled>Next: Star Game</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- STARS -->
+    <section class="screen" id="screen-stars">
+      <div class="pill">Time: <span id="timeLeft">10</span>s</div>
+      <div class="pill">Stars: <span id="starCount">0</span></div>
+      <div class="stars-area" id="starsArea"></div>
+      <div class="footer">
+        <span class="sub">Tap as many stars as you can!</span>
+        <button class="btn right" id="btnStartStars">Start 10s Round</button>
+      </div>
+    </section>
+
+    <!-- END -->
+    <section class="screen" id="screen-end">
+      <div class="center">
+        <div class="big" id="endTitle">Great session!</div>
+        <p class="sub" id="endSummary" style="max-width:60ch;margin:6px auto 0;">
+          You collected <strong id="finalStars">0</strong> stars. Remember: you’re made of the same stuff as stars.
+        </p>
+        <div class="btn-row">
+          <button class="btn" id="btnRestart">Play Again</button>
+          <a class="btn" href="#" id="btnMerch">Merch (placeholder)</a>
+          <button class="btn" id="btnShare">Share</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <span>v1.0 • Demo build • No external libraries</span>
+      <span class="right"><a class="link" href="#" id="exportBtn">Export Session JSON</a></span>
+    </div>
+  </div>
+
+<script>
+// ----------------------------
+// DATA
+// ----------------------------
+const CHARACTERS = [
+  {
+    key: 'cosmo', name: 'Cosmo', em: '🧙‍♂️', hue: 200,
+    affirm: [
+      "You shine brightest when you're being you.",
+      "The universe loves your light.",
+      "Even stars start small—keep growing."
+    ]
+  },
+  {
+    key: 'nova', name: 'Nova', em: '🌟', hue: 48,
+    affirm: [
+      "Your spark changes everything.",
+      "You're not too much—you're just right.",
+      "Born to glow. Made to grow."
+    ]
+  },
+  {
+    key: 'zennie', name: 'Zennie', em: '🧘‍♀️', hue: 160,
+    affirm: [
+      "Peace is your superpower.",
+      "Breathe deep. You already know.",
+      "Stillness makes the magic louder."
+    ]
+  },
+  {
+    key: 'bolt', name: 'Bolt', em: '⚡️', hue: 52,
+    affirm: [
+      "Your energy is a gift—use it well.",
+      "Move with purpose. You’re lightning.",
+      "Fast minds change the world."
+    ]
+  },
+  {
+    key: 'echo', name: 'Echo', em: '🎵', hue: 270,
+    affirm: [
+      "Your voice matters, even when it’s quiet.",
+      "Feel the sound inside you.",
+      "You’re heard, even in silence."
+    ]
+  },
+  {
+    key: 'koidon', name: 'Koidon', em: '🐏', hue: 10,
+    affirm: [
+      "Wisdom is power you can feel.",
+      "Every path is already inside you.",
+      "Let the stars guide, but you decide."
+    ]
+  }
+];
+
+const STEPS = ['start','affirm','breath','stars','end'];
+const S = {
+  stepIndex: 0,
+  guide: CHARACTERS[0],
+  stars: 0,
+  time: 10,
+  soundOn: true,
+  speakOn: false,
+  breathCycles: 3,
+  events: []
+};
+
+// ----------------------------
+// ELEMENTS
+// ----------------------------
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const screen = id => document.getElementById(id);
+
+const bar = $("#bar");
+const statusPill = $("#statusPill");
+const chipsWrap = $("#characterChips");
+const btnStart = $("#btnStart");
+const btnRandom = $("#btnRandom");
+const toggleSound = $("#toggleSound");
+const toggleSpeak = $("#toggleSpeak");
+
+const charEm = $("#charEm");
+const charName = $("#charName");
+const affirmText = $("#affirmText");
+const btnNextAffirm = $("#btnNextAffirm");
+const toBreathing = $("#toBreathing");
+
+const breathLabel = $("#breathLabel");
+const breathCircle = $("#breathCircle");
+const btnBreathStart = $("#btnBreathStart");
+const toStars = $("#toStars");
+
+const starsArea = $("#starsArea");
+const timeLeftEl = $("#timeLeft");
+const starCountEl = $("#starCount");
+const btnStartStars = $("#btnStartStars");
+
+const endTitle = $("#endTitle");
+const endSummary = $("#endSummary");
+const finalStars = $("#finalStars");
+const btnRestart = $("#btnRestart");
+const btnShare = $("#btnShare");
+const exportBtn = $("#exportBtn");
+const btnMerch = $("#btnMerch");
+
+// ----------------------------
+// INIT
+// ----------------------------
+function init(){
+  // character chips
+  chipsWrap.innerHTML = '';
+  CHARACTERS.forEach((c,i)=>{
+    const chip = document.createElement('button');
+    chip.className = 'chip' + (i===0?' active':'');
+    chip.dataset.key = c.key;
+    chip.innerHTML = `${c.em} ${c.name}`;
+    chip.onclick = () => selectGuide(c.key);
+    chipsWrap.appendChild(chip);
+  });
+  updateUI();
+}
+function selectGuide(key){
+  const g = CHARACTERS.find(x=>x.key===key);
+  if(!g) return;
+  S.guide = g;
+  $$(".chip").forEach(ch=>ch.classList.toggle('active', ch.dataset.key===key));
+  beep(880, 0.05);
+}
+function setStep(i){
+  S.stepIndex = Math.max(0, Math.min(STEPS.length-1, i));
+  $$(".screen").forEach(s=>s.classList.remove('active'));
+  screen('screen-'+STEPS[S.stepIndex]).classList.add('active');
+  const pct = (S.stepIndex)/(STEPS.length-1)*100;
+  bar.style.width = pct + '%';
+  statusPill.textContent = 'Step: ' + STEPS[S.stepIndex].toUpperCase();
+  S.events.push({t:Date.now(), type:'step', step:STEPS[S.stepIndex]});
+}
+
+// ----------------------------
+// AFFIRMATIONS
+// ----------------------------
+function showAffirmation(){
+  const lines = S.guide.affirm;
+  const text = lines[Math.floor(Math.random()*lines.length)];
+  affirmText.textContent = text;
+  charEm.textContent = S.guide.em;
+  charName.textContent = S.guide.name;
+  if (S.speakOn) speak(text);
+  chime();
+}
+
+// ----------------------------
+// BREATHING
+// ----------------------------
+let breathTimer = null;
+function startBreathing(){
+  let cycles = S.breathCycles;
+  btnBreathStart.disabled = true;
+  toStars.disabled = true;
+  const runCycle = () => {
+    if (cycles<=0){
+      toStars.disabled = false;
+      breathLabel.textContent = "Nice work";
+      beep(660, 0.12); chime();
+      return;
+    }
+    cycles--;
+    // Inhale 4s
+    breathLabel.textContent = "Inhale";
+    breathCircle.classList.add('expand');
+    beep(440, 0.08);
+    breathTimer = setTimeout(()=>{
+      // Hold 2s
+      breathLabel.textContent = "Hold";
+      beep(520, 0.06);
+      breathTimer = setTimeout(()=>{
+        // Exhale 4s
+        breathLabel.textContent = "Exhale";
+        breathCircle.classList.remove('expand');
+        beep(360, 0.08);
+        breathTimer = setTimeout(runCycle, 4000);
+      }, 2000);
+    }, 4000);
+  };
+  runCycle();
+}
+
+// ----------------------------
+// STAR GAME
+// ----------------------------
+let starTimer = null, starTick = null;
+function startStarRound(){
+  // reset
+  S.stars = 0; updateStars();
+  S.time = 10; timeLeftEl.textContent = S.time;
+  starsArea.innerHTML = '';
+  btnStartStars.disabled = true;
+
+  // spawn loop
+  starTick = setInterval(()=>{
+    spawnStar();
+  }, 400);
+
+  // countdown
+  starTimer = setInterval(()=>{
+    S.time--; timeLeftEl.textContent = S.time;
+    if (S.time<=0){
+      endStarRound();
+    }
+  }, 1000);
+}
+function spawnStar(){
+  const star = document.createElement('div');
+  star.className = 'star';
+  const x = Math.random()*(starsArea.clientWidth-24);
+  const y = Math.random()*(starsArea.clientHeight-24);
+  star.style.left = x+'px'; star.style.top = y+'px';
+  star.onclick = ()=>{
+    S.stars++; updateStars(); sparkle(star);
+    starsArea.removeChild(star);
+    beep(1040, 0.04);
+  };
+  starsArea.appendChild(star);
+  // auto-remove after a while
+  setTimeout(()=>{ star.remove?.() }, 2500);
+}
+function endStarRound(){
+  clearInterval(starTimer); clearInterval(starTick);
+  starTimer=null; starTick=null;
+  setTimeout(()=>{
+    // go end
+    finalStars.textContent = S.stars;
+    setStep(4);
+  }, 400);
+}
+function updateStars(){
+  starCountEl.textContent = S.stars;
+}
+
+// ----------------------------
+// AUDIO (WebAudio simple)
+// ----------------------------
+let ctx;
+function audioCtx(){
+  if (!ctx && S.soundOn) ctx = new (window.AudioContext || window.webkitAudioContext)();
+  return ctx;
+}
+function beep(freq=440, dur=0.08){
+  if (!S.soundOn) return;
+  const ac = audioCtx(); if (!ac) return;
+  const o = ac.createOscillator();
+  const g = ac.createGain();
+  o.type = 'sine'; o.frequency.value = freq;
+  o.connect(g); g.connect(ac.destination);
+  const now = ac.currentTime;
+  g.gain.setValueAtTime(0.001, now);
+  g.gain.exponentialRampToValueAtTime(0.08, now+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, now+dur);
+  o.start(); o.stop(now+dur+0.02);
+}
+function chime(){
+  beep(660, 0.09); setTimeout(()=>beep(990,0.08), 80);
+}
+function sparkle(el){
+  // tiny visual feedback
+  el.style.transform = 'scale(1.2)';
+  setTimeout(()=> el.style.transform='', 80);
+}
+
+// ----------------------------
+// SPEECH (optional)
+// ----------------------------
+function speak(text){
+  try{
+    const synth = window.speechSynthesis;
+    if (!synth) return;
+    const ut = new SpeechSynthesisUtterance(text);
+    ut.rate = 1.05; ut.pitch = 1.05;
+    synth.cancel(); synth.speak(ut);
+  }catch(e){/* ignore */}
+}
+
+// ----------------------------
+// EXPORT
+// ----------------------------
+function exportSession(){
+  const out = {
+    at: new Date().toISOString(),
+    guide: S.guide.name,
+    stars: S.stars,
+    steps: STEPS.slice(0, S.stepIndex+1),
+    events: S.events
+  };
+  const blob = new Blob([JSON.stringify(out,null,2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `cosmistics-kids-session-${Date.now()}.json`; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+
+// ----------------------------
+// UI HOOKUP
+// ----------------------------
+btnStart.onclick = ()=>{ setStep(1); showAffirmation(); };
+btnRandom.onclick = ()=>{
+  const rnd = CHARACTERS[Math.floor(Math.random()*CHARACTERS.length)];
+  selectGuide(rnd.key);
+};
+btnNextAffirm.onclick = ()=> showAffirmation();
+toBreathing.onclick = ()=> setStep(2);
+
+btnBreathStart.onclick = ()=> startBreathing();
+toStars.onclick = ()=> setStep(3);
+
+btnStartStars.onclick = ()=> startStarRound();
+
+btnRestart.onclick = ()=>{ setStep(0); };
+btnShare.onclick = async ()=>{
+  const text = `I just finished a Cosmistics Kids session with ${S.guide.name} and collected ${S.stars} stars!`;
+  if (navigator.share){
+    try{ await navigator.share({text}); }catch(e){}
+  } else {
+    navigator.clipboard?.writeText(text);
+    alert("Copied to clipboard!");
+  }
+};
+exportBtn.onclick = exportSession;
+
+toggleSound.onchange = (e)=>{
+  S.soundOn = e.target.checked;
+  if (!S.soundOn && ctx){ try{ ctx.close(); }catch(_){} ctx = null; }
+};
+toggleSpeak.onchange = (e)=>{ S.speakOn = e.target.checked; };
+
+// initial step
+setStep(0);
+init();
+
+</script>
+</body>
+</html>

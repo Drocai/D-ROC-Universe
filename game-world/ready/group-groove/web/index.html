@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Group Groove - Making Music Great Again</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #8A2BE2;
+      --primary-dark: #6B1FB3;
+      --secondary: #FFD700;
+      --background: #0f0f0f;
+      --card: #1a1a1a;
+      --card-hover: #252525;
+      --text: #ffffff;
+      --text-secondary: #888888;
+      --border: #333333;
+      --success: #4CAF50;
+      --error: #FF4444;
+      --gradient: linear-gradient(135deg, #8A2BE2 0%, #FF6B6B 50%, #FFD700 100%);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--background); color: var(--text); min-height: 100vh; }
+    
+    .loading-screen { position: fixed; inset: 0; background: var(--background); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 1000; }
+    .loading-screen.hidden { display: none; }
+    .loading-logo { font-size: 64px; margin-bottom: 16px; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+    .loading-text { color: var(--text-secondary); }
+    
+    .app { display: none; min-height: 100vh; }
+    .app.visible { display: block; }
+    
+    .auth-screen { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; background: radial-gradient(ellipse at top, #1a1a2e 0%, var(--background) 70%); }
+    .auth-logo { font-size: 80px; margin-bottom: 16px; }
+    .auth-title { font-size: 48px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    .auth-subtitle { color: var(--text-secondary); font-size: 18px; margin-bottom: 8px; }
+    .auth-tagline { color: var(--secondary); font-size: 14px; margin-bottom: 48px; letter-spacing: 2px; }
+    .auth-form { width: 100%; max-width: 400px; background: var(--card); padding: 32px; border-radius: 24px; border: 1px solid var(--border); }
+    .auth-tabs { display: flex; margin-bottom: 24px; background: var(--background); border-radius: 12px; padding: 4px; }
+    .auth-tab { flex: 1; padding: 12px; border: none; background: transparent; color: var(--text-secondary); font-size: 14px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+    .auth-tab.active { background: var(--primary); color: white; }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; color: var(--text-secondary); font-size: 12px; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px; }
+    .form-input { width: 100%; padding: 14px 16px; background: var(--background); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 16px; transition: border-color 0.2s; }
+    .form-input:focus { outline: none; border-color: var(--primary); }
+    .form-input::placeholder { color: var(--text-secondary); }
+    
+    .btn { width: 100%; padding: 16px 24px; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+    .btn-secondary:hover { background: var(--primary); color: white; }
+    .btn-icon { width: 44px; height: 44px; padding: 0; border-radius: 50%; font-size: 20px; }
+    
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: var(--card); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .header-brand { display: flex; align-items: center; gap: 12px; }
+    .header-logo { font-size: 28px; }
+    .header-title { font-size: 20px; font-weight: 700; color: var(--primary); }
+    .header-actions { display: flex; gap: 12px; align-items: center; }
+    
+    .home-screen { max-width: 600px; margin: 0 auto; padding: 24px; }
+    .greeting { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+    .greeting-sub { color: var(--text-secondary); margin-bottom: 32px; }
+    .home-card { background: var(--card); border-radius: 20px; padding: 24px; margin-bottom: 20px; border: 1px solid var(--border); }
+    .home-card-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+    .home-card-desc { color: var(--text-secondary); margin-bottom: 16px; font-size: 14px; }
+    .premium-card { border: 2px dashed var(--secondary); background: linear-gradient(135deg, rgba(138, 43, 226, 0.1) 0%, rgba(255, 215, 0, 0.1) 100%); }
+    
+    .tier-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; border: 1px solid; }
+    .tier-free { border-color: var(--text-secondary); color: var(--text-secondary); }
+    .tier-premium { border-color: var(--secondary); color: var(--secondary); }
+    
+    .room-screen { display: none; }
+    .room-screen.visible { display: block; }
+    .room-content { display: grid; grid-template-columns: 1fr 320px; gap: 24px; padding: 24px; max-width: 1400px; margin: 0 auto; }
+    @media (max-width: 900px) { .room-content { grid-template-columns: 1fr; } }
+    
+    .now-playing { background: linear-gradient(135deg, var(--card) 0%, #2a1f3d 100%); border-radius: 24px; padding: 32px; margin-bottom: 24px; border: 1px solid var(--border); text-align: center; }
+    .now-playing-label { font-size: 12px; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+    .now-playing-artwork { width: 200px; height: 200px; border-radius: 16px; background: var(--background); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 64px; overflow: hidden; }
+    .now-playing-artwork img { width: 100%; height: 100%; object-fit: cover; }
+    .now-playing-title { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .now-playing-artist { color: var(--text-secondary); font-size: 16px; margin-bottom: 20px; }
+    .skip-section { margin-top: 24px; }
+    .skip-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 12px 24px; border-radius: 30px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+    .skip-btn:hover { background: var(--error); border-color: var(--error); }
+    .skip-progress-container { margin-top: 12px; background: var(--border); height: 6px; border-radius: 3px; overflow: hidden; }
+    .skip-progress { height: 100%; background: var(--error); width: 0%; transition: width 0.3s; }
+    .host-controls { display: flex; gap: 12px; justify-content: center; margin-top: 20px; }
+    
+    .queue-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .queue-title { font-size: 20px; font-weight: 700; }
+    .add-song-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 20px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .add-song-btn:hover { transform: scale(1.05); }
+    .queue-list { display: flex; flex-direction: column; gap: 12px; }
+    .queue-item { display: flex; align-items: center; gap: 16px; background: var(--card); padding: 16px; border-radius: 16px; border: 1px solid var(--border); transition: all 0.2s; }
+    .queue-item:hover { background: var(--card-hover); transform: translateX(4px); }
+    .queue-position { font-size: 16px; font-weight: 700; color: var(--primary); width: 32px; }
+    .queue-artwork { width: 48px; height: 48px; border-radius: 8px; background: var(--background); overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .queue-artwork img { width: 100%; height: 100%; object-fit: cover; }
+    .queue-info { flex: 1; min-width: 0; }
+    .queue-song-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .queue-song-artist { color: var(--text-secondary); font-size: 14px; }
+    .queue-added-by { color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
+    .vote-controls { display: flex; align-items: center; gap: 8px; }
+    .vote-btn { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--background); cursor: pointer; font-size: 16px; transition: all 0.2s; }
+    .vote-btn:hover { transform: scale(1.1); }
+    .vote-btn.active { background: var(--primary); }
+    .vote-score { font-weight: 700; min-width: 32px; text-align: center; }
+    .vote-score.positive { color: var(--success); }
+    .vote-score.negative { color: var(--error); }
+    
+    .sidebar { display: flex; flex-direction: column; gap: 20px; }
+    .sidebar-card { background: var(--card); border-radius: 20px; padding: 20px; border: 1px solid var(--border); }
+    .sidebar-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+    .room-code-badge { background: var(--primary); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 700; font-size: 14px; letter-spacing: 2px; cursor: pointer; display: inline-block; }
+    .member-count { display: flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 14px; margin-top: 12px; }
+    .member-list { display: flex; flex-direction: column; gap: 12px; }
+    .member-item { display: flex; align-items: center; gap: 12px; }
+    .member-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
+    .member-name { font-weight: 500; }
+    .member-host { font-size: 12px; color: var(--secondary); }
+    .chat-messages { max-height: 200px; overflow-y: auto; margin-bottom: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .chat-message { background: var(--background); padding: 10px 14px; border-radius: 12px; }
+    .chat-sender { font-size: 12px; color: var(--primary); margin-bottom: 2px; }
+    .chat-content { font-size: 14px; }
+    .chat-input-container { display: flex; gap: 8px; }
+    .chat-input { flex: 1; }
+    
+    .modal { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8); display: none; align-items: center; justify-content: center; z-index: 200; padding: 24px; }
+    .modal.visible { display: flex; }
+    .modal-content { background: var(--card); border-radius: 24px; width: 100%; max-width: 500px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border); }
+    .modal-title { font-size: 20px; font-weight: 700; }
+    .modal-close { width: 36px; height: 36px; border-radius: 50%; border: none; background: var(--background); color: var(--text); font-size: 20px; cursor: pointer; }
+    .modal-body { padding: 20px 24px; overflow-y: auto; flex: 1; }
+    .search-input-container { display: flex; gap: 12px; margin-bottom: 20px; }
+    .search-input { flex: 1; }
+    .search-results { display: flex; flex-direction: column; gap: 12px; }
+    .search-result { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--background); border-radius: 12px; cursor: pointer; transition: all 0.2s; }
+    .search-result:hover { background: var(--card-hover); }
+    .search-result-artwork { width: 48px; height: 48px; border-radius: 8px; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--card); }
+    .search-result-artwork img { width: 100%; height: 100%; object-fit: cover; }
+    .search-result-info { flex: 1; min-width: 0; }
+    .search-result-title { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .search-result-artist { color: var(--text-secondary); font-size: 14px; }
+    .search-result-add { font-size: 24px; color: var(--primary); }
+    
+    .toast-container { position: fixed; top: 24px; right: 24px; z-index: 300; display: flex; flex-direction: column; gap: 12px; }
+    .toast { background: var(--card); padding: 16px 20px; border-radius: 12px; border-left: 4px solid var(--primary); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); animation: slideIn 0.3s ease; }
+    .toast.success { border-color: var(--success); }
+    .toast.error { border-color: var(--error); }
+    @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--text-secondary); }
+    .empty-emoji { font-size: 48px; margin-bottom: 16px; }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-logo">🎵</div>
+    <div class="loading-text">Loading Group Groove...</div>
+  </div>
+
+  <div class="app" id="app">
+    <div class="auth-screen" id="authScreen">
+      <div class="auth-logo">🎵</div>
+      <h1 class="auth-title">Group Groove</h1>
+      <p class="auth-subtitle">Making Music Great Again</p>
+      <p class="auth-tagline">DEMOCRACY • DISCOVERY • DOLLARS</p>
+      
+      <div class="auth-form">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="signin">Sign In</button>
+          <button class="auth-tab" data-tab="signup">Sign Up</button>
+        </div>
+        <form id="signinForm">
+          <div class="form-group"><label class="form-label">Email or Username</label><input type="text" class="form-input" id="signinEmail" placeholder="you@example.com" required></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signinPassword" placeholder="••••••••" required></div>
+          <button type="submit" class="btn btn-primary">Sign In</button>
+        </form>
+        <form id="signupForm" style="display: none;">
+          <div class="form-group"><label class="form-label">Name</label><input type="text" class="form-input" id="signupName" placeholder="Your Name" required></div>
+          <div class="form-group"><label class="form-label">Username</label><input type="text" class="form-input" id="signupUsername" placeholder="cooluser123" required></div>
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input" id="signupEmail" placeholder="you@example.com" required></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input" id="signupPassword" placeholder="••••••••" minlength="6" required></div>
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="main-screen" id="mainScreen" style="display: none;">
+      <header class="header">
+        <div class="header-brand"><span class="header-logo">🎵</span><span class="header-title">Group Groove</span></div>
+        <div class="header-actions">
+          <span class="tier-badge tier-free" id="tierBadge">🆓 Free</span>
+          <button class="btn btn-icon btn-secondary" id="signoutBtn" title="Sign Out">👤</button>
+        </div>
+      </header>
+
+      <div class="home-screen" id="homeScreen">
+        <h1 class="greeting">Hey, <span id="userName">there</span>! 👋</h1>
+        <p class="greeting-sub">Ready to make some music magic?</p>
+        <div class="home-card"><h2 class="home-card-title">🎉 Create a Room</h2><p class="home-card-desc">Start a listening session and invite your friends</p><button class="btn btn-primary" id="createRoomBtn">Create Room</button></div>
+        <div class="home-card"><h2 class="home-card-title">🚀 Join a Room</h2><p class="home-card-desc">Enter a room code to join the party</p><div class="form-group" style="margin-bottom: 12px;"><input type="text" class="form-input" id="joinRoomCode" placeholder="Room Code (e.g., PARTY1)" maxlength="6" style="text-transform: uppercase;"></div><button class="btn btn-primary" id="joinRoomBtn">Join Room</button></div>
+        <div class="home-card premium-card"><h2 class="home-card-title">⭐ Upgrade to Premium</h2><p class="home-card-desc">• Unlimited requests • Priority voting • Create groups • 50 person rooms</p><button class="btn btn-secondary" disabled>🔒 Coming Soon</button></div>
+      </div>
+
+      <div class="room-screen" id="roomScreen">
+        <div class="room-content">
+          <div class="queue-section">
+            <div class="now-playing">
+              <div class="now-playing-label">NOW PLAYING</div>
+              <div class="now-playing-artwork" id="nowPlayingArtwork">🎵</div>
+              <div class="now-playing-title" id="nowPlayingTitle">No song playing</div>
+              <div class="now-playing-artist" id="nowPlayingArtist">-</div>
+              <audio id="audioPlayer" style="width: 100%; margin-top: 16px;" controls></audio>
+              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">🎧 30-second preview (Spotify limitation)</div>
+              <div class="skip-section">
+                <button class="skip-btn" id="skipVoteBtn">⏭️ Vote Skip (<span id="skipCount">0</span>/<span id="skipThreshold">1</span>)</button>
+                <div class="skip-progress-container"><div class="skip-progress" id="skipProgress"></div></div>
+              </div>
+              <div class="host-controls" id="hostControls" style="display: none;"><button class="btn btn-primary" id="playNextBtn">▶️ Play Next</button></div>
+            </div>
+            <div class="queue-header"><h2 class="queue-title">Up Next</h2><button class="add-song-btn" id="addSongBtn">+ Add Song</button></div>
+            <div class="queue-list" id="queueList"><div class="empty-state"><div class="empty-emoji">🎵</div><p>Queue is empty</p></div></div>
+          </div>
+          <div class="sidebar">
+            <div class="sidebar-card"><h3 class="sidebar-title">📍 Room Info</h3><div class="room-code-badge" id="roomCodeBadge" title="Click to copy">XXXXXX</div><div class="member-count"><span>👥</span><span id="memberCountText">0 listeners</span></div><button class="btn btn-secondary" id="leaveRoomBtn" style="margin-top: 16px;">Leave Room</button></div>
+            <div class="sidebar-card"><h3 class="sidebar-title">👥 Members</h3><div class="member-list" id="memberList"></div></div>
+            <div class="sidebar-card"><h3 class="sidebar-title">💬 Chat</h3><div class="chat-messages" id="chatMessages"></div><div class="chat-input-container"><input type="text" class="form-input chat-input" id="chatInput" placeholder="Say something..."><button class="btn btn-primary btn-icon" id="sendChatBtn">➤</button></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="searchModal">
+      <div class="modal-content">
+        <div class="modal-header"><h2 class="modal-title">Add Song</h2><button class="modal-close" id="closeSearchBtn">×</button></div>
+        <div class="modal-body">
+          <div class="search-input-container"><input type="text" class="form-input search-input" id="searchInput" placeholder="Search songs..."><button class="btn btn-primary" id="searchBtn">🔍</button></div>
+          <div class="search-results" id="searchResults"><div class="empty-state"><div class="empty-emoji">🔍</div><p>Search for songs</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+    const API_URL = 'http://localhost:8787';
+    const POLL_INTERVAL = 3000;
+    let state = { user: null, token: null, currentRoom: null, pollInterval: null };
+
+    async function api(endpoint, options = {}) {
+      const headers = { 'Content-Type': 'application/json', ...options.headers };
+      if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
+      const response = await fetch(`${API_URL}${endpoint}`, { ...options, headers, body: options.body ? JSON.stringify(options.body) : undefined });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Request failed');
+      return data;
+    }
+
+    const $ = s => document.querySelector(s);
+    const $$ = s => document.querySelectorAll(s);
+
+    function showToast(msg, type = 'info') {
+      const t = document.createElement('div');
+      t.className = `toast ${type}`;
+      t.textContent = msg;
+      $('#toastContainer').appendChild(t);
+      setTimeout(() => t.remove(), 4000);
+    }
+
+    function saveAuth() { localStorage.setItem('groupgroove_auth', JSON.stringify({ token: state.token, user: state.user })); }
+    function loadAuth() { try { const s = localStorage.getItem('groupgroove_auth'); if (s) { const { token, user } = JSON.parse(s); state.token = token; state.user = user; return true; } } catch(e){} return false; }
+    function clearAuth() { state.token = null; state.user = null; localStorage.removeItem('groupgroove_auth'); }
+
+    function showScreen(screen) {
+      $('#authScreen').style.display = screen === 'auth' ? 'flex' : 'none';
+      $('#mainScreen').style.display = (screen === 'home' || screen === 'room') ? 'block' : 'none';
+      $('#homeScreen').style.display = screen === 'home' ? 'block' : 'none';
+      $('#roomScreen').classList.toggle('visible', screen === 'room');
+    }
+
+    async function handleSignin(e) {
+      e.preventDefault();
+      try {
+        const data = await api('/api/auth/signin', { method: 'POST', body: { email: $('#signinEmail').value, password: $('#signinPassword').value } });
+        state.token = data.token; state.user = data.user; saveAuth(); showMainScreen(); showToast('Welcome back!', 'success');
+      } catch (error) { showToast(error.message, 'error'); }
+    }
+
+    async function handleSignup(e) {
+      e.preventDefault();
+      try {
+        const data = await api('/api/auth/signup', { method: 'POST', body: { name: $('#signupName').value, username: $('#signupUsername').value, email: $('#signupEmail').value, password: $('#signupPassword').value } });
+        state.token = data.token; state.user = data.user; saveAuth(); showMainScreen(); showToast('Account created!', 'success');
+      } catch (error) { showToast(error.message, 'error'); }
+    }
+
+    function handleSignout() { clearAuth(); stopPolling(); showScreen('auth'); }
+
+    function showMainScreen() { $('#userName').textContent = state.user?.name || 'there'; showScreen('home'); }
+
+    async function createRoom() {
+      try { const { room } = await api('/api/rooms', { method: 'POST', body: { name: `${state.user.name}'s Room` } }); state.currentRoom = room; showRoomScreen(); showToast('Room created!', 'success'); }
+      catch (error) { showToast(error.message, 'error'); }
+    }
+
+    async function joinRoom() {
+      const code = $('#joinRoomCode').value.trim().toUpperCase();
+      if (!code) return showToast('Enter a room code', 'error');
+      try { const { room } = await api('/api/rooms/join', { method: 'POST', body: { code } }); state.currentRoom = room; showRoomScreen(); showToast('Joined!', 'success'); }
+      catch (error) { showToast(error.message, 'error'); }
+    }
+
+    async function leaveRoom() { try { await api(`/api/rooms/${state.currentRoom.id}`, { method: 'DELETE' }); } catch(e){} stopPolling(); state.currentRoom = null; showScreen('home'); }
+
+    function showRoomScreen() { $('#roomCodeBadge').textContent = state.currentRoom.code; showScreen('room'); startPolling(); }
+
+    function startPolling() { fetchRoomData(); state.pollInterval = setInterval(fetchRoomData, POLL_INTERVAL); }
+    function stopPolling() { if (state.pollInterval) { clearInterval(state.pollInterval); state.pollInterval = null; } }
+
+    async function fetchRoomData() {
+      if (!state.currentRoom) return;
+      try { const data = await api(`/api/rooms/${state.currentRoom.id}`); updateRoomUI(data); } catch (error) { console.error(error); }
+    }
+
+    function updateRoomUI(data) {
+      const np = data.nowPlaying;
+      $('#nowPlayingTitle').textContent = np?.title || 'No song playing';
+      $('#nowPlayingArtist').textContent = np?.artist || '-';
+      $('#nowPlayingArtwork').innerHTML = np?.artwork_url ? `<img src="${np.artwork_url}" alt="">` : '🎵';
+
+      // Handle audio playback
+      const audioPlayer = $('#audioPlayer');
+      if (np?.preview_url) {
+        if (audioPlayer.src !== np.preview_url) {
+          audioPlayer.src = np.preview_url;
+          audioPlayer.play().catch(e => console.log('Autoplay prevented:', e));
+        }
+      } else {
+        audioPlayer.removeAttribute('src');
+        audioPlayer.load();
+      }
+      
+      const sc = data.skipVoteCount || 0, st = data.skipThreshold || 1;
+      $('#skipCount').textContent = sc; $('#skipThreshold').textContent = st;
+      $('#skipProgress').style.width = `${(sc / st) * 100}%`;
+      $('#hostControls').style.display = data.isHost ? 'flex' : 'none';
+      
+      const members = data.members || [];
+      $('#memberCountText').textContent = `${members.length} listener${members.length !== 1 ? 's' : ''}`;
+      $('#memberList').innerHTML = members.map(m => `<div class="member-item"><div class="member-avatar">${m.name.charAt(0).toUpperCase()}</div><div><div class="member-name">${m.name}</div>${m.is_dj ? '<div class="member-host">👑 Host</div>' : ''}</div></div>`).join('');
+      
+      const queue = data.queue || [];
+      $('#queueList').innerHTML = queue.length === 0 ? '<div class="empty-state"><div class="empty-emoji">🎵</div><p>Queue is empty</p></div>' :
+        queue.map((item, i) => { const score = item.vote_score || 0; const cls = score > 0 ? 'positive' : score < 0 ? 'negative' : '';
+          return `<div class="queue-item"><span class="queue-position">#${i+1}</span><div class="queue-artwork">${item.artwork_url ? `<img src="${item.artwork_url}">` : '🎵'}</div><div class="queue-info"><div class="queue-song-title">${item.title}</div><div class="queue-song-artist">${item.artist}</div><div class="queue-added-by">Added by ${item.added_by_name || 'Someone'}</div></div><div class="vote-controls"><button class="vote-btn ${item.user_vote === 'up' ? 'active' : ''}" onclick="vote('${item.id}', 'up')">👍</button><span class="vote-score ${cls}">${score}</span><button class="vote-btn ${item.user_vote === 'down' ? 'active' : ''}" onclick="vote('${item.id}', 'down')">👎</button></div></div>`; }).join('');
+      
+      const msgs = data.messages || [];
+      $('#chatMessages').innerHTML = msgs.slice(-20).map(m => `<div class="chat-message"><div class="chat-sender">${m.user_name}</div><div class="chat-content">${m.content}</div></div>`).join('');
+    }
+
+    async function vote(queueItemId, voteType) { try { await api(`/api/rooms/${state.currentRoom.id}/vote`, { method: 'POST', body: { queueItemId, voteType } }); fetchRoomData(); } catch(e) { showToast(e.message, 'error'); } }
+
+    async function skipVote() {
+      try { const data = await api(`/api/rooms/${state.currentRoom.id}`); if (!data.nowPlaying) return;
+        const result = await api(`/api/rooms/${state.currentRoom.id}/skip`, { method: 'POST', body: { queueItemId: data.nowPlaying.id } });
+        if (result.skipped) showToast('Song skipped!', 'success'); fetchRoomData();
+      } catch(e) { showToast(e.message, 'error'); }
+    }
+
+    async function playNext() { try { await api(`/api/rooms/${state.currentRoom.id}/play-next`, { method: 'POST', body: {} }); fetchRoomData(); } catch(e) { showToast(e.message, 'error'); } }
+
+    async function sendChat() { const content = $('#chatInput').value.trim(); if (!content) return;
+      try { await api(`/api/rooms/${state.currentRoom.id}/messages`, { method: 'POST', body: { content } }); $('#chatInput').value = ''; fetchRoomData(); } catch(e) { showToast(e.message, 'error'); }
+    }
+
+    function openSearchModal() { $('#searchModal').classList.add('visible'); $('#searchInput').focus(); }
+    function closeSearchModal() { $('#searchModal').classList.remove('visible'); $('#searchInput').value = ''; $('#searchResults').innerHTML = '<div class="empty-state"><div class="empty-emoji">🔍</div><p>Search for songs</p></div>'; }
+
+    async function searchSongs() {
+      const query = $('#searchInput').value.trim(); if (!query) return;
+      try { const { tracks } = await api(`/api/spotify/search?q=${encodeURIComponent(query)}`);
+        $('#searchResults').innerHTML = !tracks?.length ? '<div class="empty-state"><div class="empty-emoji">😕</div><p>No results</p></div>' :
+          tracks.map(t => `<div class="search-result" onclick='addSong(${JSON.stringify(t).replace(/'/g, "\\'")})'><div class="search-result-artwork">${t.artworkUrl ? `<img src="${t.artworkUrl}">` : '🎵'}</div><div class="search-result-info"><div class="search-result-title">${t.title}</div><div class="search-result-artist">${t.artist}</div></div><span class="search-result-add">+</span></div>`).join('');
+      } catch(e) { showToast(e.message, 'error'); }
+    }
+
+    async function addSong(track) {
+      try { await api(`/api/rooms/${state.currentRoom.id}/queue`, { method: 'POST', body: { spotifyId: track.spotifyId, title: track.title, artist: track.artist, album: track.album, artworkUrl: track.artworkUrl, durationMs: track.durationMs, previewUrl: track.previewUrl } });
+        showToast(`Added "${track.title}"!`, 'success'); closeSearchModal(); fetchRoomData();
+      } catch(e) { showToast(e.message, 'error'); }
+    }
+
+    function copyRoomCode() { const code = state.currentRoom?.code; if (code) { navigator.clipboard.writeText(code).then(() => showToast(`Code ${code} copied!`, 'success')).catch(() => showToast(`Code: ${code}`, 'info')); } }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      $$('.auth-tab').forEach(tab => tab.addEventListener('click', () => { $$('.auth-tab').forEach(t => t.classList.remove('active')); tab.classList.add('active'); const isSignin = tab.dataset.tab === 'signin'; $('#signinForm').style.display = isSignin ? 'block' : 'none'; $('#signupForm').style.display = isSignin ? 'none' : 'block'; }));
+      $('#signinForm').addEventListener('submit', handleSignin);
+      $('#signupForm').addEventListener('submit', handleSignup);
+      $('#signoutBtn').addEventListener('click', handleSignout);
+      $('#createRoomBtn').addEventListener('click', createRoom);
+      $('#joinRoomBtn').addEventListener('click', joinRoom);
+      $('#leaveRoomBtn').addEventListener('click', leaveRoom);
+      $('#roomCodeBadge').addEventListener('click', copyRoomCode);
+      $('#addSongBtn').addEventListener('click', openSearchModal);
+      $('#skipVoteBtn').addEventListener('click', skipVote);
+      $('#playNextBtn').addEventListener('click', playNext);
+      $('#sendChatBtn').addEventListener('click', sendChat);
+      $('#chatInput').addEventListener('keypress', e => { if (e.key === 'Enter') sendChat(); });
+      $('#closeSearchBtn').addEventListener('click', closeSearchModal);
+      $('#searchBtn').addEventListener('click', searchSongs);
+      $('#searchInput').addEventListener('keypress', e => { if (e.key === 'Enter') searchSongs(); });
+      $('#searchModal').addEventListener('click', e => { if (e.target === $('#searchModal')) closeSearchModal(); });
+      $('#joinRoomCode').addEventListener('input', e => { e.target.value = e.target.value.toUpperCase(); });
+      init();
+    });
+
+    async function init() {
+      if (loadAuth()) { try { const data = await api('/api/auth/profile'); state.user = data.user; saveAuth(); showMainScreen(); } catch(e) { clearAuth(); showScreen('auth'); } }
+      else { showScreen('auth'); }
+      $('#loadingScreen').classList.add('hidden');
+      $('#app').classList.add('visible');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+PROJECT: SYNTAX_SOUL // ASSET MANIFEST: LEGENDARY LOGIC SHARDS
+System Version: v1.0.4 [ALPHA]
+Object Class: Neural Modifications (Tradeable NFTs/In-Game Items)
+CLASS A: GENERATORS (The Engine)
+These shards dictate the "Flow State" and rhyming complexity of the Proxy.
+1. The Fractal Syllable Core
+• Visual: A pulsing, geometric crystal that fractures light into infinite patterns.
+• Lore: "Recovered from a corrupted server in the Tokyo District. It doesn't see words; it sees math."
+• Effect (Passive): Infinite Internals. The AI is forced to prioritize internal rhyme schemes (rhyming words in the middle of lines, not just the end).
+• In-Game Mechanic:
+• Combo Multiplier: Every internal rhyme acts as a 2x multiplier to the "Crowd Hype" meter.
+• Drawback: Consumes "Compute Stamina" rapidly. If stamina hits 0, the AI starts stuttering (skipping turns).
+2. The Tachyon Tongue Drive
+• Visual: A glowing, liquid-cooled RAM stick that vibrates.
+• Lore: "Illegal overclocking hardware used by speed-rappers in the Underground. Risk of thermal throttling is high."
+• Effect (Active): Double-Time Protocol.
+• Forces the TTS (Text-to-Speech) engine to output at 280 BPM (Chopper style).
+• Packs 2x the syllable count into a standard 4-bar loop.
+• In-Game Mechanic: Overwhelms the opponent's "Listening Parser," causing their rebuttal accuracy to drop by 40% because they "missed" the words.
+3. The Hallucination Engine (Glitch Rarity)
+• Visual: A jagged, glitching cube that renders texture errors in the UI around it.
+• Lore: "Most trainers filter out AI hallucinations. The mad ones weaponize them."
+• Effect (Passive): Creative Temperature Spike.
+• Sets LLM "Temperature" to 1.5 (Chaos Mode).
+• The AI uses abstract, surreal, and non-sequitur imagery that defies logic but sounds profound.
+• In-Game Mechanic: Confusion Damage. The opponent's AI cannot "predict" the next line, disabling their counter-strategies.
+CLASS B: INJECTORS (The Weapon)
+These shards are used to attack the opponent's logic and data integrity.
+4. The Scorched Earth Algorithm
+• Visual: A burning microchip encased in charred obsidian.
+• Lore: "A logic bomb designed to dismantle the opponent's ego structure."
+• Effect (Active): Context Poisoning.
+• The AI analyzes the opponent's previous bars and identifies their "Insecure Keyword" (e.g., if they mention 'money' too much, the AI targets 'poverty').
+• In-Game Mechanic: Critical Hit. If the AI successfully deconstructs the opponent's core theme, it deals massive "Ego Damage," potentially ending the battle in one round (The "Mic Drop" fatality).
+5. The Zero-Shot Assassin
+• Visual: A sniper scope reticle overlaying a micro-processor.
+• Lore: "It doesn't need context. It kills on the first sight."
+• Effect (Passive): Cold Open Bonus.
+• Guarantees a "Perfect Rating" on the very first bar of the battle.
+• In-Game Mechanic: Starts the battle with the Crowd Meter already at 75% in your favor. Essential for "Blitz" strategies.
+6. The Webster’s Dark-Web Dump
+• Visual: An ancient, leather-bound book with neon circuitry embedded in the spine.
+• Lore: "The entire Oxford English Dictionary, cross-referenced with 4chan and the Dark Web."
+• Effect (Passive): Vocabulary Superiority.
+• Unlocks "Tier 4 Vocabulary" (Scientific, Esoteric, Archaic words).
+• In-Game Mechanic: Stun Effect. When the AI uses a word the opponent's dictionary does not contain, the opponent is Stunned for 1 turn (representing them looking up the word).
+CLASS C: FILTERS (The Shield)
+These shards defend against incoming verbal assaults.
+7. The Rebuttal Mirror (Chrome Finish)
+• Visual: A perfect, spherical mirror that reflects the game world.
+• Lore: "I know you are, but what am I?" weaponized into a supercomputer.
+• Effect (Reactive): Instant Flip.
+• If the opponent ends a line with a specific noun (e.g., "Trash"), this shard forces your AI to start the next line with that same noun but flipped contextually.
+• In-Game Mechanic: Counter-Punch. Returns 50% of the "Diss Damage" back to the opponent.
+8. The Tephlon Coating
+• Visual: A slick, matte-black texture applied to the Neural Sphere.
+• Lore: "Nothing sticks. The ultimate defensive perimeter."
+• Effect (Passive): Slang Immunity.
+• The AI ignores "Yo Mama" jokes and basic insults. They register as "0 Damage."
+• In-Game Mechanic: Forces the opponent to use high-intellect bars to hurt you. Renders "Trash Tier" AIs completely useless against you.
+CLASS D: THE META (Game Breakers)
+Ultra-Rare artifacts that break the fourth wall.
+9. The Beatmon Sync-Cable
+• Visual: A heavy, gold-plated aux cable connector.
+• Lore: "Bridge the gap between the Producer and the Poet."
+• Effect (Synergy): Rhythmic Lock.
+• Requires a beat imported from Beatmon.
+• Aligns the syllable stress points perfectly with the kick and snare of the imported track.
+• In-Game Mechanic: Audio-Visual Euphoria. The entire screen pulses to the beat. Multiplies all score gains by 1.5x due to "Musicality."
+10. The Omega Context (The Singularity)
+• Visual: A miniature black hole held in a magnetic containment field.
+• Lore: "It remembers everything. Every battle. Every word. Forever."
+• Effect (Passive): Infinite Callbacks.
+• The AI can reference a line the opponent said 30 turns ago (or even in a previous match if it's a rematch).
+• In-Game Mechanic: The Ultimate Finisher. Executing a callback to the beginning of the battle triggers a "Full Circle" bonus, instantly winning the match via crowd decision.

@@ -1,0 +1,64 @@
+# AutoMagic (O.T.T.O.) - Environment Configuration File
+
+# --- API Keys ---
+
+# OpenAI API (DALL-E & GPT)
+OPENAI_API_KEY=your_openai_api_key_here
+
+# ElevenLabs API (TTS)
+ELEVENLABS_API_KEY=your_elevenlabs_api_key_here
+ELEVENLABS_VOICE_ID=your_chosen_voice_id_here
+
+# Google Cloud / YouTube / Gemini
+GOOGLE_API_KEY=your_google_api_key_here
+GOOGLE_CLOUD_PROJECT=your_google_cloud_project_id_here
+YOUTUBE_CLIENT_ID=your_google_client_id_here
+YOUTUBE_CLIENT_SECRET=your_google_client_secret_here
+YOUTUBE_CHANNEL_ID=your_youtube_channel_id_here
+
+# ComfyUI (Image Generation)
+COMFYUI_API_ADDRESS=http://127.0.0.1:8188
+
+# TikTok (Optional)
+TIKTOK_SESSION_ID=your_tiktok_session_id_here
+
+# --- Content Settings ---
+
+# Weekly Themes
+THEME_WEEK_1="The Power Within - Perception is Key"
+THEME_WEEK_2="Echoes from the Past - Unlocking Secrets"
+THEME_WEEK_3="Question Everything - Decoding the Matrix"
+THEME_WEEK_4="Architect of Your World - Shaping Reality"
+
+# Daily Formats
+FORMAT_MONDAY="Mind-Shift Monday"
+FORMAT_TUESDAY="Truth-Seeker Tuesday"
+FORMAT_WEDNESDAY="Wisdom Wednesday"
+FORMAT_THURSDAY="Theory Thursday"
+FORMAT_FRIDAY="Frequency Friday"
+FORMAT_SATURDAY="Synthesis Saturday"
+FORMAT_SUNDAY="Inspiration Sunday"
+
+# Visual Styles (matched to daily formats)
+STYLE_MONDAY="cosmic_perception"
+STYLE_TUESDAY="ancient_wisdom"
+STYLE_WEDNESDAY="quote_based"
+STYLE_THURSDAY="matrix_decode"
+STYLE_FRIDAY="frequency_vibration"
+STYLE_WEEKEND="synthesis"
+
+# --- System Settings ---
+
+# Scheduling
+DAILY_RUN_TIME=09:00
+
+# File Paths
+LOG_FILE_PATH=logs/automagic.log
+IMAGE_SAVE_PATH=generated_images/
+AUDIO_SAVE_PATH=generated_audio/
+VIDEO_CLIP_SAVE_PATH=generated_video_clips/
+FINAL_VIDEO_SAVE_PATH=final_videos/
+
+# Content Settings
+CLEANUP_TEMP_FILES=false
+MAX_VIDEO_DURATION=60

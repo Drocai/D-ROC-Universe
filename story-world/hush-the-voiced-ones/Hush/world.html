@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HUSH: The Voiced Ones - World of Alaya</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1"></script>
+    <style>
+      .slide-container {
+        width: 1280px;
+        min-height: 720px;
+        max-height: 720px;
+        background: #0A0A0F;
+        color: #FFFFFF;
+        font-family: 'Arial', sans-serif;
+        overflow: hidden;
+        position: relative;
+      }
+      
+      .title {
+        color: #C2E7F0;
+        font-size: 72px;
+        font-weight: bold;
+        text-shadow: 0 0 15px rgba(194, 231, 240, 0.5);
+      }
+      
+      .subtitle {
+        color: #FFFFFF;
+        font-size: 36px;
+        font-weight: 300;
+      }
+      
+      .body-text {
+        font-size: 24px;
+      }
+      
+      .accent {
+        color: #FFBF40;
+      }
+      
+      .sound-wave {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        opacity: 0.2;
+        z-index: 0;
+      }
+      
+      .opal-gradient {
+        background: linear-gradient(45deg, #C2E7F0, #C9A6D6, #FFBF40, #0ADFEF);
+        background-size: 400% 400%;
+        animation: gradient 8s ease infinite;
+      }
+      
+      @keyframes gradient {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+      
+      .content-wrapper {
+        z-index: 10;
+        position: relative;
+      }
+      
+      .region-marker {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        border: 2px solid white;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+      }
+      
+      .region-label {
+        position: absolute;
+        font-size: 14px;
+        font-weight: bold;
+        transform: translate(-50%, 10px);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="slide-container grid grid-rows-1">
+      <!-- Sound wave decoration -->
+      <svg class="sound-wave" viewBox="0 0 1280 80" preserveAspectRatio="none">
+        <path d="M0,40 Q320,0 640,40 Q960,80 1280,40 L1280,80 L0,80 Z" fill="#C2E7F0"></path>
+      </svg>
+      
+      <div class="content-wrapper flex justify-evenly items-center p-12">
+        <div class="w-2/5 flex flex-col justify-center">
+          <h1 class="title mb-4">World of Alaya</h1>
+          <h2 class="subtitle mb-4">A Society Built on Silence</h2>
+          
+          <div class="body-text space-y-4">
+            <p>For a thousand years, the <span class="accent">Rite of Vocalscission</span> has been performed on every newborn, creating a society where silence reigns supreme.</p>
+            
+            <div class="flex items-center space-x-4 mt-6">
+              <div class="w-3 h-3 rounded-full" style="background-color: #C2E7F0;"></div>
+              <p>Silent Plains - Heartland of civilization</p>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+              <div class="w-3 h-3 rounded-full" style="background-color: #0ADFEF;"></div>
+              <p>Whispering Peaks - Home of Shriek</p>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+              <div class="w-3 h-3 rounded-full" style="background-color: #C9A6D6;"></div>
+              <p>Sunken Sea - Ancient ruins of the Age of Chatter</p>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+              <div class="w-3 h-3 rounded-full" style="background-color: #A5B9C9;"></div>
+              <p>Weeping Forest - Where wisdom grows in silence</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="w-3/5 flex justify-center items-center">
+          <div class="relative w-500 h-500">
+            <!-- Map background -->
+            <div class="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-700 rounded-lg overflow-hidden">
+              <!-- Terrain features -->
+              <svg viewBox="0 0 500 500" class="w-full h-full absolute">
+                <!-- Mountain ranges -->
+                <path d="M75,150 L125,75 L175,125 L225,50 L275,100 L325,25 L375,75 L425,125" 
+                      stroke="#4A5568" stroke-width="2" fill="none" opacity="0.3" />
+                
+                <!-- Rivers -->
+                <path d="M150,125 Q200,175 250,225 Q300,275 350,200 Q400,125 450,150" 
+                      stroke="#2D3748" stroke-width="1.5" fill="none" opacity="0.3" />
+                
+                <!-- Forest areas -->
+                <circle cx="125" cy="375" r="40" fill="#2D5016" opacity="0.2" />
+                <circle cx="150" cy="350" r="30" fill="#2D5016" opacity="0.2" />
+                <circle cx="100" cy="400" r="25" fill="#2D5016" opacity="0.2" />
+              </svg>
+              
+              <!-- Region markers -->
+              <div class="region-marker" style="top: 60%; left: 45%; background-color: #C2E7F0;"></div>
+              <div class="region-label" style="top: 60%; left: 45%; color: #C2E7F0;">Silent Plains</div>
+              
+              <div class="region-marker" style="top: 25%; left: 20%; background-color: #0ADFEF;"></div>
+              <div class="region-label" style="top: 25%; left: 20%; color: #0ADFEF;">Whispering Peaks</div>
+              
+              <div class="region-marker" style="top: 40%; left: 70%; background-color: #C9A6D6;"></div>
+              <div class="region-label" style="top: 40%; left: 70%; color: #C9A6D6;">Sunken Sea</div>
+              
+              <div class="region-marker" style="top: 75%; left: 25%; background-color: #A5B9C9;"></div>
+              <div class="region-label" style="top: 75%; left: 25%; color: #A5B9C9;">Weeping Forest</div>
+              
+              <div class="region-marker" style="top: 80%; left: 55%; background-color: #FF9900;"></div>
+              <div class="region-label" style="top: 80%; left: 55%; color: #FF9900;">Wandering Paths</div>
+              
+              <div class="region-marker" style="top: 20%; left: 80%; background-color: #FFBF40;"></div>
+              <div class="region-label" style="top: 20%; left: 80%; color: #FFBF40;">Obsidian Desert</div>
+              
+              <!-- Connecting paths -->
+              <svg class="absolute inset-0 w-full h-full pointer-events-none">
+                <path d="M225,300 Q275,350 275,400" stroke="#FFBF40" stroke-width="1" fill="none" opacity="0.6" />
+                <path d="M225,300 Q300,250 350,200" stroke="#C9A6D6" stroke-width="1" fill="none" opacity="0.6" />
+                <path d="M225,300 Q175,250 100,125" stroke="#0ADFEF" stroke-width="1" fill="none" opacity="0.6" />
+                <path d="M225,300 Q175,350 125,375" stroke="#A5B9C9" stroke-width="1" fill="none" opacity="0.6" />
+                <path d="M225,300 Q325,200 400,100" stroke="#FFBF40" stroke-width="1" fill="none" opacity="0.6" />
+              </svg>
+            </div>
+            
+            <!-- Overlay image -->
+            <img src="/home/ubuntu/teaser_ref1.png" alt="Silent Plains Village" class="absolute bottom-0 left-0 w-200 h-auto rounded-lg shadow-2xl opacity-70" style="transform: translateY(20px);">
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+

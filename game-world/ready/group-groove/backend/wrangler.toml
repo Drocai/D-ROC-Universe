@@ -1,0 +1,23 @@
+name = "group-groove-api"
+main = "worker.js"
+compatibility_date = "2024-01-01"
+
+# Cloudflare D1 Database
+[[d1_databases]]
+binding = "DB"
+database_name = "group-groove-db"
+database_id = "YOUR_DATABASE_ID_HERE"
+
+# Environment variables (set in Cloudflare dashboard for production)
+[vars]
+ENVIRONMENT = "development"
+
+# For production, set these in Cloudflare dashboard:
+# SPOTIFY_CLIENT_ID = "your-spotify-client-id"
+# SPOTIFY_CLIENT_SECRET = "your-spotify-client-secret"
+# JWT_SECRET = "your-super-secret-jwt-key"
+
+# Custom domain (optional)
+# routes = [
+#   { pattern = "api.groupgroove.app/*", zone_name = "groupgroove.app" }
+# ]

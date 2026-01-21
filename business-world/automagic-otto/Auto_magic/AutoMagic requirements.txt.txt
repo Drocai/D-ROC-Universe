@@ -1,0 +1,43 @@
+# AutoMagic (O.T.T.O.) Dependencies
+
+# Core Framework
+
+python-dotenv>=1.0.0
+requests>=2.31.0
+schedule>=1.2.0
+numpy>=1.24.0
+
+# Image/Video Processing
+
+Pillow>=10.0.0
+moviepy>=1.0.3
+opencv-python>=4.8.0
+
+# AI APIs
+
+elevenlabs>=0.2.27
+openai>=1.35.0
+google-generativeai>=0.7.2
+anthropic>=0.25.0
+
+# Google APIs
+
+google-api-python-client>=2.100.0
+google-auth-oauthlib>=1.1.0
+google-auth-httplib2>=0.2.0
+
+# Web Scraping & HTML Processing
+
+beautifulsoup4>=4.12.0
+selenium>=4.15.0
+
+# Data Processing
+
+pandas>=2.1.0
+pytrends>=4.9.0
+
+# Utility
+
+tqdm>=4.66.0
+colorama>=0.4.6
+python-dateutil>=2.8.2

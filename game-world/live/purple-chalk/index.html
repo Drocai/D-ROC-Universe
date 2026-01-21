@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Purple Chalk :: The Last Task | D RoC Interactive Experience</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Purple Chalk: The Last Task - An interactive noir detective game by D RoC. Investigate the case, uncover the truth, and experience the music.">
+    <meta name="keywords" content="Purple Chalk, D RoC, interactive game, music experience, noir detective, Daddy Frequency">
+    <meta name="author" content="D RoC">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.purplechalked.com/">
+    <meta property="og:title" content="Purple Chalk :: The Last Task | D RoC">
+    <meta property="og:description" content="Step into the noir mystery. Investigate the case. Uncover the truth behind the chalk outlines.">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Purple Chalk :: The Last Task | D RoC">
+    <meta name="twitter:description" content="Step into the noir mystery. Investigate the case. Uncover the truth.">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <style>
+        /* --- Reset --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #050816;
+            color: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+        }
+
+        textarea {
+            font-family: inherit;
+        }
+
+        /* --- App Frame (responsive) --- */
+        #app-container {
+            width: 100%;
+            max-width: 600px;
+            height: 100%;
+            max-height: 900px;
+            background-color: #020617;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            border: 1px solid #374151;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Desktop scaling */
+        @media (min-width: 768px) {
+            #app-container {
+                max-width: 700px;
+                max-height: 85vh;
+            }
+            .task-image {
+                max-height: 300px;
+            }
+            .task-prompt {
+                font-size: 1.4rem;
+            }
+        }
+
+        /* --- Title Screen --- */
+        #title-screen {
+            flex: 1;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            background-image:
+                linear-gradient(to top, rgba(5, 6, 20, 0.95), rgba(5, 6, 20, 0.2)),
+                url("images/game_title_screen.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        #start-button {
+            width: 100%;
+            max-width: 320px;
+            background-color: #7c3aed;
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow:
+                0 0 24px rgba(147, 51, 234, 0.7),
+                0 0 6px rgba(79, 70, 229, 0.9);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            animation: pulse-shadow 2.8s infinite ease-in-out;
+        }
+
+        #start-button:hover {
+            transform: scale(1.04);
+            box-shadow:
+                0 0 40px rgba(196, 181, 253, 0.9),
+                0 0 16px rgba(79, 70, 229, 0.9);
+        }
+
+        @keyframes pulse-shadow {
+            0%, 100% {
+                box-shadow:
+                    0 0 20px rgba(167, 139, 250, 0.7),
+                    0 0 8px rgba(79, 70, 229, 0.8);
+            }
+            50% {
+                box-shadow:
+                    0 0 38px rgba(167, 139, 250, 1),
+                    0 0 18px rgba(129, 140, 248, 1);
+            }
+        }
+
+        .title-footer-text {
+            font-size: 0.875rem;
+            color: #e5e7eb;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+            margin-top: 1.5rem;
+        }
+
+        /* --- Game Container --- */
+        #game-container {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #game-container header {
+            flex-shrink: 0;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #111827;
+            background: linear-gradient(90deg, rgba(15, 23, 42, 0.95), rgba(30, 64, 175, 0.85));
+            backdrop-filter: blur(8px);
+        }
+
+        #game-container header h1 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+            color: #c4b5fd;
+        }
+
+        header .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        header .progress-container span {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #e5e7eb;
+            opacity: 0.85;
+        }
+
+        progress {
+            width: 5rem;
+            height: 8px;
+            border-radius: 9999px;
+            overflow: hidden;
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+        }
+
+        progress::-webkit-progress-bar {
+            background-color: #1f2937;
+        }
+
+        progress::-webkit-progress-value {
+            background: linear-gradient(90deg, #4f46e5, #a855f7);
+            transition: width 0.25s ease;
+        }
+
+        progress::-moz-progress-bar {
+            background: linear-gradient(90deg, #4f46e5, #a855f7);
+            transition: width 0.25s ease;
+        }
+
+        /* --- Main --- */
+        #game-main {
+            flex: 1;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 1.25rem;
+            overflow-y: auto;
+            position: relative;
+            background:
+                radial-gradient(circle at top, rgba(147, 51, 234, 0.18), transparent 60%),
+                url("images/digital_rain-bg.jpg");
+            background-size: cover;
+            background-position: center;
+        }
+
+        #game-main::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95));
+            pointer-events: none;
+        }
+
+        .main-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        /* --- Footer / Queue --- */
+        #game-footer {
+            flex-shrink: 0;
+            padding: 0.75rem 1.25rem 1.1rem;
+            border-top: 1px solid #111827;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.9));
+        }
+
+        #game-footer h3 {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: #9ca3af;
+            margin-bottom: 0.25rem;
+        }
+
+        .task-list {
+            max-height: 5.8rem;
+            overflow-y: auto;
+        }
+
+        .task-list-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 0.5rem;
+            border-radius: 0.4rem;
+            font-size: 0.75rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .task-list-item svg {
+            min-width: 1.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .task-list-item .id {
+            font-weight: 500;
+        }
+
+        .task-list-item .type {
+            margin-left: auto;
+            font-size: 0.7rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+        }
+
+        .task-list-item.current {
+            background-color: rgba(55, 48, 163, 0.75);
+            box-shadow: 0 0 16px rgba(59, 130, 246, 0.4);
+        }
+
+        .task-list-item.current .id {
+            color: #f9fafb;
+        }
+
+        .task-list-item.queued {
+            background-color: rgba(15, 23, 42, 0.9);
+            opacity: 0.8;
+        }
+
+        .task-list-item.queued .id {
+            color: #9ca3af;
+        }
+
+        /* Scrollbar styling */
+        .task-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .task-list::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        .task-list::-webkit-scrollbar-thumb {
+            background: #4f46e5;
+            border-radius: 9999px;
+        }
+
+        /* --- Task Containers --- */
+        .task-container {
+            display: none;
+            width: 100%;
+        }
+
+        .task-prompt {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e5e7eb;
+            line-height: 1.35;
+            margin-bottom: 1rem;
+        }
+
+        .task-caption {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            margin-bottom: 0.75rem;
+        }
+
+        .task-image {
+            width: 100%;
+            border-radius: 0.65rem;
+            border: 1px solid #374151;
+            margin-bottom: 0.9rem;
+            object-fit: cover;
+            max-height: 240px;
+        }
+
+        .task-button {
+            width: 100%;
+            background-color: #7c3aed;
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 0.8rem 1.25rem;
+            border-radius: 0.6rem;
+            margin-top: 0.5rem;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .task-button:hover {
+            background-color: #6d28d9;
+            transform: translateY(-1px);
+        }
+
+        .task-input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border-radius: 0.6rem;
+            border: 1px solid #374151;
+            background: rgba(15, 23, 42, 0.95);
+            color: #f9fafb;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .task-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #8b5cf6;
+        }
+
+        .choice-option {
+            width: 100%;
+            text-align: left;
+            padding: 0.8rem 1rem;
+            border-radius: 0.6rem;
+            border: 1px solid #374151;
+            background: rgba(15, 23, 42, 0.95);
+            color: #e5e7eb;
+            font-size: 0.95rem;
+            margin-bottom: 0.6rem;
+            transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+        }
+
+        .choice-option:hover {
+            background-color: #111827;
+            border-color: #4f46e5;
+            transform: translateY(-1px);
+        }
+
+        .choice-option.wrong {
+            border-color: #b91c1c;
+            background-color: rgba(127, 29, 29, 0.75);
+        }
+
+        .choice-option.correct {
+            border-color: #22c55e;
+            background-color: rgba(22, 101, 52, 0.9);
+        }
+
+        #video-container {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1px solid #374151;
+            margin-bottom: 0.75rem;
+        }
+
+        #youtube-player {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- Small devices tweaks --- */
+        @media (max-width: 480px) {
+            #app-container {
+                border-radius: 0;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Ambient Audio -->
+    <audio id="instrumental-audio" loop preload="auto">
+        <!-- Uses audio/Purple_chalk_instrumental.mp3 -->
+        <source src="audio/Purple_chalk_instrumental.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- SFX (can be swapped to local later if you want) -->
+    <audio id="success-sound" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg" type="audio/ogg" />
+    </audio>
+    <audio id="fail-sound" preload="auto">
+        <source src="https://actions.google.com/sounds/v1/cartoon/concussive_hit_guitar_boing.ogg" type="audio/ogg" />
+    </audio>
+
+    <div id="app-container">
+        <!-- Title Screen -->
+        <div id="title-screen">
+            <div style="width: 100%;">
+                <button id="start-button">START CASE</button>
+                <p class="title-footer-text">Purple Chalk :: The Last Task</p>
+            </div>
+        </div>
+
+        <!-- Game -->
+        <div id="game-container">
+            <header>
+                <h1>PURPLE&nbsp;CHALK</h1>
+                <div class="progress-container">
+                    <span>CASE FILE</span>
+                    <progress id="session-progress" max="100" value="0"></progress>
+                </div>
+            </header>
+
+            <main id="game-main">
+                <div class="main-inner">
+                    <!-- Intel Task -->
+                    <div id="task-intel" class="task-container">
+                        <img id="intel-image" class="task-image" src="" alt="Case Intel" />
+                        <h2 id="intel-text" class="task-prompt"></h2>
+                        <p id="intel-caption" class="task-caption"></p>
+                        <button id="intel-button" class="task-button">Acknowledge Intel</button>
+                    </div>
+
+                    <!-- Text Task -->
+                    <div id="task-text" class="task-container">
+                        <h2 id="text-prompt" class="task-prompt"></h2>
+                        <textarea id="text-input" class="task-input" placeholder="Log your next move..."></textarea>
+                        <button id="submit-text-button" class="task-button">Submit Log</button>
+                    </div>
+
+                    <!-- Choice Task -->
+                    <div id="task-choice" class="task-container">
+                        <h2 id="choice-prompt" class="task-prompt"></h2>
+                        <p class="task-caption">Pick the move that actually closes the case.</p>
+                        <div id="choice-options"></div>
+                    </div>
+
+                    <!-- Video Task -->
+                    <div id="task-video" class="task-container">
+                        <h2 id="video-prompt" class="task-prompt"></h2>
+                        <p class="task-caption">
+                            Case unlocked. This is the tape they tried to bury.
+                        </p>
+                        <div id="video-container">
+                            <div id="youtube-player"></div>
+                        </div>
+                        <button id="video-complete-button" class="task-button">
+                            Case Closed
+                        </button>
+                    </div>
+                </div>
+            </main>
+
+            <footer id="game-footer">
+                <h3>Session Queue</h3>
+                <div id="task-list-container" class="task-list"></div>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // ---- YouTube API wiring ----
+        let player = null;
+        let pendingVideoId = null;
+
+        function onYouTubeIframeAPIReady() {
+            if (pendingVideoId) {
+                createYouTubePlayer(pendingVideoId);
+            }
+        }
+
+        function onPlayerStateChange(event) {
+            const instrumental = document.getElementById("instrumental-audio");
+            const gameContainer = document.getElementById("game-container");
+            if (!instrumental) return;
+
+            if (event.data === YT.PlayerState.PLAYING) {
+                instrumental.pause();
+            } else if (
+                event.data === YT.PlayerState.PAUSED ||
+                event.data === YT.PlayerState.ENDED
+            ) {
+                if (gameContainer.style.display === "flex") {
+                    instrumental.play().catch(() => {});
+                }
+            }
+        }
+
+        function createYouTubePlayer(videoId) {
+            if (typeof YT === "undefined" || typeof YT.Player === "undefined") {
+                pendingVideoId = videoId;
+                return;
+            }
+            if (player) {
+                player.destroy();
+            }
+            player = new YT.Player("youtube-player", {
+                height: "100%",
+                width: "100%",
+                videoId: videoId,
+                playerVars: {
+                    playsinline: 1,
+                    controls: 1,
+                    showinfo: 0,
+                    rel: 0,
+                    modestbranding: 1,
+                    iv_load_policy: 3
+                },
+                events: {
+                    onReady: (event) => {
+                        // event.target.mute(); // optional
+                    },
+                    onStateChange: onPlayerStateChange
+                }
+            });
+            pendingVideoId = null;
+        }
+
+        // ---- Game Logic ----
+
+        // DOM
+        const titleScreen = document.getElementById("title-screen");
+        const gameContainer = document.getElementById("game-container");
+        const startButton = document.getElementById("start-button");
+        const sessionProgress = document.getElementById("session-progress");
+        const taskListContainer = document.getElementById("task-list-container");
+
+        const taskIntel = document.getElementById("task-intel");
+        const intelImage = document.getElementById("intel-image");
+        const intelText = document.getElementById("intel-text");
+        const intelCaption = document.getElementById("intel-caption");
+        const intelButton = document.getElementById("intel-button");
+
+        const taskText = document.getElementById("task-text");
+        const textPrompt = document.getElementById("text-prompt");
+        const textInput = document.getElementById("text-input");
+        const submitTextButton = document.getElementById("submit-text-button");
+
+        const taskChoice = document.getElementById("task-choice");
+        const choicePrompt = document.getElementById("choice-prompt");
+        const choiceOptionsContainer = document.getElementById("choice-options");
+
+        const taskVideo = document.getElementById("task-video");
+        const videoPrompt = document.getElementById("video-prompt");
+        const videoCompleteButton = document.getElementById("video-complete-button");
+
+        const instrumental = document.getElementById("instrumental-audio");
+        const successSound = document.getElementById("success-sound");
+        const failSound = document.getElementById("fail-sound");
+
+        // Game config (uses your Shorts ID and images)
+        const GAME_CONFIG = {
+            youtubeId: "R1WYXbEYDhs", // from your Shorts link
+            tasks: [
+                {
+                    id: "CASE_01",
+                    type: "intel",
+                    image: "images/clue_slate.webp",
+                    text: "CASE FILE: PURPLE CHALK",
+                    caption:
+                        "Another outline. No witnesses. Just a body-shaped glow of chalk and a city that looks away."
+                },
+                {
+                    id: "CLUE_01",
+                    type: "intel",
+                    image: "images/clue_spider.jpg",
+                    text: "FIRST CLUE: SPIDERBACK TAG",
+                    caption:
+                        "Silver spider icon at the scene. Somebody wants you to know this isn’t random."
+                },
+                {
+                    id: "SCENE_01",
+                    type: "intel",
+                    image: "images/purple_chalk_street_scene.jpg",
+                    text: "CRIME SCENE: DIGITAL RAIN DISTRICT",
+                    caption:
+                        "Neon bleed, wet pavement, sirens in the distance. The outlines always show up where the ads never sleep."
+                },
+                {
+                    id: "SUSPECT_01",
+                    type: "intel",
+                    image: "images/purple_chalk_droc_scene.jpg",
+                    text: "PRIMARY POI: D-ROC",
+                    caption:
+                        "They call him The Chalker. He draws bodies before they drop. Tonight, you prove it."
+                },
+                {
+                    id: "Q1",
+                    type: "choice",
+                    prompt: "WHO IS REALLY BEHIND THE PURPLE CHALK OUTLINES?",
+                    options: [
+                        {
+                            text: "A rival crew tagging bodies for clout.",
+                            correct: false
+                        },
+                        {
+                            text: "D-ROC, moving in silence under the alias 'The Chalker'.",
+                            correct: true
+                        },
+                        {
+                            text: "Some random copycat with a chalk obsession.",
+                            correct: false
+                        }
+                    ]
+                },
+                {
+                    id: "VIDEO_01",
+                    type: "video",
+                    prompt: "CASE UNLOCKED: PLAY THE PURPLE CHALK TAPE."
+                }
+            ]
+        };
+
+        // State
+        let taskQueue = [];
+        let currentTask = null;
+        let completedTasks = 0;
+        let totalTasks = 0;
+
+        function initGame() {
+            taskQueue = [...GAME_CONFIG.tasks];
+            totalTasks = taskQueue.length;
+            updateProgress();
+            updateTaskList();
+        }
+
+        function startGame() {
+            titleScreen.style.display = "none";
+            gameContainer.style.display = "flex";
+
+            if (instrumental) {
+                instrumental.volume = 0.35;
+                instrumental
+                    .play()
+                    .catch(() => {
+                        // user may need another interaction; it's fine
+                    });
+            }
+
+            loadNextTask();
+        }
+
+        function hideAllTasks() {
+            taskIntel.style.display = "none";
+            taskText.style.display = "none";
+            taskChoice.style.display = "none";
+            taskVideo.style.display = "none";
+        }
+
+        function loadNextTask() {
+            hideAllTasks();
+
+            if (taskQueue.length === 0) {
+                showEndScreen();
+                return;
+            }
+
+            currentTask = taskQueue.shift();
+            updateTaskList();
+
+            switch (currentTask.type) {
+                case "intel":
+                    showIntelTask(currentTask);
+                    break;
+                case "text":
+                    showTextTask(currentTask);
+                    break;
+                case "choice":
+                    showChoiceTask(currentTask);
+                    break;
+                case "video":
+                    showVideoTask(currentTask);
+                    break;
+            }
+        }
+
+        // --- Task Renderers ---
+
+        function showIntelTask(task) {
+            intelImage.src = task.image || "";
+            intelText.textContent = task.text || "";
+            intelCaption.textContent = task.caption || "";
+
+            intelButton.onclick = () => {
+                completeTask(true);
+            };
+
+            taskIntel.style.display = "block";
+        }
+
+        function showTextTask(task) {
+            textPrompt.textContent = task.prompt || "Log the next move.";
+            textInput.value = "";
+
+            submitTextButton.onclick = () => {
+                if (textInput.value.trim().length === 0) {
+                    playFail();
+                    return;
+                }
+                completeTask(true);
+            };
+
+            taskText.style.display = "block";
+            textInput.focus();
+        }
+
+        function showChoiceTask(task) {
+            choicePrompt.textContent = task.prompt || "";
+            choiceOptionsContainer.innerHTML = "";
+
+            (task.options || []).forEach((opt) => {
+                const button = document.createElement("button");
+                button.className = "choice-option";
+                button.textContent = opt.text;
+                button.onclick = () => {
+                    if (opt.correct) {
+                        button.classList.add("correct");
+                        playSuccess();
+                        setTimeout(() => {
+                            completedTasks++;
+                            updateProgress();
+                            loadNextTask();
+                        }, 450);
+                    } else {
+                        button.classList.add("wrong");
+                        playFail();
+                        setTimeout(() => {
+                            button.classList.remove("wrong");
+                        }, 600);
+                    }
+                };
+                choiceOptionsContainer.appendChild(button);
+            });
+
+            taskChoice.style.display = "block";
+        }
+
+        function showVideoTask(task) {
+            videoPrompt.textContent = task.prompt || "Play tape.";
+            createYouTubePlayer(GAME_CONFIG.youtubeId);
+
+            videoCompleteButton.onclick = () => {
+                playSuccess();
+                completedTasks++;
+                updateProgress();
+                showEndScreen();
+            };
+
+            taskVideo.style.display = "block";
+        }
+
+        // --- Core Helpers ---
+
+        function playSuccess() {
+            if (successSound) {
+                successSound.currentTime = 0;
+                successSound.play().catch(() => {});
+            }
+        }
+
+        function playFail() {
+            if (failSound) {
+                failSound.currentTime = 0;
+                failSound.play().catch(() => {});
+            }
+        }
+
+        function completeTask(ok) {
+            if (!ok) {
+                playFail();
+                return;
+            }
+            playSuccess();
+            completedTasks++;
+            updateProgress();
+            loadNextTask();
+        }
+
+        function updateProgress() {
+            const pct = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+            sessionProgress.value = pct;
+        }
+
+        function updateTaskList() {
+            taskListContainer.innerHTML = "";
+
+            if (currentTask) {
+                const elCurrent = document.createElement("div");
+                elCurrent.className = "task-list-item current";
+                elCurrent.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M14 5l7 7-7 7M3 12h18" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span class="id">${currentTask.id}</span>
+                    <span class="type">${currentTask.type}</span>
+                `;
+                taskListContainer.appendChild(elCurrent);
+            }
+
+            taskQueue.forEach((task) => {
+                const el = document.createElement("div");
+                el.className = "task-list-item queued";
+                el.innerHTML = `
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M9 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span class="id">${task.id}</span>
+                    <span class="type">${task.type}</span>
+                `;
+                taskListContainer.appendChild(el);
+            });
+        }
+
+        function showEndScreen() {
+            const main = document.getElementById("game-main");
+            const footer = document.getElementById("game-footer");
+            main.innerHTML = `
+                <div class="main-inner" style="text-align:center; padding-top:2rem;">
+                    <h1 class="task-prompt" style="color:#c4b5fd; font-size:1.5rem;">CASE CLOSED</h1>
+                    <p style="margin-top:0.75rem; color:#e5e7eb; font-size:0.98rem;">
+                        You traced the chalk, cracked the alias, and pulled the tape.
+                    </p>
+                    <p style="margin-top:0.25rem; color:#9ca3af; font-size:0.9rem;">
+                        Remember: the outlines were warnings, not graves.
+                    </p>
+                    <div style="font-size:2.5rem; margin:1rem 0;">🟣</div>
+
+                    <!-- Stream D RoC -->
+                    <p style="color:#d4af37; font-size:0.85rem; margin-bottom:0.75rem; text-transform:uppercase; letter-spacing:0.1em;">Stream D RoC</p>
+                    <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:1.25rem;">
+                        <a href="https://open.spotify.com/artist/5zhEjOaACvWfbeOljSgJpr" target="_blank" style="display:flex; align-items:center; gap:6px; padding:10px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50px; color:white; text-decoration:none; font-size:0.85rem; transition:all 0.2s;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+                            Spotify
+                        </a>
+                        <a href="https://www.youtube.com/@BigDroC" target="_blank" style="display:flex; align-items:center; gap:6px; padding:10px 16px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:50px; color:white; text-decoration:none; font-size:0.85rem; transition:all 0.2s;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                            YouTube
+                        </a>
+                    </div>
+
+                    <!-- Share Result -->
+                    <button id="share-button" class="task-button" style="max-width:260px; margin:0 auto 0.75rem; background:linear-gradient(135deg, #d4af37, #8a2be2);">
+                        Share Your Result
+                    </button>
+
+                    <!-- Visit Landing Page -->
+                    <a href="https://d-roc.vercel.app" target="_blank" style="display:block; max-width:260px; margin:0 auto 0.75rem; padding:0.8rem 1.25rem; background:rgba(212,175,55,0.2); border:1px solid #d4af37; border-radius:0.6rem; color:#d4af37; text-decoration:none; font-weight:700; font-size:0.95rem; text-align:center;">
+                        Visit D RoC Hub
+                    </a>
+
+                    <button id="restart-button" class="task-button" style="max-width:260px; margin:0 auto; background:#374151;">
+                        Run Case Again
+                    </button>
+                </div>
+            `;
+            footer.style.display = "none";
+
+            // Share functionality
+            const shareBtn = document.getElementById("share-button");
+            shareBtn.onclick = async () => {
+                const shareData = {
+                    title: 'Purple Chalk: Case Closed',
+                    text: 'I just solved the Purple Chalk case! Can you crack it? 🟣',
+                    url: 'https://www.purplechalked.com'
+                };
+                try {
+                    if (navigator.share) {
+                        await navigator.share(shareData);
+                    } else {
+                        // Fallback: copy to clipboard
+                        await navigator.clipboard.writeText(shareData.text + ' ' + shareData.url);
+                        shareBtn.textContent = 'Link Copied!';
+                        setTimeout(() => { shareBtn.textContent = 'Share Your Result'; }, 2000);
+                    }
+                } catch (err) {
+                    console.log('Share failed:', err);
+                }
+            };
+
+            const restartBtn = document.getElementById("restart-button");
+            restartBtn.onclick = () => {
+                window.location.reload();
+            };
+        }
+
+        // Events
+        startButton.addEventListener("click", startGame);
+
+        // Init
+        initGame();
+    </script>
+</body>
+</html>
