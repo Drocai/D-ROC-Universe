@@ -1,0 +1,10 @@
+{
+  "name": "droc-api",
+  "version": "1.0.0",
+  "description": "D-RoC Universe API - Access for ChatGPT, Gemini, and other LLMs",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {}
+}
