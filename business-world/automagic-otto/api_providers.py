@@ -105,12 +105,19 @@ class GroqScriptProvider(ScriptProvider):
         self.logger.info(f"Generating script with Groq ({self.model})...")
 
         prompt = kwargs.get("prompt") or (
-            f"Write a natural, conversational narration script for a YouTube video about '{topic}'. "
-            "Write ONLY the words that should be spoken - no headers, no stage directions, no formatting. "
-            "Structure: Start with a hook, cover 2-3 main points with interesting facts, "
-            "end with a call to action. "
-            "Keep it under 300 words, use simple language, and write as if you're talking to a friend. "
-            "DO NOT include any markdown formatting, timestamps, or notes in parentheses."
+            f"Write a natural, expressive narration script for a YouTube video about '{topic}'. "
+            "Write ONLY the words that should be spoken - no headers, no stage directions, no markdown. "
+            "\n\nIMPORTANT: Include ElevenLabs audio tags in square brackets for expressiveness:\n"
+            "- Emotions: [excited], [curious], [amazed], [thoughtful], [warm], [playful]\n"
+            "- Reactions: [laughs], [sighs], [gasps], [whispers]\n"
+            "- Pacing: [pauses], [slowly], [with emphasis]\n"
+            "\nExample: '[excited] Hey there! [pauses] Have you ever wondered about... [curious] what makes this so fascinating?'\n"
+            "\nStructure:\n"
+            "1. Hook with energy and personality\n"
+            "2. 2-3 main points with interesting facts (use [amazed] or [curious] for reveals)\n"
+            "3. Warm call to action at the end\n"
+            "\nKeep it under 300 words, conversational like talking to a friend. "
+            "Use audio tags naturally throughout - don't overdo it, about 6-10 tags total."
         )
 
         try:
@@ -265,7 +272,7 @@ class ReplicateImageProvider(ImageProvider):
     """Replicate API provider for image generation (FLUX, SDXL, etc.)"""
 
     def __init__(self):
-        super().__init__("Replicate", priority=1)
+        super().__init__("Replicate", priority=3)
         self.api_key = os.getenv("REPLICATE_API_KEY")
         self.model = os.getenv("REPLICATE_MODEL", "black-forest-labs/flux-schnell")
 
@@ -381,7 +388,7 @@ class StabilityImageProvider(ImageProvider):
     """Stability AI provider for image generation"""
 
     def __init__(self):
-        super().__init__("Stability", priority=3)
+        super().__init__("Stability", priority=4)
         self.api_key = os.getenv("STABILITY_API_KEY")
         self.base_url = "https://api.stability.ai/v2beta/stable-image/generate"
 
@@ -437,6 +444,76 @@ class StabilityImageProvider(ImageProvider):
             raise
 
 
+class TogetherAIImageProvider(ImageProvider):
+    """Together AI provider for image generation (FLUX Schnell - fast, high quality)"""
+
+    def __init__(self):
+        super().__init__("TogetherAI", priority=1)  # Highest priority for images
+        self.api_key = os.getenv("TOGETHER_API_KEY")
+        self.model = "black-forest-labs/FLUX.1-schnell"
+        self.base_url = "https://api.together.xyz/v1/images/generations"
+
+    def is_available(self) -> bool:
+        return bool(self.api_key and not self.api_key.startswith("YOUR_"))
+
+    def test_connection(self) -> bool:
+        if not self.is_available():
+            return False
+        try:
+            headers = {"Authorization": f"Bearer {self.api_key}"}
+            response = requests.get(
+                "https://api.together.xyz/v1/models",
+                headers=headers,
+                timeout=10
+            )
+            return response.status_code == 200
+        except Exception as e:
+            self.logger.error(f"Together AI connection test failed: {e}")
+            return False
+
+    def generate_image(self, prompt: str, **kwargs) -> bytes:
+        """Generate image using Together AI Flux Schnell"""
+        self.logger.info(f"Generating image with Together AI ({self.model})...")
+
+        try:
+            headers = {
+                "Authorization": f"Bearer {self.api_key}",
+                "Content-Type": "application/json"
+            }
+
+            # Flux Schnell works best with 1024x576 (16:9) and 4 steps
+            payload = {
+                "model": self.model,
+                "prompt": prompt,
+                "width": kwargs.get("width", 1024),
+                "height": kwargs.get("height", 576),
+                "steps": kwargs.get("steps", 4),
+                "n": 1
+            }
+
+            response = requests.post(
+                self.base_url,
+                headers=headers,
+                json=payload,
+                timeout=60
+            )
+            response.raise_for_status()
+
+            result = response.json()
+            image_url = result["data"][0]["url"]
+
+            # Download the image
+            img_response = requests.get(image_url, timeout=30)
+            img_response.raise_for_status()
+
+            self.logger.info(f"✅ Image generated with Together AI ({len(img_response.content)} bytes)")
+            return img_response.content
+
+        except Exception as e:
+            self.logger.error(f"Together AI image generation failed: {e}")
+            raise
+
+
 # ============================================================================
 # VOICE GENERATION PROVIDERS
 # ============================================================================
@@ -444,10 +521,23 @@ class StabilityImageProvider(ImageProvider):
 class ElevenLabsVoiceProvider(VoiceProvider):
     """ElevenLabs API provider (primary voice service)"""
 
+    # Natural-sounding voices for YouTube content
+    RECOMMENDED_VOICES = {
+        # Female voices
+        "sarah": "EXAVITQu4vr4xnSDxMaL",      # Mature, Reassuring, Confident (American)
+        "jessica": "cgSgspJ2msm6clMCkdW9",    # Playful, Bright, Warm (American)
+        "bella": "hpp4J3VqNfWAUOO0d1Us",      # Professional, Bright, Warm (American)
+        "laura": "FGY2WhTYpPnrIDTdsKH5",      # Enthusiast, Quirky (American, social media)
+        # Male voices
+        "george": "JBFqnCBsd6RMkjVDRZzb",     # Warm storyteller (British)
+        "will": "bIHbv24MWmeRgasZH58o",       # Relaxed optimist (American)
+    }
+
     def __init__(self):
         super().__init__("ElevenLabs", priority=1)
         self.api_key = os.getenv("ELEVENLABS_API_KEY")
-        self.voice_id = os.getenv("ELEVENLABS_VOICE_ID")
+        # Default to Jessica (warm, conversational female) if no voice set
+        self.voice_id = os.getenv("ELEVENLABS_VOICE_ID") or self.RECOMMENDED_VOICES["jessica"]
 
     def is_available(self) -> bool:
         return bool(self.api_key and not self.api_key.startswith("YOUR_"))
@@ -465,33 +555,59 @@ class ElevenLabsVoiceProvider(VoiceProvider):
             return False
 
     def generate_voice(self, text: str, **kwargs) -> bytes:
-        """Generate voice using ElevenLabs"""
-        self.logger.info("Generating voice with ElevenLabs...")
+        """Generate voice using ElevenLabs v3 with audio tags for expression"""
+        self.logger.info("Generating voice with ElevenLabs v3...")
 
         try:
             from elevenlabs.client import ElevenLabs
+            from elevenlabs import VoiceSettings
 
             client = ElevenLabs(api_key=self.api_key)
             voice_id = kwargs.get("voice_id", self.voice_id)
+            use_v3 = kwargs.get("use_v3", True)
 
-            if not voice_id:
-                voices = client.voices.get_all()
-                if voices.voices:
-                    voice_id = voices.voices[0].voice_id
-                    self.logger.info(f"Using first available voice: {voices.voices[0].name}")
+            # Choose model - v3 for expressive audio tags, v2 for stability
+            model = "eleven_v3" if use_v3 else "eleven_multilingual_v2"
 
-            audio_generator = client.generate(
-                text=text,
-                voice=voice_id,
-                model=kwargs.get("model", "eleven_multilingual_v2")
-            )
+            # Voice settings - v3 requires stability to be 0.0 (Creative), 0.5 (Natural), or 1.0 (Robust)
+            if model == "eleven_v3":
+                # v3: Use Natural (0.5) for balanced expressiveness with audio tags
+                voice_settings = VoiceSettings(
+                    stability=0.5,  # Must be 0.0, 0.5, or 1.0 for v3
+                    similarity_boost=kwargs.get("similarity", 0.7),
+                )
+            else:
+                voice_settings = VoiceSettings(
+                    stability=kwargs.get("stability", 0.5),
+                    similarity_boost=kwargs.get("similarity", 0.75),
+                    style=kwargs.get("style", 0.3),
+                    use_speaker_boost=True
+                )
+
+            self.logger.info(f"Using voice ID: {voice_id}, model: {model}")
+
+            # v3 doesn't support streaming optimization, use different API call
+            if model == "eleven_v3":
+                audio_generator = client.text_to_speech.convert(
+                    voice_id=voice_id,
+                    text=text,
+                    model_id=model,
+                    voice_settings=voice_settings
+                )
+            else:
+                audio_generator = client.generate(
+                    text=text,
+                    voice=voice_id,
+                    model=model,
+                    voice_settings=voice_settings
+                )
 
             # Collect audio data
             audio_data = b""
             for chunk in audio_generator:
                 audio_data += chunk
 
-            self.logger.info(f"✅ Voice generated with ElevenLabs ({len(audio_data)} bytes)")
+            self.logger.info(f"Voice generated with ElevenLabs ({len(audio_data)} bytes)")
             return audio_data
 
         except Exception as e:
@@ -576,9 +692,10 @@ class ProviderManager:
         ]
 
         self.image_providers: List[ImageProvider] = [
-            ReplicateImageProvider(),
-            HuggingFaceImageProvider(),
-            StabilityImageProvider()
+            TogetherAIImageProvider(),      # Priority 1: FREE, fast, high quality
+            HuggingFaceImageProvider(),     # Priority 2: FREE backup
+            ReplicateImageProvider(),       # Priority 3: Paid fallback
+            StabilityImageProvider()        # Priority 4: Emergency fallback
         ]
 
         self.voice_providers: List[VoiceProvider] = [

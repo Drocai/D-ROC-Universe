@@ -341,9 +341,55 @@ Format: Just list the prompts, one per line, no numbering or extra text."""
 
             return audio_path
 
+    def _get_audio_duration(self, audio_file: str) -> float:
+        """Get duration of audio file in seconds"""
+        try:
+            import ffmpeg
+            probe = ffmpeg.probe(audio_file)
+            duration = float(probe['streams'][0]['duration'])
+            return duration
+        except Exception as e:
+            self.logger.warning(f"Could not get audio duration: {e}, defaulting to 30s")
+            return 30.0
+
+    def _apply_ken_burns(self, image_path: str, output_path: str, duration: float, effect_type: int) -> bool:
+        """Apply Ken Burns effect (pan/zoom) to a single image"""
+        fps = 25
+        frames = int(duration * fps)
+
+        # Different Ken Burns effects
+        effects = [
+            # Slow zoom in from center
+            f"zoompan=z='min(zoom+0.001,1.3)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={frames}:s=1280x720:fps={fps}",
+            # Slow zoom out
+            f"zoompan=z='if(lte(zoom,1.0),1.3,max(1.001,zoom-0.001))':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d={frames}:s=1280x720:fps={fps}",
+            # Pan left to right with slight zoom
+            f"zoompan=z='1.15':x='if(lte(on,1),0,min(x+2,iw-iw/zoom))':y='ih/2-(ih/zoom/2)':d={frames}:s=1280x720:fps={fps}",
+            # Pan right to left with slight zoom
+            f"zoompan=z='1.15':x='if(lte(on,1),iw-iw/zoom,max(x-2,0))':y='ih/2-(ih/zoom/2)':d={frames}:s=1280x720:fps={fps}",
+            # Zoom in on upper portion
+            f"zoompan=z='min(zoom+0.001,1.25)':x='iw/2-(iw/zoom/2)':y='if(lte(zoom,1.0),ih/3,ih/3-(ih/zoom/6))':d={frames}:s=1280x720:fps={fps}",
+        ]
+
+        effect = effects[effect_type % len(effects)]
+
+        try:
+            cmd = [
+                'ffmpeg', '-y', '-loop', '1', '-i', image_path,
+                '-vf', effect,
+                '-t', str(duration),
+                '-c:v', 'libx264', '-pix_fmt', 'yuv420p',
+                output_path
+            ]
+            result = subprocess.run(cmd, capture_output=True, timeout=120)
+            return result.returncode == 0
+        except Exception as e:
+            self.logger.error(f"Ken Burns effect failed: {e}")
+            return False
+
     def create_video(self, image_files: list, audio_file: str) -> str:
-        """Create final video from images and audio using ffmpeg"""
-        self.logger.info("Creating video...")
+        """Create final video with Ken Burns effects from images and audio"""
+        self.logger.info("Creating video with Ken Burns effects...")
 
         if not image_files:
             self.logger.error("No images provided for video creation")
@@ -359,58 +405,241 @@ Format: Just list the prompts, one per line, no numbering or extra text."""
         try:
             import ffmpeg
 
-            # Create concat file
-            with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.txt') as f:
-                for img in image_files:
-                    abs_path = os.path.abspath(img).replace('\\', '/')
-                    f.write(f"file '{abs_path}'\n")
-                    f.write("duration 5\n")
-                concat_file = f.name
+            # Get audio duration to properly time images
+            audio_duration = self._get_audio_duration(audio_file)
+            num_images = len(image_files)
 
-            # Create silent video from images
+            # Calculate duration per image (distribute evenly across audio)
+            duration_per_image = audio_duration / num_images
+            self.logger.info(f"Audio: {audio_duration:.1f}s, Images: {num_images}, Duration per image: {duration_per_image:.1f}s")
+
+            # Apply Ken Burns effect to each image
+            clip_files = []
+            for i, img in enumerate(image_files):
+                clip_path = tempfile.mktemp(suffix=f'_clip{i}.mp4')
+                self.logger.info(f"Applying Ken Burns effect to image {i+1}/{num_images}...")
+
+                if self._apply_ken_burns(img, clip_path, duration_per_image, i):
+                    clip_files.append(clip_path)
+                else:
+                    self.logger.warning(f"Ken Burns failed for image {i+1}, using static fallback")
+                    # Fallback to static image
+                    cmd = [
+                        'ffmpeg', '-y', '-loop', '1', '-i', img,
+                        '-vf', 'scale=1280:720:force_original_aspect_ratio=decrease,pad=1280:720:(ow-iw)/2:(oh-ih)/2',
+                        '-t', str(duration_per_image),
+                        '-c:v', 'libx264', '-pix_fmt', 'yuv420p',
+                        clip_path
+                    ]
+                    subprocess.run(cmd, capture_output=True, timeout=60)
+                    clip_files.append(clip_path)
+
+            # Create concat file for the clips
+            concat_file = tempfile.mktemp(suffix='.txt')
+            with open(concat_file, 'w') as f:
+                for clip in clip_files:
+                    f.write(f"file '{clip.replace(chr(92), '/')}'\n")
+
+            # Concatenate all clips
             silent_video = tempfile.mktemp(suffix='.mp4')
-
-            (
-                ffmpeg
-                .input(concat_file, format='concat', safe=0)
-                .output(silent_video, vcodec='libx264', pix_fmt='yuv420p', r=25)
-                .overwrite_output()
-                .run(capture_stdout=True, capture_stderr=True, quiet=True)
-            )
+            concat_cmd = [
+                'ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', concat_file,
+                '-c', 'copy', silent_video
+            ]
+            subprocess.run(concat_cmd, capture_output=True, timeout=120)
 
             # Add audio
-            video_stream = ffmpeg.input(silent_video)
-            audio_stream = ffmpeg.input(audio_file)
-
-            (
-                ffmpeg
-                .output(video_stream, audio_stream, video_path,
-                       vcodec='copy', acodec='aac')
-                .overwrite_output()
-                .run(capture_stdout=True, capture_stderr=True, quiet=True)
-            )
+            final_cmd = [
+                'ffmpeg', '-y', '-i', silent_video, '-i', audio_file,
+                '-c:v', 'copy', '-c:a', 'aac', '-t', str(audio_duration),
+                video_path
+            ]
+            subprocess.run(final_cmd, capture_output=True, timeout=120)
 
             # Cleanup
             os.remove(concat_file)
             os.remove(silent_video)
+            for clip in clip_files:
+                if os.path.exists(clip):
+                    os.remove(clip)
 
-            self.logger.info(f"✅ Video created: {video_path}")
+            self.logger.info(f"Video created: {video_path}")
             return video_path
 
         except Exception as e:
             self.logger.error(f"Video creation failed: {e}")
             return None
 
+    def verify_production(self, images: list, audio: str, video: str) -> dict:
+        """
+        Verify all production outputs meet quality standards.
+        Returns dict with pass/fail status and details for each check.
+        """
+        results = {
+            "passed": True,
+            "checks": {},
+            "errors": []
+        }
+
+        # Check 1: Images generated (not placeholders)
+        check_name = "images_generated"
+        if not images or len(images) == 0:
+            results["checks"][check_name] = {"passed": False, "detail": "No images generated"}
+            results["errors"].append("No images generated")
+            results["passed"] = False
+        else:
+            placeholder_count = sum(1 for img in images if "placeholder" in img.lower())
+            if placeholder_count > 0:
+                results["checks"][check_name] = {
+                    "passed": False,
+                    "detail": f"{placeholder_count}/{len(images)} are placeholders"
+                }
+                results["errors"].append(f"{placeholder_count} placeholder images used instead of AI-generated")
+                results["passed"] = False
+            else:
+                results["checks"][check_name] = {"passed": True, "detail": f"{len(images)} AI-generated images"}
+
+        # Check 2: Image file sizes (should be substantial, not tiny placeholders)
+        check_name = "image_quality"
+        min_size = 30000  # 30KB minimum for real images
+        small_images = []
+        for img in images:
+            if os.path.exists(img):
+                size = os.path.getsize(img)
+                if size < min_size:
+                    small_images.append((img, size))
+        if small_images:
+            results["checks"][check_name] = {
+                "passed": False,
+                "detail": f"{len(small_images)} images under {min_size/1000}KB"
+            }
+            results["errors"].append(f"Low quality images detected: {small_images}")
+            results["passed"] = False
+        else:
+            results["checks"][check_name] = {"passed": True, "detail": "All images meet size threshold"}
+
+        # Check 3: Audio file exists and has content
+        check_name = "audio_generated"
+        if not audio or not os.path.exists(audio):
+            results["checks"][check_name] = {"passed": False, "detail": "Audio file not found"}
+            results["errors"].append("Audio file not generated")
+            results["passed"] = False
+        else:
+            audio_size = os.path.getsize(audio)
+            if audio_size < 10000:  # Less than 10KB is suspicious
+                results["checks"][check_name] = {
+                    "passed": False,
+                    "detail": f"Audio too small ({audio_size} bytes)"
+                }
+                results["errors"].append("Audio file too small - may be silent/corrupted")
+                results["passed"] = False
+            else:
+                results["checks"][check_name] = {"passed": True, "detail": f"Audio: {audio_size/1000:.1f}KB"}
+
+        # Check 4: Audio duration is reasonable (10-120 seconds for short-form)
+        check_name = "audio_duration"
+        try:
+            audio_duration = self._get_audio_duration(audio)
+            if audio_duration < 10:
+                results["checks"][check_name] = {
+                    "passed": False,
+                    "detail": f"Audio too short ({audio_duration:.1f}s)"
+                }
+                results["errors"].append(f"Audio only {audio_duration:.1f}s - too short")
+                results["passed"] = False
+            elif audio_duration > 180:
+                results["checks"][check_name] = {
+                    "passed": False,
+                    "detail": f"Audio too long ({audio_duration:.1f}s)"
+                }
+                results["errors"].append(f"Audio {audio_duration:.1f}s - exceeds limit")
+                results["passed"] = False
+            else:
+                results["checks"][check_name] = {"passed": True, "detail": f"Duration: {audio_duration:.1f}s"}
+        except Exception as e:
+            results["checks"][check_name] = {"passed": False, "detail": f"Could not check: {e}"}
+            results["errors"].append(f"Audio duration check failed: {e}")
+
+        # Check 5: Video file exists and has content
+        check_name = "video_created"
+        if not video or not os.path.exists(video):
+            results["checks"][check_name] = {"passed": False, "detail": "Video file not found"}
+            results["errors"].append("Video file not created")
+            results["passed"] = False
+        else:
+            video_size = os.path.getsize(video)
+            if video_size < 100000:  # Less than 100KB is suspicious
+                results["checks"][check_name] = {
+                    "passed": False,
+                    "detail": f"Video too small ({video_size/1000:.1f}KB)"
+                }
+                results["errors"].append("Video file too small - may be corrupted")
+                results["passed"] = False
+            else:
+                results["checks"][check_name] = {"passed": True, "detail": f"Video: {video_size/1000000:.2f}MB"}
+
+        # Check 6: Video duration matches audio
+        check_name = "video_audio_sync"
+        try:
+            import ffmpeg
+            video_probe = ffmpeg.probe(video)
+            video_duration = float(video_probe['streams'][0]['duration'])
+            audio_duration = self._get_audio_duration(audio)
+
+            diff = abs(video_duration - audio_duration)
+            if diff > 2.0:  # More than 2 seconds difference
+                results["checks"][check_name] = {
+                    "passed": False,
+                    "detail": f"Video ({video_duration:.1f}s) != Audio ({audio_duration:.1f}s)"
+                }
+                results["errors"].append(f"Video/audio duration mismatch: {diff:.1f}s difference")
+                results["passed"] = False
+            else:
+                results["checks"][check_name] = {
+                    "passed": True,
+                    "detail": f"Synced (diff: {diff:.1f}s)"
+                }
+        except Exception as e:
+            results["checks"][check_name] = {"passed": False, "detail": f"Could not verify: {e}"}
+
+        return results
+
+    def print_verification_report(self, results: dict):
+        """Print a formatted verification report"""
+        print("\n" + "="*60)
+        print("VERIFICATION REPORT")
+        print("="*60)
+
+        for check_name, check_result in results["checks"].items():
+            status = "PASS" if check_result["passed"] else "FAIL"
+            symbol = "[OK]" if check_result["passed"] else "[FAIL]"
+            print(f"  {symbol} {check_name}: {check_result['detail']}")
+
+        print("-"*60)
+        if results["passed"]:
+            print("  OVERALL: ALL CHECKS PASSED")
+        else:
+            print("  OVERALL: FAILED")
+            print("\n  Errors:")
+            for error in results["errors"]:
+                print(f"    - {error}")
+
+        print("="*60 + "\n")
+
     def run_production(self):
-        """Run the complete video production pipeline"""
+        """Run the complete video production pipeline with verification"""
         self.logger.info("="*60)
-        self.logger.info("🎬 STARTING AUTOMAGIC PRODUCTION (MULTI-PROVIDER)")
+        self.logger.info("STARTING AUTOMAGIC PRODUCTION (MULTI-PROVIDER)")
         self.logger.info("="*60)
+
+        images = []
+        audio = None
+        video = None
 
         try:
             # Step 1: Generate content idea
             topic = self.generate_content_idea()
-            self.logger.info(f"📝 Topic: {topic}")
+            self.logger.info(f"Topic: {topic}")
 
             # Step 2: Generate script
             script = self.generate_script(topic)
@@ -424,19 +653,28 @@ Format: Just list the prompts, one per line, no numbering or extra text."""
             # Step 5: Create video
             video = self.create_video(images, audio)
 
-            if video and os.path.exists(video):
+            # Step 6: VERIFY all outputs
+            self.logger.info("Running verification checks...")
+            verification = self.verify_production(images, audio, video)
+            self.print_verification_report(verification)
+
+            if verification["passed"]:
                 self.logger.info("="*60)
-                self.logger.info("✅ PRODUCTION COMPLETE!")
-                self.logger.info(f"📁 Video: {video}")
+                self.logger.info("PRODUCTION COMPLETE - ALL CHECKS PASSED!")
+                self.logger.info(f"Video: {video}")
                 self.logger.info("="*60)
-                return video
+                return {"success": True, "video": video, "verification": verification}
             else:
-                self.logger.error("Production failed - video not created")
-                return None
+                self.logger.error("="*60)
+                self.logger.error("PRODUCTION FAILED VERIFICATION")
+                for error in verification["errors"]:
+                    self.logger.error(f"  - {error}")
+                self.logger.error("="*60)
+                return {"success": False, "video": video, "verification": verification}
 
         except Exception as e:
             self.logger.error(f"Production error: {e}", exc_info=True)
-            return None
+            return {"success": False, "video": None, "error": str(e)}
 
 
 def main():
@@ -479,7 +717,17 @@ def main():
     production = MultiProviderVideoProduction()
 
     if args.now:
-        production.run_production()
+        result = production.run_production()
+
+        # Exit with appropriate code based on verification
+        if result and result.get("success"):
+            print(f"\nVideo ready: {result['video']}")
+            sys.exit(0)
+        else:
+            print("\nProduction did not pass verification checks.")
+            if result and result.get("verification"):
+                print("See errors above for details.")
+            sys.exit(1)
     else:
         print("Use --now to run production immediately")
         print("Use --status to check provider configuration")
